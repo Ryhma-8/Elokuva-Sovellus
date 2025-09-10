@@ -1,8 +1,11 @@
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import movieSearch from '../services/simpleMovieSearch'
 import MoviesList from '../components/HeroBlock/movieList'
 import SearchBar from '../components/HeroBlock/searchBar'
 import '../css/App.css'
+import Header from '../components/header'
+import Footer from '../components/footer'
+
 
 function LandingPage() {
     const [movieName, setMovieName] = useState("")
@@ -24,9 +27,11 @@ function LandingPage() {
 
   return (
     <>
+      <Header />
       <h3>test</h3>
-      <SearchBar setMovieName={setMovieName} movieName={movieName} onSearch={handleSearch} />
+      <SearchBar setMovieName={setMovieName} movieName={movieName} onSearch={handleSearch} onKeyPress={handleSearch} />
       <MoviesList movies={movies} />
+      <Footer />
     </>
   )
 }
