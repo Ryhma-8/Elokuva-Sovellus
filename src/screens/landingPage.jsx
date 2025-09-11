@@ -28,8 +28,8 @@ function LandingPage() {
   return (
     <>
       <Header />
-      <h3>test</h3>
-      <SearchBar setMovieName={setMovieName} movieName={movieName} onSearch={handleSearch} onKeyPress={handleSearch} />
+      <h3>Search for movies</h3>
+      <SearchBar setMovieName={setMovieName} movieName={movieName} onSearch={handleSearch} onKeyPress={handleSearch} placeholder={"Search"} />
       <MoviesList movies={movies} />
       <Footer />
     </>
