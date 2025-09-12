@@ -23,9 +23,7 @@
   font-size: clamp(1.5rem, 2vw, 2.2rem); /* skaalautuva fontti */
   color: #ddd;
   white-space: nowrap;  
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0;
+  margin: 1.5em;
 }
 
 .movie-card {
@@ -54,14 +52,16 @@
 
 /* Movie box */
 .hero-results {
+  height: 550px;       /* tarkka korkeus scrollille */
+  overflow-y: auto;    /* vain täällä scrollataan */
   flex: 1 1 60%;   /* vie lopun tilan, mutta ei repeä */
   max-width: 900px; /* ei veny liian leveäksi */
   margin-left: auto; /* pysyy oikeassa reunassa */
 }
 
 .movies-box {
-  max-height: 550px;  
-  overflow-y: auto;
+  max-height: none;
+  overflow-y: visible;
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -101,14 +101,16 @@
     font-size: 1.8rem;
   }
 
-  .hero-results {
-    flex: 1 1 100%;
-    margin-left: 0;
-    max-width: 100%;
+   .hero-results {
+    width: 100%;
+    height: 60vh;       /* selkeä korkeus */
+    max-height: 60vh;
+    overflow-y: auto;   /* scrolli vain tähän diviin */
   }
 
   .movies-box {
-    max-height: 500px; /* vähän pienempi scrolli mobiilissa */
+    max-height: none;
+    overflow-y: visible; 
   }
 
   .movie-info {
@@ -138,9 +140,11 @@
 
   .hero-results {
     max-width: 1200px;
+    overflow-y: auto; 
   }
 
   .movies-box {
-    max-height: 730px;
+    max-height: none;   /* tai poista kokonaan max-height */
+    overflow-y: visible;
   }
 }
