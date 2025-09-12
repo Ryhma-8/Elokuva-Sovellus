@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import movieSearch from '../services/simpleMovieSearch'
 import MoviesList from '../components/HeroBlock/movieList'
 import SearchBar from '../components/HeroBlock/searchBar'
-import '../css/App.css'
+import '../css/HeroBlock.css'
 import Header from '../components/header'
 import Footer from '../components/footer'
 
@@ -28,10 +28,16 @@ function LandingPage() {
   return (
     <>
       <Header />
-      <h3>Search for movies</h3>
-      <SearchBar setMovieName={setMovieName} movieName={movieName} onSearch={handleSearch} onKeyPress={handleSearch} placeholder={"Search"} />
-      <MoviesList movies={movies} />
-      <Footer />
+      <div className="hero-block">
+        <div className="hero-search">
+          <h2 className="hero-title">Search for movies</h2>
+          <SearchBar setMovieName={setMovieName} movieName={movieName} placeholder="Search" onSearch={handleSearch} onKeyPress={handleSearch} />
+        </div>
+        <div className="hero-results">
+          <MoviesList movies={movies} />
+        </div>
+</div>
+    <Footer />
     </>
   )
 }

@@ -1,0 +1,146 @@
+/* Hero block - pääsäiliö */
+.hero-block {
+  display: flex;
+  justify-content: space-between; /* Search vasemmalle, movie box oikealle */
+  align-items: center;             /* keskitetään pystysuunnassa MovieBoxiin */
+  margin-top: 4rem;
+  padding: 0 5vw; /* skaalautuva padding sivuille */
+  gap: 3rem;      /* väli SearchBarin ja movie boxin välillä */
+}
+
+/* Search-osio */
+.hero-search {
+  flex: 0 0 25%;    /* pysyvä leveys, mutta skaalautuu leveämmille näytöille */
+  min-width: 250px; /* ei käy liian kapeaksi */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* pystysuora keskitys MovieBoxin kanssa */
+  gap: 1rem;
+}
+
+/* Otsikko */
+.hero-title {
+  font-size: clamp(1.5rem, 2vw, 2.2rem); /* skaalautuva fontti */
+  color: #ddd;
+  white-space: nowrap;  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.movie-card {
+  display: flex;
+  gap: 1rem;
+  align-items: center;  /* tekstit pysyy kuvan vieressä */
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.movie-info {
+  display: flex;
+  gap: 2rem;          /* väli title, release ja score */
+  align-items: baseline; /* keskittää pystysuunnassa */
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.movie-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  flex-shrink: 0;      /* otsikko ei kutistu */
+  white-space: nowrap; 
+  margin: 0;
+}
+
+/* Movie box */
+.hero-results {
+  flex: 1 1 60%;   /* vie lopun tilan, mutta ei repeä */
+  max-width: 900px; /* ei veny liian leveäksi */
+  margin-left: auto; /* pysyy oikeassa reunassa */
+}
+
+.movies-box {
+  max-height: 550px;  
+  overflow-y: auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.movie-poster {
+  width: 80px;       /* aiemmin 80px */
+  height: 120px;      /* selkeä suhde 2:3 */
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;     /* kuva ei kutistu */
+}
+
+/* Responsiivisuus puhelimille */
+@media (max-width: 768px) {
+  .hero-block {
+    flex-direction: column;  /* pystysuora layout */
+    align-items: center;
+    gap: 2rem;
+    padding: 0 2rem;
+  }
+
+  .hero-search {
+    flex: 1 1 100%;
+    max-width: 500px;
+    justify-content: flex-start; /* ylös mobiilissa */
+    text-align: center;
+  }
+
+  .hero-title {
+    white-space: normal;  /* sallii rivityksen pienemmillä näytöillä */
+    font-size: 1.8rem;
+  }
+
+  .hero-results {
+    flex: 1 1 100%;
+    margin-left: 0;
+    max-width: 100%;
+  }
+
+  .movies-box {
+    max-height: 500px; /* vähän pienempi scrolli mobiilissa */
+  }
+
+  .movie-info {
+    flex-direction: column;   /* kaikki tiedot allekkain */
+    gap: 0.3rem;
+    align-items: center;      /* keskitetään tekstit */
+    font-size: 0.9rem;
+  }
+
+  .movie-title {
+    white-space: normal;      /* sallii rivittämisen pienellä näytöllä */
+    text-align: center;
+  }
+}
+
+
+/* Suuret näytöt (4K, 5K) */
+@media (min-width: 2560px) {
+  .hero-block {
+    gap: 10rem;   /* isommilla näytöillä väli suurempi */
+    padding: 0 10vw;
+  }
+
+  .hero-search {
+    flex: 0 0 20%; /* ei veny liikaa */
+  }
+
+  .hero-results {
+    max-width: 1200px;
+  }
+
+  .movies-box {
+    max-height: 730px;
+  }
+}

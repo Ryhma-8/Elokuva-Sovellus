@@ -9,7 +9,6 @@ export default async function movieSearch(promps,page=1) {
             }
             }
         )
-        console.log(response.data.results)
         return response.data.results
     }
     catch (error){
