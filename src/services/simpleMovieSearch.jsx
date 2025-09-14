@@ -12,9 +12,6 @@ export default async function movieSearch(promps, page = 1) {
       }
     );
 
-    console.log("Results:", response.data.results);
-    console.log("Total pages:", response.data.total_pages);
-
     return {
       results: response.data.results,
       totalPages: response.data.total_pages,

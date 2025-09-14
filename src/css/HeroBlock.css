@@ -1,26 +1,23 @@
-/* Hero block - pääsäiliö */
 .hero-block {
   display: flex;
-  justify-content: space-between; /* Search vasemmalle, movie box oikealle */
-  align-items: center;             /* keskitetään pystysuunnassa MovieBoxiin */
-  margin-top: 4rem;
-  padding: 0 5vw; /* skaalautuva padding sivuille */
-  gap: 3rem;      /* väli SearchBarin ja movie boxin välillä */
+  justify-content: space-between; 
+  align-items: center;
+  padding: 0 5vw; 
+  gap: 3rem;     
 }
 
-/* Search-osio */
+
 .hero-search {
-  flex: 0 0 25%;    /* pysyvä leveys, mutta skaalautuu leveämmille näytöille */
-  min-width: 250px; /* ei käy liian kapeaksi */
+  flex: 0 0 25%;    
+  min-width: 250px; 
   display: flex;
   flex-direction: column;
-  justify-content: center; /* pystysuora keskitys MovieBoxin kanssa */
+  justify-content: center; 
   gap: 1rem;
 }
 
-/* Otsikko */
 .hero-title {
-  font-size: clamp(1.5rem, 2vw, 2.2rem); /* skaalautuva fontti */
+  font-size: clamp(1.5rem, 2vw, 2.2rem);
   color: #ddd;
   white-space: nowrap;  
   margin: 1.5em;
@@ -29,15 +26,15 @@
 .movie-card {
   display: flex;
   gap: 1rem;
-  align-items: center;  /* tekstit pysyy kuvan vieressä */
+  align-items: center;
   padding: 0.5rem;
   border-bottom: 1px solid #eee;
 }
 
 .movie-info {
   display: flex;
-  gap: 2rem;          /* väli title, release ja score */
-  align-items: baseline; /* keskittää pystysuunnassa */
+  gap: 2rem;
+  align-items: baseline;
   font-size: 0.9rem;
   color: #555;
 }
@@ -45,18 +42,17 @@
 .movie-title {
   font-weight: bold;
   font-size: 1.1rem;
-  flex-shrink: 0;      /* otsikko ei kutistu */
+  flex-shrink: 0;
   white-space: nowrap; 
   margin: 0;
 }
 
-/* Movie box */
 .hero-results {
-  height: 550px;       /* tarkka korkeus scrollille */
-  overflow-y: auto;    /* vain täällä scrollataan */
-  flex: 1 1 60%;   /* vie lopun tilan, mutta ei repeä */
-  max-width: 900px; /* ei veny liian leveäksi */
-  margin-left: auto; /* pysyy oikeassa reunassa */
+  height: 550px;
+  overflow-y: auto;
+  flex: 1 1 60%;
+  max-width: 900px;
+  margin-left: auto;
 }
 
 .movies-box {
@@ -73,17 +69,17 @@
 }
 
 .movie-poster {
-  width: 80px;       /* aiemmin 80px */
-  height: 120px;      /* selkeä suhde 2:3 */
+  width: 80px;
+  height: 120px;
   border-radius: 4px;
   object-fit: cover;
-  flex-shrink: 0;     /* kuva ei kutistu */
+  flex-shrink: 0; 
 }
 
 /* Responsiivisuus puhelimille */
 @media (max-width: 768px) {
   .hero-block {
-    flex-direction: column;  /* pystysuora layout */
+    flex-direction: column; 
     align-items: center;
     gap: 2rem;
     padding: 0 2rem;
@@ -92,20 +88,20 @@
   .hero-search {
     flex: 1 1 100%;
     max-width: 500px;
-    justify-content: flex-start; /* ylös mobiilissa */
+    justify-content: flex-start;
     text-align: center;
   }
 
   .hero-title {
-    white-space: normal;  /* sallii rivityksen pienemmillä näytöillä */
+    white-space: normal;
     font-size: 1.8rem;
   }
 
    .hero-results {
     width: 100%;
-    height: 60vh;       /* selkeä korkeus */
+    height: 60vh;
     max-height: 60vh;
-    overflow-y: auto;   /* scrolli vain tähän diviin */
+    overflow-y: auto;
   }
 
   .movies-box {
@@ -114,28 +110,28 @@
   }
 
   .movie-info {
-    flex-direction: column;   /* kaikki tiedot allekkain */
+    flex-direction: column;
     gap: 0.3rem;
-    align-items: center;      /* keskitetään tekstit */
+    align-items: center; 
     font-size: 0.9rem;
   }
 
   .movie-title {
-    white-space: normal;      /* sallii rivittämisen pienellä näytöllä */
+    white-space: normal;
     text-align: center;
   }
 }
 
 
-/* Suuret näytöt (4K, 5K) */
+/* Suuret näytöt 4k*/
 @media (min-width: 2560px) {
   .hero-block {
-    gap: 10rem;   /* isommilla näytöillä väli suurempi */
+    gap: 10rem; 
     padding: 0 10vw;
   }
 
   .hero-search {
-    flex: 0 0 20%; /* ei veny liikaa */
+    flex: 0 0 20%;
   }
 
   .hero-results {
@@ -144,7 +140,7 @@
   }
 
   .movies-box {
-    max-height: none;   /* tai poista kokonaan max-height */
+    max-height: none;
     overflow-y: visible;
   }
 }
