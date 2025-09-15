@@ -1,0 +1,52 @@
+.header-tila {
+    width: 100%;
+}
+
+.rounded-btn.genreNappi {
+    background-color: white;
+    border-color: black;
+    color: black;
+    border-radius: 20px;
+}
+
+.rounded-btn.genreNappi:hover,
+.rounded-btn.genreNappi:focus,
+.rounded-btn.genreNappi:active
+{
+    background-color: gold;
+    border-color: gold;
+    color: black;
+}
+
+.rounded-btn.reviewNappi {
+    background-color: white;
+    border-color: black;
+    color: black;
+    border-radius: 20px;
+}
+
+.rounded-btn.reviewNappi:hover,
+.rounded-btn.reviewNappi:focus,
+.rounded-btn.reviewNappi:active
+{
+    background-color: gold;
+    border-color: gold;
+    color: black;
+    
+}
+
+.rounded-btn.languageNappi {
+    background-color: white;
+    border-color: black;
+    color: black;
+    border-radius: 20px;
+}
+
+.rounded-btn.languageNappi:hover,
+.rounded-btn.languageNappi:focus,
+.rounded-btn.languageNappi:active
+{
+    background-color: gold;
+    border-color: gold;
+    color: black;
+}
