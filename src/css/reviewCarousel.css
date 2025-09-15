@@ -1,0 +1,72 @@
+.review-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1159px;
+    gap: 16px;
+    margin: 32px auto;
+  }
+  
+  .review-h2 {
+    font-size: 32px;
+    text-align: center;
+    margin: 0;
+  }
+
+  .review-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .nav-btn{
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding : 12px;
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .review-card {
+    padding: 0px 20px 0px 20px;
+    border-radius: 12px;
+    max-width: 1000px;
+    text-align: center;
+  }
+  
+  .review-text {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .review-rating {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .review-movie {
+    display: block;
+    margin-bottom: 16px;
+    font-weight: bold;
+    font-style: italic;
+  }
+  
+  .review-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #AAAAAA;
+  }
+  
+  .user-avatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+  
