@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import "../css/ShowtimesPage.css";
+
+import Header from "../components/header";
+import Footer from "../components/footer";
+
 import MovieList from "../components/MovieList.jsx";
 import { getAreas, getSchedule, formatFinnkinoDate } from "../services/finnkino.js";
 
@@ -53,38 +57,44 @@ export default function ShowtimesPage() {
   }, [selectedArea, date]);
 
   return (
-    <div className="showtimes-container">
-      <h2 className="showtimes-header">Movies presenting in Finnkino</h2>
+    <>
+      <Header />
 
-      <div className="showtimes-filters">
-        <label>
-          Theater
-          <select value={selectedArea} onChange={(e) => setSelectedArea(e.target.value)}>
-            {areas.map((a) => (
-              <option key={a.id} value={a.id}>{a.name}</option>
-            ))}
-          </select>
-        </label>
+      <div className="showtimes-container">
+        <h2 className="showtimes-header">Movies presenting in Finnkino</h2>
 
-        <label>
-          Date (dd.mm.yyyy)
-          <input
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            placeholder="dd.mm.yyyy"
-            pattern="\d{2}\.\d{2}\.\d{4}"
-            title="Muoto dd.mm.yyyy"
-          />
-        </label>
+        <div className="showtimes-filters">
+          <label>
+            Theatre
+            <select value={selectedArea} onChange={(e) => setSelectedArea(e.target.value)}>
+              {areas.map((a) => (
+                <option key={a.id} value={a.id}>{a.name}</option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Date (dd.mm.yyyy)
+            <input
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              placeholder="dd.mm.yyyy"
+              pattern="\d{2}\.\d{2}\.\d{4}"
+              title="Muoto dd.mm.yyyy"
+            />
+          </label>
+        </div>
+
+        {status === "loading" && <p> Loading showtimes…</p>}
+        {status === "error" && <p role="alert"> {errorMsg}</p>}
+        {status === "empty" && <p> No showtimes for the selected date.</p>}
+
+        {status === "ready" && (
+          <MovieList shows={shows} selectedDate={date} initialCount={8} />
+        )}
       </div>
 
-      {status === "loading" && <p> Loading showtimes…</p>}
-      {status === "error" && <p role="alert"> {errorMsg}</p>}
-      {status === "empty" && <p> No showtimes for the selected date.</p>}
-
-      {status === "ready" && (
-        <MovieList shows={shows} selectedDate={date} initialCount={8} />
-      )}
-    </div>
+      <Footer />
+    </>
   );
 }
