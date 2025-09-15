@@ -5,7 +5,7 @@ import useDropDown from '../components/useDropDown'
 import '../css/MoviesPage.css'
 
 
-function App() {
+function MoviesPage() {
   const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, selectedGenre , fetchMoviesByGenre, movies } = useDropDown()
 
 
@@ -89,4 +89,4 @@ function App() {
   )
 }
 
-export default App
+export default MoviesPage
