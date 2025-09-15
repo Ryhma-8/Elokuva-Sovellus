@@ -1,0 +1,97 @@
+.leave-review{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #FED41F;
+    max-width: 1159px;
+    border: 1px solid #000000;
+    border-radius: 16px;
+    margin: 32px auto;
+}
+
+.leave-review h2{
+    font-size: 32px;
+    margin: 16px 0 16px 0;
+}
+
+.textarea-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+.leave-review form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 80%;
+    margin-bottom: 24px;
+}
+
+.leave-review textarea{
+    width: 100%;
+    height: 150px;
+    padding: 60px 8px 8px 8px; 
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+    resize: vertical;
+}
+
+.review-submit-btn{
+    background-color: #EBEBEB;
+    border: 1px solid #000000;
+    min-width: 120px;
+    border-radius: 32px;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+  }
+
+  .radio-input {
+    position: fixed;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .radio-label {
+    cursor: pointer;
+    font-size: 0;
+    color: rgba(0,0,0,0.2);
+    transition: color 0.1s ease-in-out;
+  }
+  
+  .radio-label:before {
+    content: "★";
+    display: inline-block;
+    font-size: 32px;
+  }
+
+  .radio-input:checked ~ .radio-label {
+    color: #FED41F;
+  }
+  
+  .radio-label:hover,
+  .radio-label:hover ~ .radio-label {
+    color: #FED41F;
+  }
+  
+  .char-counter {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 14px;
+    color: #333;
+    opacity: 0.7;
+  }
