@@ -60,28 +60,25 @@
   }
 
   .radio-input {
-    position: fixed;
-    opacity: 0;
-    pointer-events: none;
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
   }
   
   .radio-label {
     cursor: pointer;
-    font-size: 0;
     color: rgba(0,0,0,0.2);
-    transition: color 0.1s ease-in-out;
+    transition: color 0.1s ease-in-out; 
+    font-size: 32px;
+    user-select: none;
   }
   
-  .radio-label:before {
+  .radio-label::before {
     content: "★";
     display: inline-block;
-    font-size: 32px;
   }
 
-  .radio-input:checked ~ .radio-label {
-    color: #FED41F;
-  }
-  
+  .radio-input:checked ~ .radio-label,
   .radio-label:hover,
   .radio-label:hover ~ .radio-label {
     color: #FED41F;

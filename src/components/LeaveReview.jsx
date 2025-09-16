@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "../css/leaveReview.css";
 
 export default function LeaveReview() {
@@ -10,45 +10,60 @@ export default function LeaveReview() {
         if (e.target.value.length <= maxLength) {
             setReviewText(e.target.value);
         }
+        };
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+       const res = await fetch("", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reviewText, starRating }),
+          });
+      
+          if (res.ok) {
+            alert("Review sent successfully");
+            setReviewText("");
+            setStarRating(0);
+          } else {
+            alert(`Error sending review:\n Review: "${reviewText}"\nStars: "${starRating}"`); // Temporary alert to show review data
+          }
+        };
+
+        return (
+            <div className="leave-review">
+              <h2 className="review-h2">Leave a review</h2>
+              <form className="review-form" onSubmit={handleSubmit}>
+                <div className="textarea-wrapper">
+                  <textarea
+                    className="review-textarea"
+                    value={reviewText}
+                    onChange={handleLength}
+                    maxLength={maxLength}
+                  />
+        
+                  <div className="star-rating">
+                    {[5,4,3,2,1].map(star => (
+                      <React.Fragment key={star}>
+                        <input
+                          className="radio-input"
+                          type="radio"
+                          id={`star${star}`}
+                          name="star-input"
+                          value={star}
+                          checked={starRating === star}
+                          onChange={() => setStarRating(star)}
+                        />
+                        <label className="radio-label" htmlFor={`star${star}`} title={`${star} stars`}></label>
+                      </React.Fragment>
+                    ))}
+                  </div>
+        
+                  <div className="char-counter">{reviewText.length}/{maxLength}</div>
+                </div>
+        
+                <button type="submit" className="review-submit-btn">Send</button>
+              </form>
+            </div>
+          );
         }
-
-  return (
-    <div className="leave-review">
-      <h2 className="review-h2">Leave a review</h2>
-      <form className="review-form">
-        <div className="textarea-wrapper">
-          <textarea
-            className="review-textarea"
-            placeholder="Write your review here..."
-            value={reviewText}
-            onChange={handleLength}
-            maxLength={maxLength}
-          ></textarea>
-
-          <div className="star-rating">
-            <input className="radio-input" type="radio" id="star5" name="star-input" value="5" />
-            <label className="radio-label" htmlFor="star5" title="5 stars"></label>
-
-            <input className="radio-input" type="radio" id="star4" name="star-input" value="4" />
-            <label className="radio-label" htmlFor="star4" title="4 stars"></label>
-
-            <input className="radio-input" type="radio" id="star3" name="star-input" value="3" />
-            <label className="radio-label" htmlFor="star3" title="3 stars"></label>
-
-            <input className="radio-input" type="radio" id="star2" name="star-input" value="2" />
-            <label className="radio-label" htmlFor="star2" title="2 stars"></label>
-
-            <input className="radio-input" type="radio" id="star1" name="star-input" value="1" />
-            <label className="radio-label" htmlFor="star1" title="1 star"></label>
-          </div>
-
-        <div className="char-counter">
-            <p>{reviewText.length}/{maxLength}</p>
-        </div>
-        </div>
-
-        <button type="submit" className="review-submit-btn">Send</button>
-      </form>
-    </div>
-  );
-}
