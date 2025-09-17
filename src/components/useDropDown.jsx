@@ -29,7 +29,7 @@ function useDropDown() {
       const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&language=en`,
         {
           headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
           }
         }
       )
@@ -45,7 +45,7 @@ function useDropDown() {
       const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?with_original_language${langCode}`,
         {
           headers: {
-            'Authorization': `Bearer ${import.meta.env.VITE_API_KEY}`
+            'Authorization': `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
           }
         }
       )
@@ -62,7 +62,7 @@ function useDropDown() {
       const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en`,
       {
         headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
         }
       }
     )
@@ -81,7 +81,7 @@ function useDropDown() {
     const response = await axios.get('https://api.themoviedb.org/3/genre/movie/list?api_key=&language=en', // tässä pitää luoda response muuttuja, muuten tulee virhe response not defined
       {
         headers: { 
-          Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
           
         }
       }

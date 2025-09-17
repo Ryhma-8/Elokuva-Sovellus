@@ -7,7 +7,7 @@ import '../css/MoviesPage.css'
 import Header from "../components/header";
 import Footer from "../components/footer";
 
-function App() {
+function MoviesPage() {
   const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, selectedGenre , fetchMoviesByGenre, movies } = useDropDown()
 
   return (
@@ -93,4 +93,4 @@ function App() {
   )
 }
 
-export default App
+export default MoviesPage;
