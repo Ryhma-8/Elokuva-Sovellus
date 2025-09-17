@@ -14,10 +14,13 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## For project
 
-Backend
+Backend installation
 ```sh
   Run
+
 $ npm i express cors nodemon pg dotenv cross-env jsonwebtoken bcrypt
-  testing-with
+
+  "For tests"
+
 $ npm i mocha-chai
 ```
