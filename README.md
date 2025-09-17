@@ -20,7 +20,7 @@ Backend installation
 
 $ npm i express cors nodemon pg dotenv cross-env jsonwebtoken bcrypt
 
-  "For tests"
+  For tests
 
 $ npm i mocha-chai
 ```
