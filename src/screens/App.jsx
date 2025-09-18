@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react'
 import '../css/App.css'
-import MovieBlock from '../components/MovieBlock'
-import ReviewCarousel from '../components/ReviewCarousel'
-import LeaveReview from '../components/LeaveReview'
-import SignIn from '../components/SignIn'
+import MoviePage from './moviePage';
+import ProfilePage from './profilePage';
+
+
 function App() {
   
   
   return (
     <>
-      <SignIn />
-      <MovieBlock movieId={122} />
-      <ReviewCarousel />
-      <LeaveReview />
-
+      <ProfilePage/>
     </>
   );
 }

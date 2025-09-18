@@ -4,6 +4,7 @@
     align-items: stretch;
     justify-content: center;
     max-width: 1159px;
+    height: 470px;
     width: 100%;
     gap: 16px;
     margin: 32px auto;
@@ -65,11 +66,5 @@
     align-items: center;
     justify-content: center;
     color: #AAAAAA;
-  }
-  
-  .user-avatar {
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
   }
   

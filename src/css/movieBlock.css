@@ -37,10 +37,9 @@ gap: 8px;
   align-items: flex-start;
 }
 
-.movie-poster {
+.movie-images img.movie-poster {
     height: 417px !important;
     width: auto !important;
-    height: auto;
     object-fit: cover;
     border-radius: 15px;
     background: #f7f6f6;
@@ -62,15 +61,15 @@ gap: 8px;
   gap: 4px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1077px) {
     .movie-images {
       flex-direction: column;
       align-items: center;
     }
   
     .movie-poster{
-      height: auto;
-      width: 90%; /* leveys skaalautuu ikkunan mukaan */
+      height: auto !important;
+      width: 90%;
     }
 
     .movie-backdrop {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/leaveReview.css";
+import "../../css/leaveReview.css";
 
 export default function LeaveReview() {
     const [reviewText, setReviewText] = useState("");
