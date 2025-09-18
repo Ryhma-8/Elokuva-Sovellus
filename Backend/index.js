@@ -13,6 +13,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/user', userRouter);
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+app.use((err,req,res,next)=> {
+    const statusCode = err.status || 500
+    const message = err.message || "Internal server error"
+    res.status(statusCode).json({
+        err: {
+            messsage: message,
+            status: statusCode
+        }
+    })
+})
