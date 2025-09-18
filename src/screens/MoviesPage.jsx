@@ -1,20 +1,21 @@
 import React from 'react'
 import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import useDropDown from '../components/useDropDown'
-import '../css/MoviesPage.css'
+import useDropDown from './components/useDropDown'
+import { Card } from 'react-bootstrap'
+import './App.css'
 
-import Header from "../components/header";
-import Footer from "../components/footer";
 
-function MoviesPage() {
-  const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, selectedGenre , fetchMoviesByGenre, movies } = useDropDown()
+function App() {
+  const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, page, totalPages,
+          selectedGenre , fetchMoviesByGenre, movies, fetchMoviesByLanguage, fetchMoviesByReview, setSelectedReview, selectedReview } = useDropDown()
+
 
   return (
-    <>
-      <Header />
-
-      <div className="d-flex gap-3 p-3">
+    <><header className="header-tila">
+      <h3>Sample</h3>
+    </header>
+    <div className="napit">
         <Dropdown>
           <Dropdown.Toggle className="genreNappi rounded-btn" variant="" id="dropdown-basic"> {/* variant="succes" muuttaa napin vihreäksi */}
             Genre {/* jos ei ole mitään variant kohdasssa niin bootstrap laittaa napin siniseksi joten variant="" korjaa ongelman */}
@@ -22,14 +23,16 @@ function MoviesPage() {
 
           <Dropdown.Menu>
             {genres.length > 0 ? (
-              genres.map((genres) => (
+              genres.map((genre) => (
                 <Dropdown.Item
-                 key={genres.id}
+                 key={genre.id}
                  onClick={() => {
-                  setSelectedGenre(genres.id)
-                  fetchMoviesByGenre(genres.id)
-                 }}> {/* React tarvitsee uniikin keyn jokaiselle listan ID:lle, jotta se osaa päivittää näkymän tehokkaasti. */}
-                  {genres.name} {/* href={#/genre/${genre.id}} tekee jokaiselle itemille oman linkin genren ID:en mukaan */}
+                  setSelectedGenre(genre.id) // jos haetaan genren perusteella niin
+                  setSelectedLanguage(null) // pitää asettaa nulliksi muut vaihtoehdot ettei tule päällekkäisiä hakuja ja pystyy vaihtamaan lennosta mihin hakukriteetiin tahansa
+                  setSelectedReview(null)
+                  }}> 
+                  {/* React tarvitsee uniikin keyn jokaiselle listan ID:lle, jotta se osaa päivittää näkymän tehokkaasti. */}
+                  {genre.name} {/* href={#/genre/${genre.id}} tekee jokaiselle itemille oman linkin genren ID:en mukaan */}
                 </Dropdown.Item> /* genres.name tämä näyttää genren nimen sen ID:en perusteella */
               ))
             ) : (
@@ -46,9 +49,17 @@ function MoviesPage() {
 
           <Dropdown.Menu>
             {reviews.length > 0 ? (
-              reviews.map((review) => (
-                <Dropdown.Item key={review.id} className="text-wrap">
-                  <strong>{review.author}</strong>: {review.content.substring(0, 100)} {/* arvostelun jättäjä on bold fontilla (<strong>{review.author}</strong>) */}
+              reviews.map((review) => ( //reviews.map käy läpi reviews taulukon elementit jotka tallennetaan review muuttujaan
+                <Dropdown.Item
+                key={review.label}
+                onClick={() => {
+                  console.log("Clicked review", review)
+                  setSelectedReview(review) // jos haetaan arvostelujen perusteella dropdownista niin
+                  setSelectedGenre(null) // pitää asettaa nulliksi muut vaihtoehdot ettei tule päällekkäisiä hakuja ja pystyy vaihtamaan lennosta mihin hakukriteetiin tahansa
+                  setSelectedLanguage(null)
+                }}>
+                   {review.label}
+                   {/* arvostelun jättäjä on bold fontilla (<strong>{review.author}</strong>) */}
                 </Dropdown.Item> /* {review.content.substring(0, 100)} näyttää sataan merkkiin asti arvostelua */
               ))
             ) : (
@@ -64,33 +75,66 @@ function MoviesPage() {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            {languages.map((lang) => (
-              <Dropdown.Item key={lang.code} onClick={() => setSelectedLanguage(lang.code)}>
+            {languages.length > 0 ? (
+            languages.map((lang) => (
+              <Dropdown.Item
+              key={lang.code} 
+              onClick={() => {
+                setSelectedLanguage(lang.code) // jos haetaan kielen perusteella dropdownista niin
+                setSelectedGenre(null) // pitää asettaa nulliksi muut vaihtoehdot ettei tule päällekkäisiä hakuja ja pystyy vaihtamaan lennosta mihin hakukriteetiin tahansa
+                setSelectedReview(null)
+              }}>
                 {lang.label}
               </Dropdown.Item>
-            ))}
+            ))
+          ) : (
+            <Dropdown.Item disabled>loading...</Dropdown.Item>
+            )}
           </Dropdown.Menu>
         </Dropdown>
+        
       </div>
-
-      {/* leffa lista */}
-      <div className="leffa-lista">
-        {movies.length > 0 ? (
-          <ul>
-            {movies.map((movie) => (
-              <li key={movie.id}>
-                {movie.title}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No movies found</p>
-        )}
-      </div>
-
-      <Footer />
-    </>
+      {/* leffa kortit */}
+      <div className="leffa-kortit"> {/* koko korttilistan asetteluun */}
+            {movies.length > 0 ? (
+                movies.map((movie) => (
+                  <Card key={movie.id} style={{ width: "16em" }} className="kortti shadow-sm">
+                    <Card.Img
+                      variant="top"
+                      src={
+                        movie.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                        : "https://via.placeholder.com/300x450?text=No+Image" 
+                      }
+                      alt={movie.title}
+                    />
+                    <Card.Body>
+                      <Card.Title className="fs-6">{movie.title}</Card.Title> {/* korteille annetaan tiedot (leffan nimi) */}
+                      <Card.Text className="text-muted">{movie.release_date ? `(${movie.release_date.substring(0, 4)})` : ""}</Card.Text> {/* korteille annetaan tiedot (julkaisuvuosi) */}
+                      <Card.Text>⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "No reviews"}</Card.Text> {/* keskiarvo arvostelusta kahden desimaalin tarkkuudella */}
+                    </Card.Body>
+                  </Card> 
+                ))
+            ) : (
+              <p className="text-muted">No movies found</p>
+            )}
+            </div>
+            {page < totalPages && (
+              <div className="load-container">
+                <button className="load-button"
+                  onClick={() => {
+                  if (selectedGenre) fetchMoviesByGenre(selectedGenre, page + 1) // pitää laittaa ehdot tänne myös jotta ohjelma tietää millä sivulla tarvitsee ladata lisää leffoja
+                  else if (selectedLanguage) fetchMoviesByLanguage(selectedLanguage, page + 1)
+                  else if (selectedReview) fetchMoviesByReview(selectedReview, page + 1)
+                }}>
+                    Load More
+                </button>
+              </div>
+            )}
+      
+      </>
+      
   )
 }
 
-export default MoviesPage;
+export default App
