@@ -4,15 +4,17 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import useDropDown from '../components/useDropDown'
 import '../css/MoviesPage.css'
 
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 function MoviesPage() {
   const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, selectedGenre , fetchMoviesByGenre, movies } = useDropDown()
 
-
   return (
-    <><header className="header-tila">
-      <h3>Sample</h3>
-    </header><div className="d-flex gap-3 p-3">
+    <>
+      <Header />
+
+      <div className="d-flex gap-3 p-3">
         <Dropdown>
           <Dropdown.Toggle className="genreNappi rounded-btn" variant="" id="dropdown-basic"> {/* variant="succes" muuttaa napin vihreäksi */}
             Genre {/* jos ei ole mitään variant kohdasssa niin bootstrap laittaa napin siniseksi joten variant="" korjaa ongelman */}
@@ -70,23 +72,25 @@ function MoviesPage() {
           </Dropdown.Menu>
         </Dropdown>
       </div>
+
       {/* leffa lista */}
       <div className="leffa-lista">
-            {movies.length > 0 ? (
-              <ul>
-                {movies.map((movie) => (
-                  <li key={movie.id}>
-                    {movie.title}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No movies found</p>
-            )}
+        {movies.length > 0 ? (
+          <ul>
+            {movies.map((movie) => (
+              <li key={movie.id}>
+                {movie.title}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No movies found</p>
+        )}
       </div>
-      </>
-      
+
+      <Footer />
+    </>
   )
 }
 
-export default MoviesPage
+export default MoviesPage;

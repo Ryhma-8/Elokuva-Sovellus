@@ -7,6 +7,7 @@ import SearchBar from "../components/HeroBlock/searchBar";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import "../css/HeroBlock.css";
+import TheatreShowtimesSection from "../components/TheatreShowtimesSection.jsx";
 
 function LandingPage() {
   const [movieName, setMovieName] = useState("Dune");
@@ -14,7 +15,6 @@ function LandingPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   
-
   // Haetaan ekalla latauksella Dune elokuvat
   useEffect(() => {
     fetchMovies(movieName, 1);
@@ -40,7 +40,6 @@ function LandingPage() {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
     fetchMovies(movieName, 1);
   }
-
 
   return (
     <>
@@ -69,6 +68,16 @@ function LandingPage() {
           </InfiniteScroll>
         </div>
       </div>
+
+      <TheatreShowtimesSection
+        title="Next movie presentations"
+        showTheatrePicker={true}
+        showDatePicker={false} 
+        initialCount={4}
+        step={4}
+        showMore={false}
+      />
+
       <Footer />
     </>
   );

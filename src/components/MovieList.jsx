@@ -6,7 +6,13 @@ function isSameFinnkinoDay(dateStr) {
   return dateStr === formatFinnkinoDate(new Date());
 }
 
-export default function MovieList({ shows, selectedDate, initialCount = 8 }) {
+export default function MovieList({
+  shows,
+  selectedDate,
+  initialCount = 8,
+  step = initialCount,
+  showMore = true,
+}) {
   const [visibleCount, setVisibleCount] = useState(initialCount);
   const todaySelected = isSameFinnkinoDay(selectedDate);
   const now = new Date();
@@ -45,9 +51,9 @@ export default function MovieList({ shows, selectedDate, initialCount = 8 }) {
         ))}
       </div>
 
-      {canLoadMore && (
+      {showMore && canLoadMore && (
         <div className="load-more">
-          <button onClick={() => setVisibleCount((v) => v + initialCount)}>Show more</button>
+          <button onClick={() => setVisibleCount((v) => v + step)}>Show more</button>
         </div>
       )}
     </>
