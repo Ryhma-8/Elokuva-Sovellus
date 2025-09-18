@@ -6,7 +6,6 @@ import LandingPage from "./screens/landingPage.jsx";
 import ShowtimesPage from "./screens/ShowtimesPage.jsx";
 import MoviesPage from "./screens/MoviesPage.jsx";
 import MoviePage from "./screens/moviePage.jsx";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
