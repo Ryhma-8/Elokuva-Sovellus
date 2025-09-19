@@ -3,7 +3,7 @@ import { useUser } from "../context/useUser"
 import '../css/authentication.css'
 
 export const AuthenticationMode = Object.freeze({
-    SignIn: 'Login',
+    SignIn: 'SignIn',
     SignUp: 'SignUp'
 })
 
@@ -58,6 +58,8 @@ export default function Authentication({authenticationMode}) {
           type="password"
           className="form-input"
           placeholder="Password"
+          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+          title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
           required

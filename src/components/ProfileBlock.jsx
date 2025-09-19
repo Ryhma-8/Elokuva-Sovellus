@@ -12,7 +12,7 @@ export default function ProfileBlock() {
             <h2 className="profile-title">Profile</h2>
             <p className="username">Username: user123</p>
             <p className="user-email">consumer@example.com</p>
-            <div className="buttons">
+            <div className="profile-buttons">
                 <button className="log-out-button">Log out</button>
                 <button className="delete-button" onClick={handleSubmit}>Delete account</button>
             </div>

@@ -7,8 +7,6 @@
     margin: 32px auto;
 }
 
-.profile-content{
-}
 .profile-title{
     font-size: 32px;
     color: #000;
@@ -21,8 +19,10 @@
     gap: 16px;
 }
 
-.buttons {
+.profile-buttons button {
     display: flex;
     align-items: right;
     gap: 8px;
+    background-color: none;
+    border-radius: 32px;
 }
