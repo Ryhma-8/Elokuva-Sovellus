@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "../css/movieBlock.css";
-import { getMovieCredits } from "../services/creditSearch";
+import "../../css/movieBlock.css";
+import { getMovieCredits } from "../../services/creditSearch";
 
 const MovieBlock = ({ movieId }) => {
   const [movie, setMovie] = useState(null);

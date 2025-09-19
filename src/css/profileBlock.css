@@ -1,0 +1,28 @@
+.profile-block {
+    width: 100%;
+    max-width: 1159px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 32px auto;
+}
+
+.profile-title{
+    font-size: 32px;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-buttons button {
+    display: flex;
+    align-items: right;
+    gap: 8px;
+    background-color: none;
+    border-radius: 32px;
+}

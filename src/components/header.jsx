@@ -31,6 +31,16 @@ export default function Header() {
               (MoviePage)
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/profile" className={({ isActive }) => (isActive ? "active" : "")}>
+              Profile
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
+              Sign in
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </header>
