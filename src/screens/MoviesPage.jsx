@@ -1,20 +1,20 @@
 import React from 'react'
 import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import useDropDown from './components/useDropDown'
+import useDropDown from '../components/useDropDown'
+import "../css/MoviesPage.css"
 import { Card } from 'react-bootstrap'
-import './App.css'
+import Footer from '../components/footer'
+import Header from '../components/header'
 
-
-function App() {
+function MoviesPage() {
   const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, page, totalPages,
           selectedGenre , fetchMoviesByGenre, movies, fetchMoviesByLanguage, fetchMoviesByReview, setSelectedReview, selectedReview } = useDropDown()
 
 
   return (
-    <><header className="header-tila">
-      <h3>Sample</h3>
-    </header>
+    <>
+    <Header></Header>
     <div className="napit">
         <Dropdown>
           <Dropdown.Toggle className="genreNappi rounded-btn" variant="" id="dropdown-basic"> {/* variant="succes" muuttaa napin vihreäksi */}
@@ -131,10 +131,10 @@ function App() {
                 </button>
               </div>
             )}
-      
-      </>
+      <Footer></Footer>
+  </>
       
   )
 }
 
-export default App
+export default MoviesPage

@@ -40,7 +40,7 @@ function useDropDown() {
       const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?vote_average.gte=${min}&vote_average.lte=${max}&page=${page}`,
          {
           headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}` 
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}` 
           }
         }
       )
@@ -68,7 +68,7 @@ function useDropDown() {
       const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&language=en&page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
           }
         }
       )
@@ -96,7 +96,7 @@ function useDropDown() {
       const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?with_original_language=${langCode}&page=${page}`,
         {
           headers: {
-            'Authorization': `Bearer ${import.meta.env.VITE_API_KEY}`
+            'Authorization': `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
           }
         }
       )
@@ -125,7 +125,7 @@ function useDropDown() {
     const response = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?&language=en`,
     {
       headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`
+        Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
       }
     }
     )
