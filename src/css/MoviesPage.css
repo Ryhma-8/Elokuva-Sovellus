@@ -1,3 +1,39 @@
+.load-container {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1em;
+}
+
+.load-button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: gold;
+    color: black;
+    cursor: pointer;
+}
+
+.napit {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+    padding: 1em;
+}
+
+
+.leffa-kortit {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+    padding: 1em;
+}
+
+.kortti {
+    width: 16em;
+    box-sizing: border-box;
+}
+
 .header-tila {
     width: 100%;
 }
@@ -50,3 +86,5 @@
     border-color: gold;
     color: black;
 }
+
+
