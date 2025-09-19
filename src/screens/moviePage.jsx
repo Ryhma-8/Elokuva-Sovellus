@@ -1,6 +1,7 @@
 import React from "react";
 import MovieBlock from "../components/MovieBlock";
-
+import ReviewCarousel from '../components/ReviewCarousel'
+import LeaveReview from '../components/LeaveReview'
 import Header from "../components/header";
 import Footer from "../components/footer";
 
@@ -10,7 +11,10 @@ const MoviePage = () => {
       <Header /> 
       <div>
         <MovieBlock movieId={121} />
+        <ReviewCarousel />
+        <LeaveReview />
       </div>
+      
       <Footer /> 
     </>
   );
