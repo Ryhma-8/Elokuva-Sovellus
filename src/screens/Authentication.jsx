@@ -18,7 +18,7 @@ export default function Authentication({authenticationMode}) {
         signUp : signIn
 
         signFunction().then(response => {
-            navigate(authenticationMode === AuthenticationMode.SignUp ? '/signin': '/')
+            navigate(authenticationMode === AuthenticationMode.SignUp ? '/login': '/')
         })
         .catch (error => {
             alert(error)
@@ -70,7 +70,7 @@ export default function Authentication({authenticationMode}) {
         </button>
 
         <Link className="auth-link"
-          to={authenticationMode === AuthenticationMode.SignIn ? "/signup" : "/signin"}
+          to={authenticationMode === AuthenticationMode.SignIn ? "/register" : "/login"}
         >
           {authenticationMode === AuthenticationMode.SignIn
             ? "No account? Sign up"

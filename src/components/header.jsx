@@ -37,7 +37,7 @@ export default function Header() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/signin" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
               Sign in
             </NavLink>
           </li>

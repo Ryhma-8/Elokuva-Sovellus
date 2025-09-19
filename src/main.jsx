@@ -23,8 +23,8 @@ createRoot(document.getElementById("root")).render(
         <Route path="/movies" element={<MoviesPage />} />
         <Route path="/movie" element={<MoviePage />} />
         <Route path="/profile" element={<ProfilePage/>} />
-        <Route path="/signin" element={<Authentication authenticationMode={AuthenticationMode.SignIn}/>} />
-        <Route path="/signup" element={<Authentication authenticationMode={AuthenticationMode.SignUp}/>} />
+        <Route path="/login" element={<Authentication authenticationMode={AuthenticationMode.SignIn}/>} />
+        <Route path="/register" element={<Authentication authenticationMode={AuthenticationMode.SignUp}/>} />
       </Routes>
     </BrowserRouter>
     </UserProvider>
