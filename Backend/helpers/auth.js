@@ -4,20 +4,22 @@ import dotenv from "dotenv"
 
 dotenv.config()
 const {verify} = jwt
+const {sign} = jwt
 
 const auth = (req,res,next) => {
-    const token = req.headers["authorization"]
-    if (!token){
-        return next(ApiError("No token provided!", 401))
-    }
-    verify(token,process.env.JWT_SECRET_KEY, (err,decode) => {
-        
-        if (err) {
-            return next(ApiError("Failed to authenticate token", 401))
-        }
-
+    if (!req.headers.authorization) return next(ApiError("Unauthorized", 401))
+    
+    try {
+        const token = req.headers.authorization.split(" ")[1]
+        const decodeUser = verify(token,process.env.JWT_SECRET_KEY)
+        const newToken = sign(decodeUser.email,process.env.JWT_SECRET_KEY,{expiresIn: "30m"})
+        res.headers("Access-Control-Expose-Headers","Authorization")
+        res.headers("Authorization", "Bearer " + newToken)
         next()
-    })
+    } catch (err) {
+        return next(ApiError("Unauthorized", 401))
+    }
+    
 }
 
 export {auth}

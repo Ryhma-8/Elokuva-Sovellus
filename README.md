@@ -18,9 +18,9 @@ Backend installation
 ```sh
   Run
 
-$ npm i express cors nodemon pg dotenv cross-env jsonwebtoken bcrypt
+$ npm i express cors nodemon pg dotenv cross-env jsonwebtoken bcrypt joi fs
 
   For tests
 
-$ npm i mocha-chai
+$ npm i mocha chai --save-dev
 ```

@@ -3,11 +3,25 @@
 --
 
 \restrict kfQGNGkOStGBjqVVWgXPUKSVv52RdaldFhCjHh3qfneNE9ADzkmPfyFVW1gWc8G
-
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 17.6
 
 -- Started on 2025-09-17 19:39:55
+
+DROP TABLE IF EXISTS public."Reviews" CASCADE;
+DROP TABLE IF EXISTS public."Presenting_times" CASCADE;
+DROP TABLE IF EXISTS public."Group_movies" CASCADE;
+DROP TABLE IF EXISTS public."Group_members" CASCADE;
+DROP TABLE IF EXISTS public."Group" CASCADE;
+DROP TABLE IF EXISTS public."Favorites" CASCADE;
+DROP TABLE IF EXISTS public."Account" CASCADE;
+DROP SEQUENCE IF EXISTS public."Account_id_seq" CASCADE;
+DROP SEQUENCE IF EXISTS public."Favorites_id_seq" CASCADE;
+DROP SEQUENCE IF EXISTS public."Group_id_seq" CASCADE;
+DROP SEQUENCE IF EXISTS public."Group_members_id_seq" CASCADE;
+DROP SEQUENCE IF EXISTS public."Group_movies_id_seq" CASCADE;
+DROP SEQUENCE IF EXISTS public."Presenting_times_id_seq" CASCADE;
+DROP SEQUENCE IF EXISTS public."Reviews_id_seq" CASCADE;
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;

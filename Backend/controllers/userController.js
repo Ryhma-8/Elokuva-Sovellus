@@ -3,6 +3,7 @@ import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../helpers/apiErrorClass.js";
 import dotenv from "dotenv"
+import Joi from "joi"
 
 dotenv.config()
 const {sign} = jwt
@@ -12,6 +13,13 @@ const register = async (req, res, next) => {
     
     if (!username || !email || !password || !email.includes('@')) {
         return next(new ApiError("Username, email and password are required",400))
+    }
+
+    const passwordSchema = Joi.string().min(8).pattern(new RegExp("^(?=.*[A-Z])(?=.*[0-9]).+$"))
+    const {error} = passwordSchema.validate(password)
+
+    if (error) {
+        return next(new ApiError("Password didn't meet all of the requirements",400))
     }
 
     try {
@@ -48,11 +56,12 @@ const login = async (req, res, next) => {
                 return next(new ApiError("Email or password is wrong!",401))
             }
 
-            const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY)
-            res.status(200).json({
+            const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '30m'})
+            return res.header("Access-Control-Expose-Headers","Authorization")
+            .header("Authorization","Bearer " + token)
+            .status(200).json({
                     id: dbUser.id,
                     email: dbUser.email,
-                    token,
             }
             )})
         
