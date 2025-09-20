@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha *.test.js",
-    "testStart": "cross-env NODE_ENV=test node index.js",
+    "testStart": "cross-env NODE_ENV=test nodemon index.js",
     "devStart": "cross-env NODE_ENV=development nodemon index.js"
   },
   "keywords": [],
@@ -14,6 +14,7 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cross-env": "^10.0.0",
     "dotenv": "^17.2.2",

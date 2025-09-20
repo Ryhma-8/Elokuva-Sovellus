@@ -48,7 +48,8 @@ CREATE TABLE public."Account" (
     id integer NOT NULL,
     email character varying(30) NOT NULL,
     password character varying(255) NOT NULL,
-    username character varying(30) NOT NULL
+    username character varying(30) NOT NULL,
+    refreshToken character varying(255)
 );
 
 

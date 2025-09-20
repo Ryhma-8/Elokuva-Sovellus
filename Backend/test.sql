@@ -12,7 +12,8 @@ CREATE TABLE public."Account" (
     id SERIAL PRIMARY KEY,
     email VARCHAR(30) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    username VARCHAR(30) NOT NULL
+    username VARCHAR(30) NOT NULL,
+    refreshToken VARCHAR(255)
 );
 
 CREATE TABLE public."Favorites" (

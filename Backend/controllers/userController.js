@@ -1,4 +1,4 @@
-import { registerUser, userExists } from "../models/user.js";
+import { registerUser, userExists, insertRefreshToken, getUserWithRefreshToken, deleteRefreshToken } from "../models/userModel.js";
 import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../helpers/apiErrorClass.js";
@@ -14,6 +14,8 @@ const register = async (req, res, next) => {
     if (!username || !email || !password || !email.includes('@')) {
         return next(new ApiError("Username, email and password are required",400))
     }
+    const dbUser = await userExists(email)
+    if (dbUser.rows.length > 0) return next (new ApiError("Account already registered for this email", 400))
 
     const passwordSchema = Joi.string().min(8).pattern(new RegExp("^(?=.*[A-Z])(?=.*[0-9]).+$"))
     const {error} = passwordSchema.validate(password)
@@ -57,7 +59,18 @@ const login = async (req, res, next) => {
             }
 
             const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '30m'})
-            return res.header("Access-Control-Expose-Headers","Authorization")
+            const refreshToken = sign({user: dbUser.email}, process.env.JWT_REFRESH_SECRET_KEY,{expiresIn: '15d'})
+
+            insertRefreshToken(refreshToken,dbUser.email)
+
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                maxAge: 7*24*60*60*1000,
+                sameSite: "lax", // suojaa CSRF
+                secure: false // aseta True kun vaihdetaan localahostista muualle, True siis tekee sen että cookie lähtee vain https yhdteyden yli
+            })
+
+            res.header("Access-Control-Expose-Headers","Authorization")
             .header("Authorization","Bearer " + token)
             .status(200).json({
                     id: dbUser.id,
@@ -71,4 +84,27 @@ const login = async (req, res, next) => {
     }
 }
 
-export { register, login };
+const logout = async (req, res, next) => {
+    // client puolella pitää nollata myös access tokeni
+    const cookies = req.cookies
+    if (!cookies?.refreshToken) return next(new ApiError("No refresh token", 401))
+    const refreshToken = cookies.refreshToken
+    const foundUser =  await getUserWithRefreshToken(refreshToken)
+    if (!foundUser) {
+        res.clearCookie('refreshToken', 
+            {httpOnly: true,
+            maxAge: 7*24*60*60*1000,
+            sameSite: "lax",
+            secure: false})
+        return res.sendStatus(204)
+    }
+    await deleteRefreshToken(refreshToken)
+    res.clearCookie('refreshToken', 
+            {httpOnly: true,
+            maxAge: 7*24*60*60*1000,
+            sameSite: "lax",
+            secure: false})
+    return res.sendStatus(204)
+}
+
+export { register, login, logout };
