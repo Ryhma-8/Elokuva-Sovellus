@@ -1,4 +1,4 @@
-import { registerUser, userExists } from "../models/user.js";
+import { registerUser, userExists, insertRefreshToken } from "../models/userModel.js";
 import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../helpers/apiErrorClass.js";
@@ -57,7 +57,18 @@ const login = async (req, res, next) => {
             }
 
             const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '30m'})
-            return res.header("Access-Control-Expose-Headers","Authorization")
+            const refreshToken = sign({user: dbUser.email}, process.env.JWT_REFRESH_SECRET_KEY,{expiresIn: '15d'})
+
+            insertRefreshToken(refreshToken,dbUser.email)
+
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                maxAge: 7*24*60*60*1000,
+                sameSite: "lax", // suojaa CSRF
+                secure: false // aseta True kun vaihdetaan localahostista muualle, True siis tekee sen että cookie lähtee vain https yhdteyden yli
+            })
+
+            res.header("Access-Control-Expose-Headers","Authorization")
             .header("Authorization","Bearer " + token)
             .status(200).json({
                     id: dbUser.id,
