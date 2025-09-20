@@ -8,9 +8,9 @@ const {sign} = jwt
 
 const handleTokenRefresh = async (req,res,next) => {
     const cookies = req.cookies
-    if (!cookies?.jwt) return next(new ApiError("No refresh token", 401))
     console.log(cookies)
-    const refreshToken = cookies.jwt
+    if (!cookies?.refreshToken) return next(new ApiError("No refresh token", 401))
+    const refreshToken = cookies.refreshToken
 
     const dbUser = await getUserWithRefreshToken(refreshToken)
     if (!dbUser) return next(new ApiError("Forbidden", 403))

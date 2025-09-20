@@ -16,6 +16,9 @@ const insertRefreshToken = async (refreshToken, email) => {
     return pool.query('UPDATE "Account" SET refreshtoken = $1 WHERE email = $2', [refreshToken,email]);
 }
 
+const deleteRefreshToken = async(refreshToken) => {
+    return pool.query('UPDATE "Account" SET refreshtoken = NULL WHERE refreshtoken = $1', [refreshToken])
+}
 
 
-export { registerUser, userExists, getUserWithRefreshToken, insertRefreshToken };
+export { registerUser, userExists, getUserWithRefreshToken, insertRefreshToken, deleteRefreshToken };
