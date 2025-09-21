@@ -1,5 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "../css/header.css";
+import { logOut } from "../services/logOut.jsx";
 
 export default function Header() {
   return (
@@ -23,7 +24,7 @@ export default function Header() {
           </li>
           <li>
             <NavLink to="/groups" className={({ isActive }) => (isActive ? "active" : "")}>
-              Groups 
+              Groups
             </NavLink>
           </li>
           <li>
@@ -40,6 +41,11 @@ export default function Header() {
             <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
               Sign in
             </NavLink>
+          </li>
+          <li>
+            <Link className="logout-link" onClick={logOut}>
+              Log out
+            </Link>
           </li>
         </ul>
       </nav>
