@@ -122,3 +122,12 @@
 }
 /* <-- "Add for group" */
 
+/* 768px = kortit ja filtterit allekkain */
+@media (max-width: 768px) {
+  .showtimes-grid {
+    grid-template-columns: 1fr;
+  }
+  .showtimes-filters {
+    grid-template-columns: 1fr;
+  }
+}
