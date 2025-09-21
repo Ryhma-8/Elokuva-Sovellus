@@ -20,6 +20,10 @@
     padding: 1em;
 }
 
+.aloitus-otsikko {
+    display: flex;
+    justify-content: center;
+}
 
 .leffa-kortit {
     display: flex;
@@ -54,6 +58,12 @@
     color: black;
 }
 
+.rounded-btn.genreNappi.selected {
+    background-color: gold;
+    border-color: gold;
+    color: black;
+}
+
 .rounded-btn.reviewNappi {
     background-color: white;
     border-color: black;
@@ -67,11 +77,16 @@
 {
     background-color: gold;
     border-color: gold;
-    color: black;
-    
+    color: black;  
 }
 
-.rounded-btn.languageNappi {
+.rounded-btn.reviewNappi.selected {
+    background-color: gold;
+    border-color: gold;
+    color: black;
+}
+
+.rounded-btn.languageNappi { /* luokkien järjestyksellä ei ole väliä eli toimisi samalla tavalla toistepäin .languageNappi.rounded-btn, kunhan molemmat elementit otetaan huomioon */
     background-color: white;
     border-color: black;
     color: black;
@@ -82,6 +97,12 @@
 .rounded-btn.languageNappi:focus,
 .rounded-btn.languageNappi:active
 {
+    background-color: gold;
+    border-color: gold;
+    color: black;
+}
+
+.rounded-btn.languageNappi.selected { /*(jatko) ja silloin tämä css tyyli on aktiivinen */
     background-color: gold;
     border-color: gold;
     color: black;

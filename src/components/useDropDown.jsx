@@ -33,8 +33,38 @@ function useDropDown() {
   const [selectedLanguage, setSelectedLanguage] = useState(null)
   const [selectedGenre, setSelectedGenre] = useState(null)
   const [selectedReview, setSelectedReview] = useState(null)
+  const [selectedGenreName, setSelectedGenreName] = useState(null) /* nämä hoitavat että valittu genre, arvosteluväli tai kieli pysyy näkyvillä napissa */
+  const [selectedReviewName, setSelectedReviewName] = useState(null) /* nämä hoitavat että valittu genre, arvosteluväli tai kieli pysyy näkyvillä napissa */
+  const [selectedLanguageName, setSelectedLanguageName] = useState(null) /* nämä hoitavat että valittu genre, arvosteluväli tai kieli pysyy näkyvillä napissa */
 
+  
+  
+  const fetchPopularMovies = async (page = 1) => {
+    try {
+      const response = await axios.get(`https://api.themoviedb.org/3/movie/popular?page=${page}`,
+        {
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`
+        }
+      }
+    )
+    setMovies((prev) => 
+    page === 1
+    ? response.data.results
+    : [...prev, ...response.data.results.filter(
+      (newMovie) => !prev.some((m) => m.id === newMovie.id)
+    )]
+    )
     
+    setTotalPages(response.data.total_pages)
+    setPage(page)
+  } catch (error) {
+    console.log("Error fetching popular movies", error)
+  }
+}
+
+
+
   const fetchMoviesByReview = async ({ min, max }, page = 1 ) => {
     try {
       const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?vote_average.gte=${min}&vote_average.lte=${max}&page=${page}`,
@@ -135,6 +165,18 @@ function useDropDown() {
       }
     } 
 
+
+    useEffect(() => {
+      
+    
+      fetchPopularMovies()
+    
+      
+    }, [])
+    
+
+
+
     useEffect(() => {
     // tarkistetaan ehdoilla, että minkä kriteerin kautta leffoja haetaan
 
@@ -166,8 +208,14 @@ function useDropDown() {
     fetchMoviesByReview,
     setSelectedReview,
     page,
-    totalPages
+    totalPages,
+    fetchPopularMovies,
+    setSelectedGenreName,
+    selectedGenreName,
+    setSelectedReviewName,
+    selectedReviewName,
+    setSelectedLanguageName,
+    selectedLanguageName
   }
 }
-
 export default useDropDown

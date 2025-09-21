@@ -9,7 +9,9 @@ import Header from '../components/header'
 
 function MoviesPage() {
   const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, page, totalPages,
-          selectedGenre , fetchMoviesByGenre, movies, fetchMoviesByLanguage, fetchMoviesByReview, setSelectedReview, selectedReview } = useDropDown()
+          selectedGenre, fetchMoviesByGenre, movies, fetchMoviesByLanguage, fetchMoviesByReview, setSelectedReview,
+          selectedReview, fetchPopularMovies, setSelectedGenreName, selectedGenreName, setSelectedReviewName, selectedReviewName,
+          setSelectedLanguageName, selectedLanguageName } = useDropDown()
 
 
   return (
@@ -17,8 +19,11 @@ function MoviesPage() {
     <Header></Header>
     <div className="napit">
         <Dropdown>
-          <Dropdown.Toggle className="genreNappi rounded-btn" variant="" id="dropdown-basic"> {/* variant="succes" muuttaa napin vihreäksi */}
-            Genre {/* jos ei ole mitään variant kohdasssa niin bootstrap laittaa napin siniseksi joten variant="" korjaa ongelman */}
+          <Dropdown.Toggle className={`genreNappi rounded-btn ${selectedGenreName ? "selected" : ""}`}
+          id="dropdown-basic"> {/* variant="succes" muuttaa napin vihreäksi */}
+             
+             
+             {selectedGenreName || "Genre"} {/* jos ei ole mitään variant kohdasssa niin bootstrap laittaa napin siniseksi joten variant="" korjaa ongelman */}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
@@ -27,8 +32,12 @@ function MoviesPage() {
                 <Dropdown.Item
                  key={genre.id}
                  onClick={() => {
-                  setSelectedGenre(genre.id) // jos haetaan genren perusteella niin
-                  setSelectedLanguage(null) // pitää asettaa nulliksi muut vaihtoehdot ettei tule päällekkäisiä hakuja ja pystyy vaihtamaan lennosta mihin hakukriteetiin tahansa
+                  console.log("Genre click", genre.id, genre.name)
+                  setSelectedGenre(genre.id) // dropdowniin haetaan genret ideen perusteella
+                  setSelectedGenreName(genre.name) // asetetaan haetun genren nimi nappiin
+                  setSelectedLanguageName(null) /* nollataan kieli jos sieltä haettu ennen genreä */
+                  setSelectedReviewName(null) /* nollataan arvosteluväli jos sieltä haettu ennen genreä */
+                  setSelectedLanguage(null) /* nollataan muut haut ettei tule päällekkäisiä hakuja */
                   setSelectedReview(null)
                   }}> 
                   {/* React tarvitsee uniikin keyn jokaiselle listan ID:lle, jotta se osaa päivittää näkymän tehokkaasti. */}
@@ -43,8 +52,11 @@ function MoviesPage() {
 
         {/* Reviews dropdown */}
         <Dropdown>
-          <Dropdown.Toggle className="reviewNappi rounded-btn" variant="" id="reviews-dropdown">
-            Reviews
+          <Dropdown.Toggle className={`reviewNappi rounded-btn ${selectedReviewName ? "selected" : ""} `}
+          id="reviews-dropdown">
+            
+            
+            {selectedReviewName || "Reviews"}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
@@ -54,8 +66,11 @@ function MoviesPage() {
                 key={review.label}
                 onClick={() => {
                   console.log("Clicked review", review)
-                  setSelectedReview(review) // jos haetaan arvostelujen perusteella dropdownista niin
-                  setSelectedGenre(null) // pitää asettaa nulliksi muut vaihtoehdot ettei tule päällekkäisiä hakuja ja pystyy vaihtamaan lennosta mihin hakukriteetiin tahansa
+                  setSelectedReview(review) /* dropdowniin haetaan tehty taulukko useDropDown tiedostosta */
+                  setSelectedReviewName(review.label) /* asetetaan nappiin haettu arvosteluväli */
+                  setSelectedGenreName(null) /* nollataan genren nimi jos sieltä haettu ennen arvostelua */
+                  setSelectedLanguageName(null) /* nollataan kieli jos sieltä haettu ennen arvostelua */
+                  setSelectedGenre(null) /* nollataan muut haut ettei tule päällekkäisiä hakuja */
                   setSelectedLanguage(null)
                 }}>
                    {review.label}
@@ -70,8 +85,11 @@ function MoviesPage() {
 
         {/* Languages dropdown */}
         <Dropdown>
-          <Dropdown.Toggle className="languageNappi rounded-btn" variant="" id="language-dropdown">
-            Language
+          <Dropdown.Toggle className={`languageNappi rounded-btn ${selectedLanguageName ? "selected" : ""}`} /* jos selectedLanguageName valittuna niin nappiin lisätään selected -> (katso css tiedosto)*/
+          id="language-dropdown">
+            
+            
+            {selectedLanguageName || "Language"}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
@@ -80,8 +98,11 @@ function MoviesPage() {
               <Dropdown.Item
               key={lang.code} 
               onClick={() => {
-                setSelectedLanguage(lang.code) // jos haetaan kielen perusteella dropdownista niin
-                setSelectedGenre(null) // pitää asettaa nulliksi muut vaihtoehdot ettei tule päällekkäisiä hakuja ja pystyy vaihtamaan lennosta mihin hakukriteetiin tahansa
+                setSelectedLanguage(lang.code) /* dropdowniin haetaan tehty taulukko useDropDown tiedostosta */
+                setSelectedLanguageName(lang.label) /* tallennetaan valittu kieli näkyviin nappiin */
+                setSelectedGenreName(null) /* nollataan genren nimi jos sieltä haettu ennen kieltä */
+                setSelectedReviewName(null) /* nollataan arvosteluväli jos sieltä haettu ennen kieltä */
+                setSelectedGenre(null) /* nollataan muut haut ettei tule päällekkäisiä hakuja */
                 setSelectedReview(null)
               }}>
                 {lang.label}
@@ -94,6 +115,9 @@ function MoviesPage() {
         </Dropdown>
         
       </div>
+              {movies.length > 0 && !selectedGenre && !selectedLanguage && !selectedReview && (
+              <h3 className="aloitus-otsikko">Popular right now</h3>
+              )}
       {/* leffa kortit */}
       <div className="leffa-kortit"> {/* koko korttilistan asetteluun */}
             {movies.length > 0 ? (
@@ -126,6 +150,7 @@ function MoviesPage() {
                   if (selectedGenre) fetchMoviesByGenre(selectedGenre, page + 1) // pitää laittaa ehdot tänne myös jotta ohjelma tietää millä sivulla tarvitsee ladata lisää leffoja
                   else if (selectedLanguage) fetchMoviesByLanguage(selectedLanguage, page + 1)
                   else if (selectedReview) fetchMoviesByReview(selectedReview, page + 1)
+                  else fetchPopularMovies(page + 1)
                 }}>
                     Load More
                 </button>
