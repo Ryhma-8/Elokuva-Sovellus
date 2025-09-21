@@ -9,7 +9,7 @@ const MoviePage = () => {
   return (
     <div>
       <Header></Header>
-        <MovieBlock movieId={121} />
+        <MovieBlock movieId={123} />
         <ReviewCarousel />
         <LeaveReview />
       <Footer></Footer>
