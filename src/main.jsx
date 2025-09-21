@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserProvider from "./context/UserProvider.jsx";
 import "./css/index.css";
-import App from "./screens/App.jsx";
+//import App from "./screens/App.jsx";
 import LandingPage from "./screens/landingPage.jsx";
 import ShowtimesPage from "./screens/ShowtimesPage.jsx";
 import MoviesPage from "./screens/MoviesPage.jsx";
