@@ -30,7 +30,7 @@ const register = async (req, res, next) => {
         return res.status(201).json({id: result.rows[0].id, email: result.rows[0].email});
     } catch (error) {
         console.error(error)
-        return next(error)
+        return next(new ApiError("Something went wrong during registration"))
     }
 };
 
@@ -77,7 +77,7 @@ const login = async (req, res, next) => {
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 maxAge: 7*24*60*60*1000,
-                sameSite: "lax", // suojaa CSRF
+                sameSite: "lax", // suojaa CSRF tämä pitää asettaa none kun siirretään palvelimelle
                 secure: false // aseta True kun vaihdetaan localahostista muualle, True siis tekee sen että cookie lähtee vain https yhdteyden yli
             })
 
