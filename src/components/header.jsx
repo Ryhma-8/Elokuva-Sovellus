@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "../css/header.css";
-import { logOut } from "../services/logOut.jsx";
+import {logOut} from "../services/logOut";
 
 export default function Header() {
   return (
@@ -42,11 +43,7 @@ export default function Header() {
               Sign in
             </NavLink>
           </li>
-          <li>
-            <Link className="logout-link" onClick={logOut}>
-              Log out
-            </Link>
-          </li>
+          <Link className="logout-link" onClick={logOut}>Log out</Link>
         </ul>
       </nav>
     </header>
