@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRouter from './routes/userRouter.js';
 import cookieParser from 'cookie-parser';
-
+import favoriteRouter from './routes/favoriteRouter.js';
 
 dotenv.config();
 
@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser())
 
 app.use('/user', userRouter);
+app.use('/api/favorites', favoriteRouter);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
@@ -29,7 +30,7 @@ app.use((err,req,res,next)=> {
     const message = err.message || "Internal server error"
     res.status(statusCode).json({
         err: {
-            messsage: message,
+            message: message,
             status: statusCode
         }
     })

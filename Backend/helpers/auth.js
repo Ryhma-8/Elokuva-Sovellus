@@ -15,7 +15,7 @@ const auth = (req,res,next) => {
         req.user = decodeUser;
         next()
     } catch (err) {
-        return next(ApiError("Unauthorized", 401))
+        return next(new ApiError("Unauthorized", 401))
     }
     
 }
