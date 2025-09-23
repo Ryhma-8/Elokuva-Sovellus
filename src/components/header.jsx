@@ -3,6 +3,7 @@ import "../css/header.css";
 import {logOut} from "../services/logOut";
 import { useUser } from "../context/useUser";
 
+
 export default function Header() {
   const { user, setUser} = useUser();
 
@@ -51,7 +52,11 @@ export default function Header() {
               Sign in
             </NavLink>
           </li>
-          )}
+          <li>
+            <Link className="logout-link" onClick={logOut}>
+              Log out
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
