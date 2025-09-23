@@ -86,6 +86,7 @@ const login = async (req, res, next) => {
             .status(200).json({
                     id: dbUser.id,
                     email: dbUser.email,
+                    username: dbUser.username
             }
             )})
         
