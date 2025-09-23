@@ -1,9 +1,12 @@
-import { Link, NavLink } from "react-router-dom";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink} from "react-router-dom";
 import "../css/header.css";
 import {logOut} from "../services/logOut";
+import { useUser } from "../context/useUser";
 
 export default function Header() {
+  const { user, setUser} = useUser();
+
+
   return (
     <header className="site-header">
       <nav className="nav">
@@ -33,17 +36,22 @@ export default function Header() {
               (MoviePage)
             </NavLink>
           </li>
+          {user?.username ?(
+            <>
           <li>
             <NavLink to="/profile" className={({ isActive }) => (isActive ? "active" : "")}>
-              Profile
+              {user.username}'s Profile
             </NavLink>
           </li>
+          <Link className="logout-link" onClick={() => logOut (setUser)}>Log out</Link>
+          </>
+          ):(
           <li>
             <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
               Sign in
             </NavLink>
           </li>
-          <Link className="logout-link" onClick={logOut}>Log out</Link>
+          )}
         </ul>
       </nav>
     </header>
