@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import userRouter from './routes/userRouter.js';
 import cookieParser from 'cookie-parser';
 import favoriteRouter from './routes/favoriteRouter.js';
+import reviewRouter from './routes/reviewRouter.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(cookieParser())
 
 app.use('/user', userRouter);
 app.use('/api/favorites', favoriteRouter);
+app.use('/api/reviews', reviewRouter);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
