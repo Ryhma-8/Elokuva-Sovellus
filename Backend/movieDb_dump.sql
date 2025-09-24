@@ -225,8 +225,13 @@ CREATE TABLE public."Reviews" (
     movie_id integer NOT NULL,
     account_id integer NOT NULL,
     description character varying NOT NULL,
-    title character varying NOT NULL
+    title character varying NOT NULL,
+    rating integer,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE public."Reviews"
+  ADD CONSTRAINT reviews_rating_check CHECK (rating BETWEEN 1 AND 5);
 
 
 ALTER TABLE public."Reviews" OWNER TO postgres;
