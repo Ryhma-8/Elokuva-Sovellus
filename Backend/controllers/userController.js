@@ -1,4 +1,4 @@
-import { registerUser, userExists, insertRefreshToken, getUserWithRefreshToken, deleteRefreshToken } from "../models/userModel.js";
+import { registerUser, userExists, insertRefreshToken, getUserWithRefreshToken, deleteRefreshToken, deleteUserByEmail } from "../models/userModel.js";
 import { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../helpers/apiErrorClass.js";
@@ -119,4 +119,24 @@ const logout = async (req, res, next) => {
     return res.sendStatus(204)
 }
 
-export { register, login, logout };
+const deleteAccount = async (req,res, next) => {
+    try {
+        const userEmail = req.user.user
+        if(!userEmail) {
+            return next(new ApiError("Unauthorized", 401))
+        }
+
+        await deleteUserByEmail(userEmail)
+
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: false
+        })
+        return res.sendStatus(204)
+    } catch (err) {
+        return next(new ApiError("Failed to delete account", 500))
+    }
+}
+
+export { register, login, logout, deleteAccount };
