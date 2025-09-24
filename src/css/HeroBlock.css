@@ -68,6 +68,17 @@
   flex-shrink: 0; 
 }
 
+.hero-movie-card a,
+.hero-title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.hero-movie-card a:hover,
+.hero-title a:hover {
+  text-decoration: underline;
+}
+
 /* Responsiivisuus puhelimille */
 @media (max-width: 768px) {
   .hero-block {

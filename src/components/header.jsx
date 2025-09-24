@@ -30,12 +30,6 @@ export default function Header() {
               Groups
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/movie" className={({ isActive }) => (isActive ? "active" : "")}>
-              (MoviePage)
-            </NavLink>
-          </li>
-
           {user?.username ? (
             <>
               <li>

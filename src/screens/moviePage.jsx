@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import MovieBlock from "../components/moviePageComponents/MovieBlock";
 import ReviewCarousel from "../components/moviePageComponents/ReviewCarousel";
 import LeaveReview from "../components/moviePageComponents/LeaveReview";
@@ -7,9 +7,8 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 
 const MoviePage = () => {
-  const params = useParams();
-  const routeId = Number(params?.id);
-  const movieId = Number.isFinite(routeId) ? routeId : 123;
+  const location = useLocation();
+  const { movieId } = location.state || {};
 
   const [refreshTick, setRefreshTick] = useState(0);
   const bump = () => setRefreshTick(t => t + 1);
