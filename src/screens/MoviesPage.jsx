@@ -2,6 +2,7 @@ import React from 'react'
 import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import useDropDown from '../components/useDropDown'
+import { Link } from "react-router-dom";
 import "../css/MoviesPage.css"
 import { Card } from 'react-bootstrap'
 import Footer from '../components/footer'
@@ -123,17 +124,21 @@ function MoviesPage() {
             {movies.length > 0 ? (
                 movies.map((movie) => (
                   <Card key={movie.id} style={{ width: "16em" }} className="kortti shadow-sm">
-                    <Card.Img
-                      variant="top"
-                      src={
-                        movie.poster_path
-                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                        : "https://via.placeholder.com/300x450?text=No+Image" 
-                      }
-                      alt={movie.title}
-                    />
+                    <Link to="/movie"  state={{movieId: movie.id}}>
+                      <Card.Img
+                        variant="top"
+                        src={
+                          movie.poster_path
+                          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                          : "https://via.placeholder.com/300x450?text=No+Image" 
+                        }
+                        alt={movie.title}
+                      />
+                    </Link>
                     <Card.Body>
-                      <Card.Title className="fs-6">{movie.title}</Card.Title> {/* korteille annetaan tiedot (leffan nimi) */}
+                      <Link to="/movie"  state={{movieId: movie.id}}>
+                        <Card.Title className="fs-6">{movie.title}</Card.Title> {/* korteille annetaan tiedot (leffan nimi) */}
+                      </Link>
                       <Card.Text className="text-muted">{movie.release_date ? `(${movie.release_date.substring(0, 4)})` : ""}</Card.Text> {/* korteille annetaan tiedot (julkaisuvuosi) */}
                       <Card.Text>⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "No reviews"}</Card.Text> {/* keskiarvo arvostelusta kahden desimaalin tarkkuudella */}
                     </Card.Body>
