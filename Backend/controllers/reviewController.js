@@ -2,7 +2,6 @@ import { ApiError } from '../helpers/apiErrorClass.js'
 import { insertReview, listReviewsByMovie } from '../models/reviewModel.js'
 import { userExists } from '../models/userModel.js'
 
-// ratkaisee account_id tokenista (email -> id)
 async function resolveAccountId(req) {
   if (req.user?.id) return req.user.id
   const email = req.user?.user || req.user?.email
@@ -15,6 +14,14 @@ async function resolveAccountId(req) {
 function parsePositiveInt(x) {
   const n = Number(x)
   return Number.isInteger(n) && n > 0 ? n : null
+}
+
+// tulkitsee ratingin valinnaisena 1..5
+function parseOptionalRating(x) {
+  if (x === undefined || x === null || x === '') return null
+  const n = Number(x)
+  if (!Number.isInteger(n) || n < 1 || n > 5) return undefined // invalid
+  return n
 }
 
 // POST /api/reviews
@@ -30,17 +37,18 @@ export async function addReviewController(req, res, next) {
       return next(new ApiError('description must be 1–250 characters', 400))
     }
 
-    // title ei näy UI:ssa
-    const title = (req.body?.title ?? '').toString()
+    const title = (req.body?.title ?? '').toString() // title ei UI:ssa, mutta DB vaatii NOT NULL
+    const rating = parseOptionalRating(req.body?.rating)
+    if (rating === undefined) return next(new ApiError('rating must be an integer between 1 and 5', 400))
 
-    const row = await insertReview(accountId, movieId, title, description)
+    const row = await insertReview(accountId, movieId, title, description, rating )
     return res.status(201).json(row)
   } catch (err) {
     return next(err)
   }
 }
 
-// GET /api/reviews?movie_id=550&limit=20&offset=0  (julkinen)
+// GET pysyy samana (palauttaa nyt myös ratingin)
 export async function listReviewsByMovieController(req, res, next) {
   try {
     const movieId = parsePositiveInt(req.query?.movie_id)
