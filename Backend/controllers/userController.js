@@ -34,17 +34,6 @@ const register = async (req, res, next) => {
     }
 };
 
-//FRONTTIIN AXIOSILLA PITÄÄ KÄYTTÄÄ
-/*
-axios.post("http://localhost:3001/user/logout", {}, {
-  withCredentials: true
-});
-
-tai globaalisti
-
-axios.defaults.withCredentials = true;
-
-*/
 
 const login = async (req, res, next) => {
 
@@ -69,7 +58,7 @@ const login = async (req, res, next) => {
                 return next(new ApiError("Email or password is wrong!",401))
             }
 
-            const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '30m'})
+            const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '15m'})
             const refreshToken = sign({user: dbUser.email}, process.env.JWT_REFRESH_SECRET_KEY,{expiresIn: '15d'})
 
             insertRefreshToken(refreshToken,dbUser.email)
