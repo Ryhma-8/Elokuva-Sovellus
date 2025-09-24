@@ -16,6 +16,7 @@ const auth = (req,res,next) => {
         next()
     } catch (err) {
         return next(new ApiError("Unauthorized", 401))
+        
     }
     
 }

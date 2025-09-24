@@ -26,7 +26,7 @@ export default function LeaveReview({ movieId, onReviewSent }) {
       await addReview({
         movie_id: movieId,
         description,
-        title: "", // DB vaatii NOT NULL
+        title: "", // käytännössä turha kentä, voi poistaa täältä ja kannasta
         rating: starRating || null, // valinnainen
       });
       setReviewText("");
