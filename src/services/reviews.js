@@ -22,7 +22,7 @@ async function handle(r) {
 
 export async function getReviews(movieId) {
   const url = `${BASE}/api/reviews?movie_id=${encodeURIComponent(movieId)}`;
-  const r = await fetch(url); // julkinen 
+  const r = await fetch(url);
   return handle(r); // -> { id, account_id, movie_id, title, description, rating }
 }
 
@@ -30,7 +30,6 @@ export async function getReviews(movieId) {
 //Tässä uudella tokenilla tehdyn kutsun voisi toteuttaa paremmin, esim axiosilla on oma intercepter ominaisuus tätä varten 
 export async function addReview({ movie_id, description, rating, title = '' }) {
   const user = JSON.parse(sessionStorage.getItem('user'))
-  console.log(user.accessToken)
   const r = await fetch(`${BASE}/api/reviews`, {
     method: 'POST',
     headers: {
@@ -42,7 +41,6 @@ export async function addReview({ movie_id, description, rating, title = '' }) {
   if (r.status===401) {
     await refreshAccessToken()
     const user = JSON.parse(sessionStorage.getItem('user'))
-    console.log(user.accessToken)
     const newR = await fetch(`${BASE}/api/reviews`, {
       method: 'POST',
       headers: {

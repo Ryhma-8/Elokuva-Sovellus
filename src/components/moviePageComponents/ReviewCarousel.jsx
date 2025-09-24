@@ -67,6 +67,19 @@ function ReviewCarousel({ movieId, movieTitle, refreshTick = 0 }) {
                 <p>{review.author_email}</p>
 
               </div>
+              <div className="review-timestamp">
+              <div>
+              <p>
+                {new Date(review.created_at).toLocaleString('fi-FI', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+              </div>
+              </div>
             </div>
           </div>
 

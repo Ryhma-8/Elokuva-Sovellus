@@ -19,6 +19,7 @@ export async function listReviewsByMovie(movieId, limit = 50, offset = 0) {
       r.title,
       r.description,
       r.rating,
+      r.created_at,
       a.email AS author_email
     FROM public."Reviews" r
     JOIN public."Account" a ON a.id = r.account_id
