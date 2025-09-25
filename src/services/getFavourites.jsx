@@ -1,24 +1,37 @@
 import axios from "axios";
 import {refreshAccessToken} from "../services/refreshToken.js"
 
-
-const API_URL = import.meta.env.VITE_API_URL;
-
 export const getFavourites = async () => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    console.log(user)
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/favorites`, { withCredentials: true, headers: {Authorization: `Bearer ${user?.accessToken}`} });
+  const url = `${import.meta.env.VITE_API_URL}/api/favorites`;
 
-  console.log(response)
-  if (response.status===401) {
-    await refreshAccessToken()
-    const user = JSON.parse(sessionStorage.getItem('user'))
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    const response = await axios.get(url, {
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${user?.accessToken}` },
+    });
+    console.log(response.data)
+    return response.data;
 
-    const newR = await axios.get(`${import.meta.env.VITE_API_URL}/api/favorites`, { withCredentials: true,
-    headers: {Authorization: `Bearer ${user?.accessToken}`} });
-    console.log(newR)
-    return newR.data;
+  } catch (err) {
+    if (err.response?.status === 401) {
+      await refreshAccessToken();
+      const user = JSON.parse(sessionStorage.getItem("user"));
+
+      try {
+        const retry = await axios.get(url, {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${user?.accessToken}` },
+        });
+        console.log(retry.data)
+        return retry.data;
+      } catch (retryErr) {
+        console.error("Retry after refresh failed", retryErr);
+        throw new Error("Login required");
+      }
+    }
+
+    console.error("getFavourites failed", err);
+    throw err;
   }
-
-  return response.data;
 };
