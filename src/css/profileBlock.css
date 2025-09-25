@@ -2,8 +2,7 @@
     width: 100%;
     max-width: 1159px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
     margin: 32px auto;
 }
 
@@ -11,18 +10,25 @@
     font-size: 32px;
     color: #000;
     margin-bottom: 16px;
+    margin-top: 0;
 }
 
 .profile-content {
     display: flex;
     flex-direction: column;
+    font-size: 16px;
     gap: 16px;
 }
 
-.profile-buttons button {
+.delete-button {
     display: flex;
-    align-items: right;
-    gap: 8px;
-    background-color: none;
+    justify-content: center;
+    align-items: center;
+    min-width: 132px;
+    min-height: 32px;
+    width: 132px;
+    height: 32px;
+    margin: 4px auto;
+    background-color: white;
     border-radius: 32px;
 }
