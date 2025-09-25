@@ -2,6 +2,8 @@ import React from "react";
 import ProfileBlock from "../components/ProfileBlock";
 import { UserContext } from "../context/UserContext";
 import { Navigate } from "react-router-dom";
+import Header from "../components/header"
+import FavouriteList from "../components/favouriteList";
 
 const ProfilePage = () => {
   const {user} = React.useContext(UserContext);
@@ -12,7 +14,9 @@ const ProfilePage = () => {
   }
   return (
     <div>
+      <Header />
       <ProfileBlock />
+      <FavouriteList />
     </div>
   );
 };

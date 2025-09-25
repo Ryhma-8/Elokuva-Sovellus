@@ -1,8 +1,17 @@
+.form-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
 .form-background {
     display: flex;
-    width: 100%;
+    width: 90%;
+    height: 90%;
     max-width: 519px;
-    height: 681px;
+    max-height: 681px;
     background-color: rgb(36, 36, 36);
     color : #FFF;
     justify-content: center;

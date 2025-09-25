@@ -8,7 +8,6 @@ async function handle(r) {
   if (!r.ok) {
     const msg =
       data?.err?.message ||
-      data?.error?.message ||
       r.statusText ||
       'Request failed';
     const e = new Error(msg);
@@ -27,8 +26,6 @@ export async function getReviews(movieId) {
   return handle(r); // -> { id, account_id, movie_id, title, description, rating }
 }
 
-
-//Tässä uudella tokenilla tehdyn kutsun voisi toteuttaa paremmin, esim axiosilla on oma intercepter ominaisuus tätä varten 
 
 //Tässä uudella tokenilla tehdyn kutsun voisi toteuttaa paremmin, esim axiosilla on oma intercepter ominaisuus tätä varten 
 export async function addReview({ movie_id, description, rating, title = '' }) {

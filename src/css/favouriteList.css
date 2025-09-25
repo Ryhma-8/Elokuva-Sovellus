@@ -1,0 +1,50 @@
+.favourite-wrapper{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding:0 16px;
+    max-width: 1200px;
+}
+
+.favourite-wrapper h4{
+    align-self: flex-start;
+    margin-bottom: 16px;
+}
+
+.favourite-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    list-style-type: none;
+    gap: 16px;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+}
+
+.favourite-list-item {
+    display: flex;
+    flex-direction: column;
+    width: 274px;
+    max-height: 550px;
+    background-color: #FED41F;
+    overflow-y: auto;
+    border-radius: 16px;
+    padding: 10px;
+}
+
+.movie-poster {
+    width: 100%;
+    height: auto;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.movie-title{
+    font-size: 16px;
+    font-weight: bold;
+    overflow: hidden;
+    height: 48px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
