@@ -18,26 +18,26 @@ const initializeTestDb = async () => {
 }
 
 const insertTestUser = (user) => {
-    hash(user.password,10,(err,hashedPassword) =>{
-        if (err) {
-            console.error("Error hashing",err)
+  return new Promise((resolve, reject) => {
+    hash(user.password, 10, (err, hashedPassword) => {
+      if (err) return reject(err);
+      pool.query(
+        'INSERT INTO "Account" (username, email, password) VALUES ($1, $2, $3) RETURNING id',
+        [user.username, user.email, hashedPassword],
+        (err, result) => {
+          if (err) return reject(err);
+          console.log("Test user inserted successfully");
+          resolve(result.rows[0]);
         }
-        pool.query('INSERT INTO "Account" (username, email, password) VALUES ($1, $2, $3)',
-            [user.username,user.email,hashedPassword],
-            (err) => {
-                if (err){
-                    console.error("Error inserting test user:",err)
-                }
-                else {
-                    console.log("Test user inserted succesfully")
-                }
-            }
-        )
-    })
-}
+      );
+    });
+  });
+};
 
 const getToken = (email) => {
     return jwt.sign({email}, process.env.JWT_SECRET_KEY,{expiresIn: "2m"})
 }
+
+
 
 export {initializeTestDb, insertTestUser, getToken}
