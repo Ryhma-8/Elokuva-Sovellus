@@ -27,6 +27,7 @@ export default function Authentication({authenticationMode}) {
 
 
   return (
+  <div className="form-wrapper">
     <div className="form-background">
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-fields">
@@ -83,5 +84,6 @@ export default function Authentication({authenticationMode}) {
         </div>
       </form>
     </div>
+  </div>  
   )
 }

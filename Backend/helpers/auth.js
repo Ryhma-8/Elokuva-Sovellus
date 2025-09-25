@@ -12,7 +12,6 @@ const auth = (req,res,next) => {
         const decodeUser = verify(token,process.env.JWT_SECRET_KEY)
         if (!decodeUser) return next(new ApiError("Unauthorized",401))
         req.user = decodeUser;
-        
         next()
     } catch (err) {
         return next(new ApiError("Unauthorized", 401))

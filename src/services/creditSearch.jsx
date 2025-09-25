@@ -36,6 +36,7 @@ export const getMovieCredits = async (movieId) => {
       actors,
       poster: details.poster_path,
       backdrop: details.backdrop_path,
+      vote_average: details.vote_average.toFixed(1),
     };
   } catch (error) {
     console.error("Error fetching movie details:", error);
