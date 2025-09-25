@@ -8,7 +8,6 @@ async function handle(r) {
   if (!r.ok) {
     const msg =
       data?.err?.message ||
-      data?.error?.message ||
       r.statusText ||
       'Request failed';
     const e = new Error(msg);
@@ -29,16 +28,12 @@ export async function getReviews(movieId) {
 
 
 //Tässä uudella tokenilla tehdyn kutsun voisi toteuttaa paremmin, esim axiosilla on oma intercepter ominaisuus tätä varten 
-
-//Tässä uudella tokenilla tehdyn kutsun voisi toteuttaa paremmin, esim axiosilla on oma intercepter ominaisuus tätä varten 
 export async function addReview({ movie_id, description, rating, title = '' }) {
-  const user = JSON.parse(sessionStorage.getItem('user'))
   const user = JSON.parse(sessionStorage.getItem('user'))
   console.log(user.accessToken)
   const r = await fetch(`${BASE}/api/reviews`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${user.accessToken}`,
       Authorization: `Bearer ${user.accessToken}`,
       'Content-Type': 'application/json',
     },
@@ -47,20 +42,6 @@ export async function addReview({ movie_id, description, rating, title = '' }) {
   if (r.status===401) {
     await refreshAccessToken()
     const user = JSON.parse(sessionStorage.getItem('user'))
-    const newR = await fetch(`${BASE}/api/reviews`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${user.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ movie_id, description, rating, title }),
-    });
-    return handle(newR);
-  }
-  if (r.status===401) {
-    await refreshAccessToken()
-    const user = JSON.parse(sessionStorage.getItem('user'))
-    console.log(user.accessToken)
     const newR = await fetch(`${BASE}/api/reviews`, {
       method: 'POST',
       headers: {

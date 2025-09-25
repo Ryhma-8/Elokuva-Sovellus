@@ -18,7 +18,7 @@ const handleTokenRefresh = async (req,res,next) => {
     jwt.verify(refreshToken,process.env.JWT_REFRESH_SECRET_KEY,
         (err, decoded) => {
             if (err || decoded.user !== dbUser.email) return next(new ApiError("Forbidden", 403))
-        const token = sign({id: dbUser.id, email: dbUser.email, username: dbUser.username}, process.env.JWT_SECRET_KEY,{expiresIn: '15m'})
+        const token = sign({id: dbUser.id, email: dbUser.email, username: dbUser.username}, process.env.JWT_SECRET_KEY,{expiresIn: '15s'})
         res.header("Access-Control-Expose-Headers","Authorization")
             .header("Authorization","Bearer " + token)
             .status(200).json({
