@@ -1,5 +1,5 @@
 import axios from "axios";
-import {refreshAccessToken} from "../services/refreshToken.js"
+import { refreshAccessToken } from "../services/refreshToken.js"
 
 export const getFavourites = async () => {
   const url = `${import.meta.env.VITE_API_URL}/api/favorites`;
