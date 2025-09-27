@@ -5,6 +5,36 @@
     height: 100vh;
 }
 
+.password-field {
+  position: relative;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.password-field .form-input {
+  width: 100%;
+  padding-right: 17em; /* jättää tilaa ikonille */
+}
+
+.password-field .toggle-password {
+  position: absolute;
+  top: 11%;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.form-h2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-field .toggle-password:hover {
+  color: #fff;
+}
 
 .form-background {
     display: flex;
@@ -44,10 +74,23 @@
 
 }
 
+.button-container{
+    display: flex;
+    justify-content: center;
+}
+
+.auth-link{
+    display: flex;
+    justify-content: center;
+}
+
 .form-button{
     background-color: #FED41F;
     color: black;
-    width: 100%;
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 40px;
     border: none;
     border-radius: 20px;
