@@ -12,10 +12,10 @@ export default function MoviesList({movies}) {
                     </Link>
                     <div className="hero-movie-info">
                         <Link to="/movie" state={{ movieId: movie.id }}>
-                            <h4>{movie.title}</h4>
+                            <h4 className="hero-list-title">{movie.title}</h4>
                         </Link>
-                        <p>Release: {movie.release_date}</p>
-                        <p>Score: {Math.round(movie.vote_average * 10) / 10}</p>
+                        <p className="hero-text">Release: {movie.release_date}</p>
+                        <p  className="hero-text">Score: {Math.round(movie.vote_average * 10) / 10}</p>
                     </div>
                 </div>
             ))}

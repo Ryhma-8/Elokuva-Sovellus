@@ -14,13 +14,12 @@ const MoviePage = () => {
   const bump = () => setRefreshTick(t => t + 1);
 
   // väliaikainen title
-  const movieTitle = "Movie Title (placeholder)";
 
   return (
     <div>
       <Header />
         <MovieBlock movieId={movieId} />
-        <ReviewCarousel movieId={movieId} movieTitle={movieTitle} refreshTick={refreshTick} />
+        <ReviewCarousel movieId={movieId} refreshTick={refreshTick} />
         <LeaveReview movieId={movieId} onReviewSent={bump} />
       <Footer />
     </div>

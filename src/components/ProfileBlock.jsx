@@ -1,12 +1,18 @@
+
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/useUser";
 import "../css/profileBlock.css";
+import { deleteAccount } from "../services/deleteAccount";
 
 export default function ProfileBlock() {
-  const { user } = useUser();
+  const navigate=useNavigate()
+  const { user, setUser } = useUser();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("Deleted account!");
+    deleteAccount(setUser)
+    navigate("/");
   };
 
   return (
@@ -16,7 +22,9 @@ export default function ProfileBlock() {
             <p className="username">Username: {user.username}</p>
             <p className="user-email">{user.email}</p>
         </div>
+        <div className="delete-block">
             <button className="delete-button" onClick={handleSubmit}>Delete account</button>
+        </div>
     </div>
   );
 }

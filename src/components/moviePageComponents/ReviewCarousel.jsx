@@ -46,7 +46,7 @@ function ReviewCarousel({ movieId, movieTitle, refreshTick = 0 }) {
 
       {loading && <p>Loading…</p>}
       {err && <p className="text-red-500">{err}</p>}
-      {!loading && !has && <p>No reviews yet.</p>}
+      {!loading && !has && <p id="no-reviews">No reviews yet.</p>}
 
       {has && review && (
         <div className="review-content">
@@ -57,10 +57,6 @@ function ReviewCarousel({ movieId, movieTitle, refreshTick = 0 }) {
           <div className="review-card">
             <p className="review-text">"{review.description}"</p>
             <p className="review-rating">{review.rating ?? "-"} / 5</p>
-
-            {/* Elokuvan nimi (välitetty MoviePagesta propina) */}
-            {movieTitle && <p className="review-movie">{movieTitle}</p>}
-
             {/* Kirjoittajan sähköposti (tulee backendin JOINista) */}
             <div className="review-user">
               <div>
