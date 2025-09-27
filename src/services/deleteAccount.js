@@ -10,8 +10,7 @@ const deleteAccount = async(setUser) => {
         }
         console.log(`${import.meta.env.VITE_API_URL}/user/delete`)
         console.log(user.email)
-        const response = await axios.delete(`${import.meta.env.VITE_API_URL}/user/delete`, {headers, data: {email: user.email},  withCredentials: true });
-        sessionStorage.removeItem('user');
+        const response = await axios.delete(`${import.meta.env.VITE_API_URL}/user/delete`, {headers,  withCredentials: true });
         setUser({email:"", username:"", accessToken:""});
         return response.data;
     } catch (error) {
@@ -22,7 +21,7 @@ const deleteAccount = async(setUser) => {
             Authorization: `Bearer ${newUser.accessToken}`,
             'Content-Type': 'application/json',
             }
-            const newResponse = await axios.delete(`${import.meta.env.VITE_API_URL}/user/delete`, {headers, data: {email: newUser.email},  withCredentials: true }); 
+            const newResponse = await axios.delete(`${import.meta.env.VITE_API_URL}/user/delete`, {headers,  withCredentials: true }); 
             sessionStorage.removeItem('user');
             setUser({email:"", username:"", accessToken:""});
             return newResponse.data;
