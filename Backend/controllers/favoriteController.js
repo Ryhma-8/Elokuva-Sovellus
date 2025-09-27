@@ -32,7 +32,7 @@ export async function addFavoriteController(req, res, next) {
   try {
     const accountId = await resolveAccountId(req)
     const movieId = parsePositiveInt(req.body?.movie_id)
-    if (!movieId) return next(new ApiError('movie_id must be a positive integer', 400))
+    if (!movieId) return next(new ApiError('No movie id', 400))
 
     const row = await addFavorite(accountId, movieId)
     return res.status(201).json(row)

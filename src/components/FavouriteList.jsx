@@ -1,20 +1,25 @@
-import axios from "axios"
 import { getMovieCredits } from "../services/creditSearch";
-import React from "react"
+import {useEffect,useState} from "react"
 import "../css/favouriteList.css"
 import { getFavourites } from "../services/getFavourites";
 
 
 export default function FavouriteList() {
-    const [favouriteMovies, setFavouriteMovies] = React.useState([])
+    const [favouriteMovies, setFavouriteMovies] = useState([])
 
-    React.useEffect(() => {
+    useEffect(() => {
         const fetchFavourites = async () => {
             try {
                 const favourites = await getFavourites();
                 const movieIds = favourites.map(f => f.movie_id);
-
-                const movies = await Promise.all(movieIds.map(id => getMovieCredits(id)));
+                const safeCredits = async (id) => {
+                    try {
+                        return await getMovieCredits(id)
+                    } catch (err) {
+                        return null;
+                    }
+                }
+                const movies = (await Promise.all(movieIds.map(safeCredits))).filter(Boolean);
                 setFavouriteMovies(movies)
 
             }

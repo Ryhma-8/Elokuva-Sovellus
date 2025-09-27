@@ -11,7 +11,6 @@ const auth = (req,res,next) => {
     try {
         const token = req.headers.authorization.split(" ")[1]
         const decodeUser = verify(token,process.env.JWT_SECRET_KEY)
-        console.log("Decode failed, returning 401")
         if (!decodeUser) return next(new ApiError("Unauthorized",401))
         req.user = decodeUser;
         next()

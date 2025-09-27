@@ -42,6 +42,11 @@
     flex-grow: 1;
     text-align: center;
   }
+
+  #no-reviews{
+    display: flex;
+    justify-content: center;
+  }
   
   .review-text {
     font-size: 18px;

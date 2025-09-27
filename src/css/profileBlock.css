@@ -1,8 +1,9 @@
 .profile-block {
+    
     width: 100%;
     max-width: 1159px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin: 32px auto;
 }
 
@@ -21,9 +22,7 @@
 }
 
 .delete-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 16px;  
     min-width: 132px;
     min-height: 32px;
     width: 132px;

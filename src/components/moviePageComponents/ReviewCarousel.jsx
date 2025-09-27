@@ -46,7 +46,7 @@ function ReviewCarousel({ movieId, movieTitle, refreshTick = 0 }) {
 
       {loading && <p>Loading…</p>}
       {err && <p className="text-red-500">{err}</p>}
-      {!loading && !has && <p>No reviews yet.</p>}
+      {!loading && !has && <p id="no-reviews">No reviews yet.</p>}
 
       {has && review && (
         <div className="review-content">
