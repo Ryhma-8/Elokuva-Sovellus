@@ -57,10 +57,6 @@ function ReviewCarousel({ movieId, movieTitle, refreshTick = 0 }) {
           <div className="review-card">
             <p className="review-text">"{review.description}"</p>
             <p className="review-rating">{review.rating ?? "-"} / 5</p>
-
-            {/* Elokuvan nimi (välitetty MoviePagesta propina) */}
-            {movieTitle && <p className="review-movie">{movieTitle}</p>}
-
             {/* Kirjoittajan sähköposti (tulee backendin JOINista) */}
             <div className="review-user">
               <div>

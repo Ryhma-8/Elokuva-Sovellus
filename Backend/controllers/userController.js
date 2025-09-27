@@ -110,7 +110,8 @@ const logout = async (req, res, next) => {
 
 const deleteAccount = async (req,res, next) => {
     try {
-        const userEmail = req.user.email
+        const userEmail = req.user.email || req.user.user;
+
         if(!userEmail) {
             return next(new ApiError("Unauthorized", 401))
         }
