@@ -17,6 +17,13 @@
 
 }
 
+.header-image{
+    height: 50px;
+    width: auto;
+    margin-right: 10px;
+  }
+
+
 .footer-text-wrapper{
     display: flex;
     justify-content: center;
