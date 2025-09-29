@@ -3,6 +3,7 @@ import ProfileBlock from "../components/ProfileBlock";
 import { UserContext } from "../context/UserContext";
 import { Navigate } from "react-router-dom";
 import Header from "../components/header"
+import Footer from "../components/footer"
 import FavouriteList from "../components/favouriteList";
 
 const ProfilePage = () => {
@@ -17,6 +18,7 @@ const ProfilePage = () => {
       <Header />
       <ProfileBlock />
       <FavouriteList />
+      <Footer></Footer>
     </div>
   );
 };
