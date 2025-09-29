@@ -3,6 +3,9 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import useDropDown from '../components/useDropDown'
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons'
+import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons'
 import "../css/MoviesPage.css"
 import { Card } from 'react-bootstrap'
 import Footer from '../components/footer'
@@ -12,7 +15,8 @@ function MoviesPage() {
   const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, page, totalPages,
           selectedGenre, fetchMoviesByGenre, movies, fetchMoviesByLanguage, fetchMoviesByReview, setSelectedReview,
           selectedReview, fetchPopularMovies, setSelectedGenreName, selectedGenreName, setSelectedReviewName, selectedReviewName,
-          setSelectedLanguageName, selectedLanguageName } = useDropDown()
+          setSelectedLanguageName, selectedLanguageName, addFavorite, favorite, search, handleSearch, fetchMoviesBySearch,
+          setSearch, tempSearch, setTempSearch } = useDropDown()
 
 
   return (
@@ -40,6 +44,8 @@ function MoviesPage() {
                   setSelectedReviewName(null) /* nollataan arvosteluväli jos sieltä haettu ennen genreä */
                   setSelectedLanguage(null) /* nollataan muut haut ettei tule päällekkäisiä hakuja */
                   setSelectedReview(null)
+                  setSearch("") /* lisäys että hakupalkin haku ja input kenttä tyhjennetään jos haetaan tekstihaun jälkeen muilla kriteereillä */
+                  setTempSearch("")
                   }}> 
                   {/* React tarvitsee uniikin keyn jokaiselle listan ID:lle, jotta se osaa päivittää näkymän tehokkaasti. */}
                   {genre.name} {/* href={#/genre/${genre.id}} tekee jokaiselle itemille oman linkin genren ID:en mukaan */}
@@ -73,6 +79,8 @@ function MoviesPage() {
                   setSelectedLanguageName(null) /* nollataan kieli jos sieltä haettu ennen arvostelua */
                   setSelectedGenre(null) /* nollataan muut haut ettei tule päällekkäisiä hakuja */
                   setSelectedLanguage(null)
+                  setSearch("") /* lisäys että hakupalkin haku ja input kenttä tyhjennetään jos haetaan tekstihaun jälkeen muilla kriteereillä */
+                  setTempSearch("")
                 }}>
                    {review.label}
                    {/* arvostelun jättäjä on bold fontilla (<strong>{review.author}</strong>) */}
@@ -105,6 +113,8 @@ function MoviesPage() {
                 setSelectedReviewName(null) /* nollataan arvosteluväli jos sieltä haettu ennen kieltä */
                 setSelectedGenre(null) /* nollataan muut haut ettei tule päällekkäisiä hakuja */
                 setSelectedReview(null)
+                setSearch("") /* lisäys että hakupalkin haku ja input kenttä tyhjennetään jos haetaan tekstihaun jälkeen muilla kriteereillä */
+                setTempSearch("")
               }}>
                 {lang.label}
               </Dropdown.Item>
@@ -114,9 +124,28 @@ function MoviesPage() {
             )}
           </Dropdown.Menu>
         </Dropdown>
+
+      <div className="haku-palkki">
+      <input
+      type='text'
+      value={tempSearch}
+      onChange={(e) => setTempSearch(e.target.value)} /* tempSearch hoitaa että kun input kenttään kirjoitetaan niin hakua ei suoriteta automaattisesti ennekuin painettu enter tai "search" nappia */
+      onKeyDown={(e) => { if (e.key === "Enter") handleSearch() }} /* handlesearch suorittaa haun kun painetaan enteriä */
+      placeholder='Search movies'
+      className='haku-kenttä'
+      />
+
+      <button
+      className='haku-nappi rounded-btn'
+      onClick={handleSearch} /* sama homma mutta jos painetaan "search" nappia  */
+      >
+        Search
+        </button>
+
+    </div>  
         
       </div>
-              {movies.length > 0 && !selectedGenre && !selectedLanguage && !selectedReview && (
+              {movies.length > 0 && !search && !selectedGenre && !selectedLanguage && !selectedReview && ( /* lisätty ehto että sisältää hakupalkin niin että suosittuja leffoja näytetään jos millään kriteetillä ei ole haettu leffoja */
               <h3 className="aloitus-otsikko">Popular right now</h3>
               )}
       {/* leffa kortit */}
@@ -141,6 +170,11 @@ function MoviesPage() {
                       </Link>
                       <Card.Text className="text-muted">{movie.release_date ? `(${movie.release_date.substring(0, 4)})` : ""}</Card.Text> {/* korteille annetaan tiedot (julkaisuvuosi) */}
                       <Card.Text>⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "No reviews"}</Card.Text> {/* keskiarvo arvostelusta kahden desimaalin tarkkuudella */}
+                      <button className={`favorite-button ${favorite.some((fav) => fav.id === movie.id) ? "active": ""}`}
+                        onClick={() => addFavorite(movie)}>
+                          <FontAwesomeIcon
+                          icon={favorite.some((fav) => fav.id === movie.id) ? solidStar : regularStar}/>
+                      </button>
                     </Card.Body>
                   </Card> 
                 ))
@@ -152,7 +186,8 @@ function MoviesPage() {
               <div className="load-container">
                 <button className="load-button"
                   onClick={() => {
-                  if (selectedGenre) fetchMoviesByGenre(selectedGenre, page + 1) // pitää laittaa ehdot tänne myös jotta ohjelma tietää millä sivulla tarvitsee ladata lisää leffoja
+                  if (search) fetchMoviesBySearch(search, page +1)
+                  else if (selectedGenre) fetchMoviesByGenre(selectedGenre, page + 1) // pitää laittaa ehdot tänne myös jotta ohjelma tietää millä sivulla tarvitsee ladata lisää leffoja
                   else if (selectedLanguage) fetchMoviesByLanguage(selectedLanguage, page + 1)
                   else if (selectedReview) fetchMoviesByReview(selectedReview, page + 1)
                   else fetchPopularMovies(page + 1)
