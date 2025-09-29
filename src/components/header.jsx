@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import "../css/header.css";
 import { logOut } from "../services/logOut";
 import { useUser } from "../context/useUser";
+import movbee from "../assets/movbee.png";
 
 export default function Header() {
   const { user, setUser } = useUser();
@@ -11,7 +12,8 @@ export default function Header() {
       <nav className="nav">
         <h1 className="logo">
           <NavLink to="/" className="logo-link">
-            Movies.com
+          <img src={movbee} className="header-image" alt="MovBee" />
+            MovBee
           </NavLink>
         </h1>
         <ul className="nav-links">

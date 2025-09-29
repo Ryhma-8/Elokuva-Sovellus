@@ -11,6 +11,12 @@
   gap: 3rem;
 }
 
+.header-image{
+  height: 50px;
+  width: auto;
+  margin-right: 10px;
+}
+
 .logo {
   margin: 0;
   font-size: 1.5rem;
