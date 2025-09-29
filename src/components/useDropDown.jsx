@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
 
 
 function useDropDown() {
   const [genres, setGenres] = useState([])
+  const [favorite, setFavorite] = useState([])
   const [reviews, setReviews] = useState([ // arvostelut pitää kovakoodata koska apin kautta ei saa suoraan hakua tietylle välille
     { label: "1-2 ⭐", min: 1, max: 2 }, // reviews taulukko
     { label: "2-3 ⭐", min: 2, max: 3 },
@@ -27,6 +28,8 @@ function useDropDown() {
     { code: "es", label: "Español" },
     { code: "zh", label: "Chinese" },
   ])
+  const [tempSearch, setTempSearch] = useState("")
+  const [search, setSearch] = useState("")
   const [movies, setMovies] = useState([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -38,7 +41,58 @@ function useDropDown() {
   const [selectedLanguageName, setSelectedLanguageName] = useState(null) /* nämä hoitavat että valittu genre, arvosteluväli tai kieli pysyy näkyvillä napissa */
 
   
-  
+  const fetchMoviesBySearch = async (query, page = 1) => { /* hoitaa tekstillä haun samaan tyyliin kun muutkin haut */
+    try {
+      const response = await axios.get(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&page=${page}`,
+        {
+          headers: {
+            Authorization: `bearer ${import.meta.env.VITE_TMDB_API_KEY}` 
+        }
+      })
+
+      if (page === 1) {
+        setMovies(response.data.results || [])
+      } else {
+        setMovies((prev) => [...prev, (response.data.results || []).filter(
+          (newMovie) => !prev.some((m) => m.id === newMovie.id)
+        )])
+      }
+
+      setTotalPages(response.data.total_pages)
+      setPage(page)
+    } catch (err) {
+      console.log("Error searching movies", err)
+    }
+  }
+
+
+  //haku search nappia painamalla
+  const handleSearch = () => {
+    if (tempSearch.trim().length >= 1) {
+      
+      setSelectedGenreName("") /* nollataan genren nimi jos sieltä haettu ennen kieltä */
+      setSelectedReviewName("") /* asetetaan nappien nimet "" tyhjiksi kentiksi ettei ne jää päälle kun on tehnyt tekstillä haun */
+      setSelectedGenre(null) /* asetetaan oikea haku tyhjäksi että hakee ainoastaan tekstin perusteella */
+      setSelectedReview(null)
+      setSelectedLanguage(null)
+      setSelectedLanguageName("")
+      setSearch("")
+
+      setSearch(tempSearch.trim())
+      fetchMoviesBySearch (tempSearch.trim(), 1)
+    }
+  }
+
+  const addFavorite = (movie) => {
+    setFavorite((prev) => {
+      if(prev.some((fav) => fav.id === movie.id)) {
+        return prev.filter((fav) => fav.id !== movie.id)
+      } else {
+        return [...prev, movie]
+      }
+    })
+  }
+
   const fetchPopularMovies = async (page = 1) => {
     try {
       const response = await axios.get(`https://api.themoviedb.org/3/movie/popular?page=${page}`,
@@ -179,8 +233,9 @@ function useDropDown() {
 
     useEffect(() => {
     // tarkistetaan ehdoilla, että minkä kriteerin kautta leffoja haetaan
+    if (search) fetchMoviesBySearch(search)
 
-    if (selectedGenre) fetchMoviesByGenre(selectedGenre) // suoritetaan vain yksi ehto niin aaltosulkeita ei tarvita
+    else if (selectedGenre) fetchMoviesByGenre(selectedGenre) // suoritetaan vain yksi ehto niin aaltosulkeita ei tarvita
 
     else if (selectedReview) fetchMoviesByReview(selectedReview) 
 
@@ -190,7 +245,7 @@ function useDropDown() {
 
     
 
-  }, [selectedLanguage, selectedGenre, selectedReview])
+  }, [search, selectedLanguage, selectedGenre, selectedReview])
 
 
   return {
@@ -215,7 +270,15 @@ function useDropDown() {
     setSelectedReviewName,
     selectedReviewName,
     setSelectedLanguageName,
-    selectedLanguageName
+    selectedLanguageName,
+    favorite,
+    addFavorite,
+    search,
+    handleSearch,
+    fetchMoviesBySearch,
+    setSearch,
+    setTempSearch,
+    tempSearch
   }
 }
 export default useDropDown
