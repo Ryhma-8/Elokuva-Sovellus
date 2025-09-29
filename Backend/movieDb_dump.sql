@@ -78,7 +78,7 @@ ALTER TABLE public."Account" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 CREATE TABLE public."Favorites" (
     id integer NOT NULL,
     account_id integer NOT NULL,
-    movie_id integer NOT NULL
+    movie_id integer NOT NULL,
     CONSTRAINT unique_favorite_per_user UNIQUE (account_id, movie_id)
 );
 

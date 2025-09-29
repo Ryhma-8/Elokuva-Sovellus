@@ -9,6 +9,7 @@ const REVIEW_URL = "http://localhost:3001/api/reviews";
 
 describe("Full user management and reviews tests (axios)", () => {
   const user = { username: "testUser", email: "foo2@test.com", password: "Password123" };
+  const loginUser = {email: "foo2@test.com", password: "Password123" };
   const newUser = { username: "testUser1", email: "foo@test.com", password: "Password123" };
   let accessToken = "";
   let reviewUserId = null;
@@ -114,20 +115,26 @@ describe("Full user management and reviews tests (axios)", () => {
   });
 
   // ===== Logout =====
-  it("should log out successfully when refresh token exists", async () => {
+  it("should log out successfully with accessToken", async () => {
+    const logResponse = await axios.post(`${BASE_URL}/login`, loginUser);
+    let token = logResponse.headers["authorization"];
+    let refreshToken = logResponse.headers["set-cookie"][0];
     const response = await axios.get(`${BASE_URL}/logout`, {
-      headers: { Cookie: `refreshToken=${refreshToken}` },
-      validateStatus: () => true
-    });
+    headers: { 
+      Authorization: token, 
+      Cookie: `refreshToken=${refreshToken}` 
+    },
+    validateStatus: () => true
+  });
     expect(response.status).to.equal(204);
     console.log("Logout headers:", response.headers);
   });
 
-  it("should fail to log out without refresh token", async () => {
+  it("should fail to log out without accessToken", async () => {
     try {
       await axios.get(`${BASE_URL}/logout`);
     } catch (err) {
-      expect(err.response.data.err.message).to.equal("No refresh token");
+      expect(err.response.data.err.message).to.equal("Unauthorized");
       console.log("Logout without token error:", err.response.data.err.message);
     }
   });
