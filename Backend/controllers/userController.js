@@ -58,7 +58,7 @@ const login = async (req, res, next) => {
                 return next(new ApiError("Email or password is wrong!",401))
             }
 
-            const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '15s'})
+            const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '15m'})
             const refreshToken = sign({user: dbUser.email}, process.env.JWT_REFRESH_SECRET_KEY,{expiresIn: '15d'})
 
             insertRefreshToken(refreshToken,dbUser.email)
