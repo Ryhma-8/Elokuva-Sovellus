@@ -57,3 +57,13 @@ CREATE TABLE public."Reviews" (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT reviews_rating_check CHECK (rating BETWEEN 1 AND 5)
 );
+
+CREATE TABLE Group_requests (
+    id SERIAL PRIMARY KEY,
+    group_id INT NOT NULL REFERENCES "Group"(id) ON DELETE CASCADE,
+    account_id INT NOT NULL REFERENCES "Account"(id) ON DELETE CASCADE,
+    requested_by INT REFERENCES "Account"(id),
+    request_type VARCHAR(20) NOT NULL CHECK (request_type IN ('join_request', 'invitation')),
+    status VARCHAR(20) NOT NULL CHECK (status IN ('pending','accepted','rejected')),
+    created_at TIMESTAMP NOT NULL DEFAULT now()
+);
