@@ -252,6 +252,16 @@ ALTER TABLE public."Reviews" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 );
 
 
+CREATE TABLE group_requests (
+    id SERIAL PRIMARY KEY,
+    group_id INT NOT NULL REFERENCES "Group"(id) ON DELETE CASCADE,
+    account_id INT NOT NULL REFERENCES "Account"(id) ON DELETE CASCADE,
+    requested_by INT REFERENCES "Account"(id),
+    request_type VARCHAR(20) NOT NULL CHECK (request_type IN ('join_request', 'invitation')),
+    status VARCHAR(20) NOT NULL CHECK (status IN ('pending','accepted','rejected')),
+    created_at TIMESTAMP NOT NULL DEFAULT now()
+);
+
 --
 -- TOC entry 4938 (class 0 OID 33613)
 -- Dependencies: 217
