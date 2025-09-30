@@ -7,7 +7,7 @@ const makeNewGroup = async(req,res,next) => {
     const owner = await userExists(req.user.user)
     const ownerId = owner.rows[0].id
     if (!grouName || !ownerId) return next (new ApiError("No group name or owner", 400))
-    const membersList = req.body.membersId
+    const membersList = req.body.memberEmails
     if (membersList.length > 5) return next (new ApiError("Maximum of 5 members", 400))
 
     try {
