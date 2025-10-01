@@ -40,4 +40,15 @@ const createGroup = async (name, ownerId, memberEmails = []) => {
     
 }
 
-export {createGroup}
+const allGroups = async () => {
+    return pool.query(`
+        select "Group".id,
+        "Group".name,
+        COUNT(account_id)
+        FROM "Group" LEFT JOIN "Group_members"
+        on "Group".id = "Group_members".group_id
+        Group BY "Group".name, "Group".id;`)
+
+}
+
+export {createGroup, allGroups}
