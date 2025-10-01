@@ -1,5 +1,5 @@
 import { ApiError } from '../helpers/apiErrorClass.js'
-import { createGroup } from '../models/groupModel.js'
+import { createGroup, allGroups } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
 const makeNewGroup = async(req,res,next) => {
@@ -19,4 +19,17 @@ const makeNewGroup = async(req,res,next) => {
     }
 }
 
-export {makeNewGroup}
+const getAllGroups = async(req,res,next) => {
+    try {
+        const result = await allGroups()
+        const groupsData = result.rows
+        console.log(groupsData)
+        return res.status(200).json(groupsData)
+
+    } catch (err) {
+        return next(new ApiError(`geting groups data: ${err}`, 404))
+    }
+    
+}
+
+export {makeNewGroup, getAllGroups}
