@@ -55,6 +55,17 @@ export async function listFavoritesController(req, res, next) {
   }
 }
 
+export async function listFavoritesShareController(req, res, next) {
+  try {
+    const accountId = parseInt(req.params.id, 10)
+    const rows = await listFavorites(accountId)
+    return res.json(rows)
+  } catch (err) {
+    return next(err)
+  }
+}
+
+
 // DELETE /api/favorites/:id
 export async function deleteFavoriteByIdController(req, res, next) {
   try {

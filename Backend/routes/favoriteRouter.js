@@ -8,16 +8,16 @@ import {
 
 const router = Router()
 
-// Kaikki suosikkireitit vaativat kirjautumisen
-router.use(auth)
-
 // POST /api/favorites
-router.post('/', addFavoriteController)
+router.post('/',auth, addFavoriteController)
 
 // GET /api/favorites
-router.get('/', listFavoritesController)
+router.get('/',auth, listFavoritesController)
+
+// GET /api/favorites/share/:id
+router.get('/share/:id', listFavoritesController)
 
 // DELETE /api/favorites/:id
-router.delete('/:id', deleteFavoriteByIdController)
+router.delete('/:id',auth, deleteFavoriteByIdController)
 
 export default router
