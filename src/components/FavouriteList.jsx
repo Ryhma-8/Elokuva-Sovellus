@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import "../css/favouriteList.css"
 import { getFavourites } from "../services/getFavourites";
 import { useUser } from "../context/useUser";
+import { useLocation } from "react-router-dom";
 
 
 export default function FavouriteList({userId, groupId}) {
@@ -36,9 +37,24 @@ export default function FavouriteList({userId, groupId}) {
 fetchFavourites()
         }, [userId, groupId, user]);
 
+        const isProfilePage = location.pathname === "/profile"; 
+
 return (
     <div className="favourite-wrapper">
         <h4>FAVOURITES</h4>
+        {isProfilePage && (
+        <button
+            className="copy-link-button"
+            onClick={() => {
+                const link = `${window.location.origin}/favorites/${user?.id}`;
+                navigator.clipboard.writeText(link)
+                    .then(() => console.log("Copied:", link))
+                    .catch(err => console.error(err));
+            }}
+        >
+            Copy link
+        </button>
+        )}
         {favouriteMovies.length === 0 ? (
             <p>No favourite movies found.</p>
         ) : (
