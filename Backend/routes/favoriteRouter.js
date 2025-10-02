@@ -3,6 +3,7 @@ import { auth } from '../helpers/auth.js'
 import {
   addFavoriteController,
   listFavoritesController,
+  listFavoritesShareController,
   deleteFavoriteByIdController
 } from '../controllers/favoriteController.js'
 
@@ -15,7 +16,7 @@ router.post('/',auth, addFavoriteController)
 router.get('/',auth, listFavoritesController)
 
 // GET /api/favorites/share/:id
-router.get('/share/:id', listFavoritesController)
+router.get('/share/:id', listFavoritesShareController)
 
 // DELETE /api/favorites/:id
 router.delete('/:id',auth, deleteFavoriteByIdController)
