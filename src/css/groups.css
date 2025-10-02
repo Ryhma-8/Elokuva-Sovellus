@@ -1,9 +1,6 @@
-/* Groups-sivun perus-tyylit (vain tällä sivulla, kun juurielementissä on .groups-page)
-   - Tavoitteena Showtimes-sivun kaltainen keltainen teema ja pyöristetyt kulmat. */
-
 /* Kortit ja otsikkopalkki */
 .groups-page .card {
-  border: 2px solid #3d3922;       /* sama ruskea reunasävy kuin Showtimes */
+  border: 2px solid #3d3922;
   border-radius: 14px;
   overflow: hidden;
   background: #fff;
@@ -11,20 +8,18 @@
 }
 
 .groups-page .card-header {
-  background: #ffd400;             /* keltainen otsikkopalkki */
+  background: #ffd400;
   color: #111;
 }
 
-/* Runko keltaisella pohjalla kuten mockissa */
 .groups-page .card-body {
   background: #ffd400;
 }
 
-/* Yksittäisen ryhmärivin laatikko */
 .groups-page .group-row {
   border: 1px solid #3d3922;
   border-radius: 10px;
-  background: #fff;                /* valkoinen sisältö kortin sisällä */
+  background: #fff; 
   padding: 0.5rem 0.75rem;
   display: flex;
   align-items: center;
@@ -33,25 +28,21 @@
   margin-bottom: 0.5rem;
 }
 
-/* Pieni select “Members” -pudotusvalikolle */
 .groups-page .member-select {
   width: 180px;
 }
 
-/* Tyhjä tila -teksti */
 .groups-page .empty-state {
   color: #555;
   margin-bottom: 0.75rem;
 }
 
-/* Painikkeet: pidetään teeman mukaisina */
 .groups-page .btn-outline-primary,
 .groups-page .btn-outline-danger,
 .groups-page .btn-outline-secondary {
   border-width: 1.5px;
 }
 
-/* Luontilomakkeen painike */
 .groups-page .btn-warning {
   border: 1px solid #222;
   font-weight: 600;
@@ -90,18 +81,16 @@
   gap: 0.5rem;
 }
 
-/* Virheteksti punaisella */
 .groups-page .form-text.error {
   color: #b00020;
 }
 
-/* Laskuri */
 .groups-page .email-counter {
   font-size: 0.9rem;
   color: #333;
 }
 
-/* Responsiivisuus: pinotaan rivit mukavasti mobiilissa */
+/* Responsiivisuus*/
 @media (max-width: 768px) {
   .groups-page .group-row {
     align-items: stretch;
