@@ -80,6 +80,7 @@ const sendGroupJoinRequest = async (req,res,next) => {
         const userId = user.rows[0].id
         const groupId = parseInt(req.body.groupId)
         const groupRes = await groupExists(groupId)
+        //ryhmä täynnä? >=20
         if (!groupRes.rows.length) return next (new ApiError("Group does not exist", 404))
         const inGroup = await alreadyInGroup(userId, groupId)
         if (inGroup) return next (new ApiError("Already in group", 400))
