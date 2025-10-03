@@ -42,7 +42,7 @@ const createGroup = async (name, ownerId, memberEmails = []) => {
 
 const allGroups = async () => {
     return pool.query(`
-        select "Group".id,
+        SELECT "Group".id,
         "Group".name,
         COUNT(account_id)
         FROM "Group" LEFT JOIN "Group_members"
@@ -51,4 +51,43 @@ const allGroups = async () => {
 
 }
 
-export {createGroup, allGroups}
+
+const usersGroups = async (id) => {
+  return pool.query(
+    `
+    SELECT 
+      g.id AS group_id,
+      g.name AS group_name,
+      CASE
+    WHEN g.owner_id = $1 THEN 'owner'
+          WHEN gm.account_id IS NOT NULL THEN 'member'
+          WHEN gr.account_id IS NOT NULL AND gr.status = 'pending' AND gr.request_type = 'invitation' THEN 'invited'
+      END AS role,
+      COALESCE(a.username, a_invited.username) AS member_name,
+      CASE 
+          WHEN gm_all.account_id IS NOT NULL THEN 'joined'
+          ELSE 'invited'
+      END AS member_status
+        FROM "Group" g
+        LEFT JOIN "Group_members" gm_self 
+            ON g.id = gm_self.group_id AND gm_self.account_id = $1
+        LEFT JOIN "Group_requests" gr_self
+            ON g.id = gr_self.group_id AND gr_self.account_id = $1 AND gr_self.status = 'pending'
+
+        LEFT JOIN "Group_members" gm_all 
+            ON g.id = gm_all.group_id
+        LEFT JOIN "Account" a 
+            ON gm_all.account_id = a.id
+
+        LEFT JOIN "Group_requests" gr_all
+            ON g.id = gr_all.group_id AND gr_all.status = 'pending' AND gr_all.request_type = 'invitation'
+        LEFT JOIN "Account" a_invited
+            ON gr_all.account_id = a_invited.id
+
+            WHERE g.owner_id = $1 OR gm_self.account_id = $1 OR gr_self.account_id = $1
+            ORDER BY g.id, member_name
+            `, [id]);
+};
+
+
+export {createGroup, allGroups, usersGroups}

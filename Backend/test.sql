@@ -27,6 +27,7 @@ CREATE TABLE public."Group" (
     id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
     owner_id INT NOT NULL REFERENCES public."Account"(id) ON DELETE CASCADE
+    CONSTRAINT group_name_unique UNIQUE (name)
 );
 
 CREATE TABLE public."Group_members" (

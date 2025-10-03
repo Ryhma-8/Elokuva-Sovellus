@@ -2,13 +2,15 @@ import { ApiError } from '../helpers/apiErrorClass.js'
 import { createGroup, allGroups } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
+
+//lisää tarkistus onko nimi jo käytössä ja palauta siitä virhe jos on
 const makeNewGroup = async(req,res,next) => {
     const grouName = req.body.groupName
     const owner = await userExists(req.user.user)
     const ownerId = owner.rows[0].id
     if (!grouName || !ownerId) return next (new ApiError("No group name or owner", 400))
     const membersList = req.body.memberEmails
-    if (membersList.length > 5) return next (new ApiError("Maximum of 5 members", 400))
+    if (membersList.length > 20) return next (new ApiError("Maximum of 5 members", 400)) // fronttiin kanssa maksimi rajaksi 20
 
     try {
         const group = await createGroup(grouName, ownerId, membersList)
