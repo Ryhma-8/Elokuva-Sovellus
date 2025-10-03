@@ -55,38 +55,47 @@ const allGroups = async () => {
 const usersGroups = async (id) => {
   return pool.query(
     `
-    SELECT 
-      g.id AS group_id,
-      g.name AS group_name,
-      CASE
-    WHEN g.owner_id = $1 THEN 'owner'
-          WHEN gm.account_id IS NOT NULL THEN 'member'
-          WHEN gr.account_id IS NOT NULL AND gr.status = 'pending' AND gr.request_type = 'invitation' THEN 'invited'
-      END AS role,
-      COALESCE(a.username, a_invited.username) AS member_name,
-      CASE 
-          WHEN gm_all.account_id IS NOT NULL THEN 'joined'
-          ELSE 'invited'
-      END AS member_status
+    WITH user_groups AS (
+        SELECT g.id AS group_id,
+            g.name AS group_name,
+            CASE
+                WHEN g.owner_id = $1 THEN 'owner'
+                WHEN gm_self.account_id IS NOT NULL THEN 'member'
+                WHEN gr_self.account_id IS NOT NULL THEN 'invited'
+            END AS user_role
         FROM "Group" g
-        LEFT JOIN "Group_members" gm_self 
+        LEFT JOIN "Group_members" gm_self
             ON g.id = gm_self.group_id AND gm_self.account_id = $1
         LEFT JOIN "Group_requests" gr_self
-            ON g.id = gr_self.group_id AND gr_self.account_id = $1 AND gr_self.status = 'pending'
+            ON g.id = gr_self.group_id 
+            AND gr_self.account_id = $1
+            AND gr_self.status = 'pending'
+            AND gr_self.request_type = 'invitation'
+        WHERE g.owner_id = $1 
+        OR gm_self.account_id = $1 
+        OR gr_self.account_id = $1
+    ),
+    group_members AS (
+        SELECT gm.group_id, a.username, 'joined' AS member_status
+        FROM "Group_members" gm
+        JOIN "Account" a ON gm.account_id = a.id
 
-        LEFT JOIN "Group_members" gm_all 
-            ON g.id = gm_all.group_id
-        LEFT JOIN "Account" a 
-            ON gm_all.account_id = a.id
+        UNION ALL
 
-        LEFT JOIN "Group_requests" gr_all
-            ON g.id = gr_all.group_id AND gr_all.status = 'pending' AND gr_all.request_type = 'invitation'
-        LEFT JOIN "Account" a_invited
-            ON gr_all.account_id = a_invited.id
-
-            WHERE g.owner_id = $1 OR gm_self.account_id = $1 OR gr_self.account_id = $1
-            ORDER BY g.id, member_name
-            `, [id]);
+        SELECT gr.group_id, a.username, 'invited' AS member_status
+        FROM "Group_requests" gr
+        JOIN "Account" a ON gr.account_id = a.id
+        WHERE gr.status = 'pending' AND gr.request_type = 'invitation'
+    )
+    SELECT ug.group_id,
+        ug.group_name,
+        ug.user_role,
+        gm.username AS member_name,
+        gm.member_status
+    FROM user_groups ug
+    LEFT JOIN group_members gm ON ug.group_id = gm.group_id
+    ORDER BY ug.group_id, gm.username;
+`, [id]);
 };
 
 
