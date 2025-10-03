@@ -1,0 +1,107 @@
+/* Kortit ja otsikkopalkki */
+.groups-page .card {
+  border: 2px solid #3d3922;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  color: #111;
+}
+
+.groups-page .card-header {
+  background: #ffd400;
+  color: #111;
+}
+
+.groups-page .card-body {
+  background: #ffd400;
+}
+
+.groups-page .group-row {
+  border: 1px solid #3d3922;
+  border-radius: 10px;
+  background: #fff; 
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.groups-page .member-select {
+  width: 180px;
+}
+
+.groups-page .empty-state {
+  color: #555;
+  margin-bottom: 0.75rem;
+}
+
+.groups-page .btn-outline-primary,
+.groups-page .btn-outline-danger,
+.groups-page .btn-outline-secondary {
+  border-width: 1.5px;
+}
+
+.groups-page .btn-warning {
+  border: 1px solid #222;
+  font-weight: 600;
+}
+
+/* Chip-lista */
+.groups-page .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.groups-page .chip {
+  background: #fff;
+  border: 1px solid #3d3922;
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.groups-page .chip-remove {
+  border: none;
+  background: transparent;
+  line-height: 1;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0;
+}
+
+/* Syötekenttä + Add-nappi vierekkäin */
+.groups-page .email-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.groups-page .form-text.error {
+  color: #b00020;
+}
+
+.groups-page .email-counter {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Responsiivisuus*/
+@media (max-width: 768px) {
+  .groups-page .group-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .groups-page .member-select {
+    width: 100%;
+  }
+
+  .groups-page .email-controls {
+    flex-direction: column;
+  }
+}
