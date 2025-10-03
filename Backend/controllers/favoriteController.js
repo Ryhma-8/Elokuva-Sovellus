@@ -2,7 +2,8 @@ import { ApiError } from '../helpers/apiErrorClass.js'
 import {
   addFavorite,
   listFavorites,
-  deleteFavoriteById
+  deleteFavoriteById,
+  deleteFavoriteByMovieId
 } from '../models/favoriteModel.js'
 import { userExists } from '../models/userModel.js'
 
@@ -75,6 +76,22 @@ export async function deleteFavoriteByIdController(req, res, next) {
 
     const deleted = await deleteFavoriteById(id, accountId)
     if (!deleted) return next(new ApiError('Favorite not found', 404))
+    return res.status(204).send()
+  } catch (err) {
+    return next(err)
+  }
+}
+
+//DELETE /api/favorites/movie/:movie_id
+export async function deleteFavoriteByMovieIdController(req, res, next) {
+  try {
+    const accountId = await resolveAccountId(req)
+    const movieId = parsePositiveInt(req.params?.movie_id)
+    if (!movieId) return next (new ApiError('invalid movie id', 400))
+
+    const deleted = await deleteFavoriteByMovieId(movieId, accountId)
+    if (!deleted) return next(new ApiError('Favorite not found', 404))
+
     return res.status(204).send()
   } catch (err) {
     return next(err)

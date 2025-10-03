@@ -14,12 +14,12 @@ export const getFavourites = async ({ userId, groupId} = {}) => {
   }
 
   try {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-
-    const headers= userId
-     ? {} : { Authorization: `Bearer ${user?.accessToken}` };
-
-     const response = await axios.get(url, {
+    const user = console.log("Current user before request" ,JSON.parse(sessionStorage.getItem("user")));
+    /* 
+    // Mainin ehdollinen versio, jos joskus haluat ohittaa tokenin userId:n perusteella
+    // const headers = userId ? {} : { Authorization: `Bearer ${user?.accessToken}` };
+    */
+    const response = await axios.get(url, {
       withCredentials: true,
       headers,
     });
@@ -48,3 +48,49 @@ export const getFavourites = async ({ userId, groupId} = {}) => {
     throw err;
   }
 };
+
+export const addFavourite = async (movie, userId) => {
+  const url = `${import.meta.env.VITE_API_URL}/api/favorites`
+
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user"))
+
+    const payload = {
+      movie_id: movie.id,
+      title: movie.title,
+      poster: movie.poster_path || movie.poster,
+      year: movie.release_date ? movie.release_date.substring(0, 4) : null,
+      vote_average: movie.vote_average,
+      user_id: userId
+    }
+
+    console.log("Adding favourite with payload", payload)
+
+    const response = await axios.post(url, payload, {
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${user?.accessToken}` }
+    })
+    console.log("Added movie:", response.data)
+    return response.data
+  } catch (err) {
+    console.error("Adding movie failed", err)
+    throw err
+  }
+}
+
+export const removeFavourite = async (movieId) => {
+  const url = `${import.meta.env.VITE_API_URL}/api/favorites/movie/${movieId}`
+
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user"))
+    const response = await axios.delete(url, {
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${user?.accessToken}` }
+    })
+    console.log("Removed movie", response.data)
+    return response.data
+  } catch (err) {
+    console.error("Removing movie failed", err)
+    throw err
+  }
+}

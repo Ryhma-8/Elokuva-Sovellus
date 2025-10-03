@@ -4,7 +4,8 @@ import {
   addFavoriteController,
   listFavoritesController,
   listFavoritesShareController,
-  deleteFavoriteByIdController
+  deleteFavoriteByIdController,
+  deleteFavoriteByMovieIdController
 } from '../controllers/favoriteController.js'
 
 const router = Router()
@@ -20,5 +21,8 @@ router.get('/share/:id', listFavoritesShareController)
 
 // DELETE /api/favorites/:id
 router.delete('/:id',auth, deleteFavoriteByIdController)
+
+// DELETE /api/favorites/movie/:movie_id
+router.delete('/movie/:movie_id', auth, deleteFavoriteByMovieIdController)
 
 export default router

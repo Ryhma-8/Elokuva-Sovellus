@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons'
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons'
+import { useFavorites } from '../context/FavoritesContext';
 import "../css/MoviesPage.css"
 import { Card } from 'react-bootstrap'
 import Footer from '../components/footer'
@@ -15,8 +16,11 @@ function MoviesPage() {
   const { genres, reviews, languages, selectedLanguage, setSelectedLanguage, setSelectedGenre, page, totalPages,
           selectedGenre, fetchMoviesByGenre, movies, fetchMoviesByLanguage, fetchMoviesByReview, setSelectedReview,
           selectedReview, fetchPopularMovies, setSelectedGenreName, selectedGenreName, setSelectedReviewName, selectedReviewName,
-          setSelectedLanguageName, selectedLanguageName, addFavorite, favorite, search, handleSearch, fetchMoviesBySearch,
+          setSelectedLanguageName, selectedLanguageName, /*addFavorite,*/ favorite, search, handleSearch, fetchMoviesBySearch,
           setSearch, tempSearch, setTempSearch } = useDropDown()
+
+  const { isFavorite, toggleFavorite, favouriteMovies } = useFavorites()
+  console.log("Favourites from context:", favouriteMovies)
 
 
   return (
@@ -170,10 +174,11 @@ function MoviesPage() {
                       </Link>
                       <Card.Text className="text-muted">{movie.release_date ? `(${movie.release_date.substring(0, 4)})` : ""}</Card.Text> {/* korteille annetaan tiedot (julkaisuvuosi) */}
                       <Card.Text>⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "No reviews"}</Card.Text> {/* keskiarvo arvostelusta kahden desimaalin tarkkuudella */}
-                      <button className={`favorite-button ${favorite.some((fav) => fav.id === movie.id) ? "active": ""}`}
-                        onClick={() => addFavorite(movie)}>
+                      <button
+                        className={`favorite-button ${isFavorite(movie.id) ? "active": ""}`}
+                        onClick={() => toggleFavorite(movie)}>
                           <FontAwesomeIcon
-                          icon={favorite.some((fav) => fav.id === movie.id) ? solidStar : regularStar}/>
+                          icon={isFavorite(movie.id) ? solidStar : regularStar}/>
                       </button>
                     </Card.Body>
                   </Card> 

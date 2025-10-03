@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext";
 import { Navigate } from "react-router-dom";
 import Header from "../components/header"
 import Footer from "../components/footer"
-import FavouriteList from "../components/favouriteList";
+import FavouriteList from "../components/FavouriteList";
 
 const ProfilePage = () => {
   const {user} = React.useContext(UserContext);

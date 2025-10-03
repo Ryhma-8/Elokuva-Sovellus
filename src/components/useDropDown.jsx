@@ -5,7 +5,7 @@ import axios from 'axios'
 
 function useDropDown() {
   const [genres, setGenres] = useState([])
-  const [favorite, setFavorite] = useState([])
+  /*const [favorite, setFavorite] = useState([])*/
   const [reviews, setReviews] = useState([ // arvostelut pitää kovakoodata koska apin kautta ei saa suoraan hakua tietylle välille
     { label: "1-2 ⭐", min: 1, max: 2 }, // reviews taulukko
     { label: "2-3 ⭐", min: 2, max: 3 },
@@ -83,16 +83,7 @@ function useDropDown() {
     }
   }
 
-  const addFavorite = (movie) => {
-    setFavorite((prev) => {
-      if(prev.some((fav) => fav.id === movie.id)) {
-        return prev.filter((fav) => fav.id !== movie.id)
-      } else {
-        return [...prev, movie]
-      }
-    })
-  }
-
+ 
   const fetchPopularMovies = async (page = 1) => {
     try {
       const response = await axios.get(`https://api.themoviedb.org/3/movie/popular?page=${page}`,
@@ -271,8 +262,8 @@ function useDropDown() {
     selectedReviewName,
     setSelectedLanguageName,
     selectedLanguageName,
-    favorite,
-    addFavorite,
+    /*favorite,
+    addFavorite,*/
     search,
     handleSearch,
     fetchMoviesBySearch,

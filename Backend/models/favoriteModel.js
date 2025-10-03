@@ -30,3 +30,13 @@ export async function deleteFavoriteById(id, accountId) {
   const { rows } = await pool.query(sql, [id, accountId])
   return rows[0] || null
 }
+
+export async function deleteFavoriteByMovieId(movieId, accountId) {
+  const sql = `
+  DELETE FROM public. "Favorites"
+  WHERE movie_id = $1 AND account_id = $2
+  RETURNING movie_id;
+  `
+  const { rows } = await pool.query(sql, [movieId, accountId])
+  return rows[0] || null
+}
