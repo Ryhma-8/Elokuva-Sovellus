@@ -27,6 +27,7 @@ CREATE TABLE public."Group" (
     id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
     owner_id INT NOT NULL REFERENCES public."Account"(id) ON DELETE CASCADE
+    CONSTRAINT group_name_unique UNIQUE (name)
 );
 
 CREATE TABLE public."Group_members" (
@@ -58,7 +59,7 @@ CREATE TABLE public."Reviews" (
     CONSTRAINT reviews_rating_check CHECK (rating BETWEEN 1 AND 5)
 );
 
-CREATE TABLE Group_requests (
+CREATE TABLE public."Group_requests" (
     id SERIAL PRIMARY KEY,
     group_id INT NOT NULL REFERENCES "Group"(id) ON DELETE CASCADE,
     account_id INT NOT NULL REFERENCES "Account"(id) ON DELETE CASCADE,

@@ -109,6 +109,7 @@ CREATE TABLE public."Group" (
     id integer NOT NULL,
     name character varying(30) NOT NULL,
     owner_id integer NOT NULL
+    CONSTRAINT group_name_unique UNIQUE (name)
 );
 
 
@@ -252,7 +253,7 @@ ALTER TABLE public."Reviews" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 );
 
 
-CREATE TABLE Group_requests (
+CREATE TABLE public."Group_requests" (
     id SERIAL PRIMARY KEY,
     group_id INT NOT NULL REFERENCES "Group"(id) ON DELETE CASCADE,
     account_id INT NOT NULL REFERENCES "Account"(id) ON DELETE CASCADE,

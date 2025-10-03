@@ -48,3 +48,13 @@
     margin-top: 8px;
     margin-bottom: 8px;
 }
+
+.favourite-wrapper .copy-link-button{
+    align-self: flex-start;
+    margin-top: 16px;  
+    margin-bottom: 16px;
+    width: 132px;
+    height: 32px;
+    background-color: white;
+    border-radius: 32px;
+}
