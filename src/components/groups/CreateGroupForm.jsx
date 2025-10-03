@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
-import { createGroup } from "../../services/groups.js";
+import { createGroup, GROUP_MAX_INVITES } from "../../services/groups.js";
 import Alert from "../Alert.jsx";
 
+// Sähköpostin perusvalidointi
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function CreateGroupForm({ disabled }) {
+  // lomake-tilat
   const [groupName, setGroupName] = useState("");
   const [emailsInput, setEmailsInput] = useState("");
   const [inviteEmails, setInviteEmails] = useState([]);
@@ -13,40 +15,55 @@ export default function CreateGroupForm({ disabled }) {
   const [ok, setOk] = useState("");
   const [err, setErr] = useState("");
 
+  // käyttölogiikka
   const canInteract = !disabled;
   const canSubmit = useMemo(() => {
     return canInteract && String(groupName).trim().length > 0 && !submitting;
   }, [canInteract, groupName, submitting]);
 
+  // Lisää useita sähköposteja kerralla (pilkku/puolipiste/välilyönti eroteltuna)
   const addEmails = (candidates) => {
-    const items = candidates.map(s => String(s).trim()).filter(Boolean);
+    const items = candidates.map((s) => String(s).trim()).filter(Boolean);
     if (!items.length) return;
 
     let next = [...inviteEmails];
     let lastError = "";
 
     for (const raw of items) {
-      if (next.length >= 5) { lastError = "You can add up to 5"; break; }
-      if (!emailRegex.test(raw)) { lastError = "Invalid email address"; continue; }
-      if (next.includes(raw)) { lastError = "Duplicate email"; continue; }
+      if (next.length >= GROUP_MAX_INVITES) {
+        lastError = `You can add up to ${GROUP_MAX_INVITES}`;
+        break;
+      }
+      if (!emailRegex.test(raw)) {
+        lastError = "Invalid email address";
+        continue;
+      }
+      if (next.includes(raw)) {
+        lastError = "Duplicate email";
+        continue;
+      }
       next.push(raw);
     }
+
     setInviteEmails(next);
     setEmailsInput("");
     setEmailError(lastError || "");
   };
 
+  // Lisää yhden emailin syötekentästä
   const addEmailFromInput = () => {
     const raw = emailsInput.trim();
     if (!raw) return;
     addEmails(raw.split(/[,\s;]+/).filter(Boolean));
   };
 
+  // Poista chip
   const removeEmail = (email) => {
-    setInviteEmails(prev => prev.filter(x => x !== email));
+    setInviteEmails((prev) => prev.filter((x) => x !== email));
     setEmailError("");
   };
 
+  // Enter, pilkku, puolipiste lisäävät chippinä
   const onEmailsKeyDown = (e) => {
     if (e.key === "Enter" || e.key === "," || e.key === ";") {
       e.preventDefault();
@@ -55,10 +72,16 @@ export default function CreateGroupForm({ disabled }) {
     }
   };
 
+  // Lähetys
   const onCreate = async () => {
-    setOk(""); setErr("");
+    setOk("");
+    setErr("");
+
     const name = String(groupName || "").trim();
-    if (!name) { setErr("Group name is required"); return; }
+    if (!name) {
+      setErr("Group name is required");
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -69,7 +92,7 @@ export default function CreateGroupForm({ disabled }) {
       setEmailsInput("");
       setEmailError("");
     } catch (e) {
-      setErr(e?.message || "Failed to create group");
+      setErr(e && e.message ? e.message : "Failed to create group");
     } finally {
       setSubmitting(false);
     }
@@ -80,6 +103,7 @@ export default function CreateGroupForm({ disabled }) {
       {ok && <Alert type="success">{ok}</Alert>}
       {err && <Alert type="danger">{err}</Alert>}
 
+      {/* Nimi */}
       <div className="mb-3">
         <label className="form-label">Group name</label>
         <input
@@ -89,14 +113,18 @@ export default function CreateGroupForm({ disabled }) {
           value={groupName}
           onChange={(e) => setGroupName(e.target.value)}
           disabled={!canInteract || submitting}
-          maxLength={30}
+          maxLength={30} // DB:n varchar(30)
         />
         <div className="form-text">{groupName.length}/30</div>
       </div>
 
+      {/* Sähköpostit */}
       <div className="mb-2">
-        <label className="form-label">Invite members by email (max 5)</label>
+        <label className="form-label">
+          Invite members by email (max {GROUP_MAX_INVITES})
+        </label>
 
+        {/* Chip-lista */}
         {inviteEmails.length > 0 && (
           <div className="chips mb-2">
             {inviteEmails.map((email) => (
@@ -117,6 +145,7 @@ export default function CreateGroupForm({ disabled }) {
           </div>
         )}
 
+        {/* Syöte + Add-nappi */}
         <div className="email-controls">
           <input
             type="text"
@@ -131,27 +160,46 @@ export default function CreateGroupForm({ disabled }) {
             type="button"
             className="btn btn-outline-dark"
             onClick={addEmailFromInput}
-            disabled={!canInteract || submitting || !emailsInput.trim() || inviteEmails.length >= 5}
+            disabled={
+              !canInteract ||
+              submitting ||
+              !emailsInput.trim() ||
+              inviteEmails.length >= GROUP_MAX_INVITES
+            }
             title="Add email"
           >
             Add
           </button>
         </div>
 
+        {/* Ohje/virhe + laskuri */}
         <div className={`form-text ${emailError ? "error" : ""}`}>
           {emailError || "Use comma, semicolon or Enter to add."}
         </div>
-        <div className="email-counter mt-1">{inviteEmails.length}/5</div>
+        <div className="email-counter mt-1">
+          {inviteEmails.length}/{GROUP_MAX_INVITES}
+        </div>
       </div>
 
+      {/* Lähetysnappi */}
       <div className="d-flex justify-content-end">
-        <button className="btn btn-warning fw-semibold" disabled={!canSubmit} onClick={onCreate}>
+        <button
+          className="btn btn-warning fw-semibold"
+          disabled={!canSubmit}
+          onClick={onCreate}
+        >
           {submitting ? (
             <span className="d-inline-flex align-items-center gap-2">
-              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+              <span
+                className="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              />
               Creating…
             </span>
-          ) : "Create group"}
+          ) : (
+            "Create group"
+          )}
         </button>
       </div>
     </>
