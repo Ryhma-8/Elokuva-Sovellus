@@ -1,7 +1,4 @@
-// Palvelukerros: Groups-sivun kutsut backendille.
-// - Toteutettuna: createGroup + invitations (get/accept/reject)
-// - Muut funktiot jätetään stubiksi toistaiseksi.
-// - Kommentit suomeksi, UI-tekstit hoidetaan komponentissa.
+.// - Toteutettuna: createGroup + invitations (get/accept/reject)
 
 import { refreshAccessToken } from "./refreshToken.js";
 
@@ -86,9 +83,8 @@ export async function createGroup({ groupName, memberEmails = [] }) {
   return withAuthRetry(doRequest);
 }
 
-/* ----------------------------------------------------------------------------
-   Invitations (Accept / Decline) – frontti hakee pending-kutsut ja toimii niiden kanssa
----------------------------------------------------------------------------- */
+/*
+   Invitations Accept / Decline */
 
 /**
  * Hakee kirjautuneen käyttäjän pending-kutsut (invitations).
@@ -116,7 +112,6 @@ export async function getInvitations() {
 /**
  * Hyväksyy kutsun (Accept).
  * - POST /api/requests/:requestId/accept
- * - Paluu: { ok: true, group?: {...} } tms. backendin määrittelyn mukaan
  */
 export async function acceptInvitation(requestId) {
   const id = String(requestId || "").trim();
@@ -175,10 +170,8 @@ export async function rejectInvitation(requestId) {
   return withAuthRetry(doRequest);
 }
 
-/* ----------------------------------------------------------------------------
-   Alla stubit myöhempiä ominaisuuksia varten. Ne eivät tee vielä mitään, mutta
-   pidetään nimipinnat olemassa, jotta komponentit voivat importata nämä jo nyt.
----------------------------------------------------------------------------- */
+/* Alla stubit myöhempiä ominaisuuksia varten. Ne eivät tee vielä mitään, mutta
+   pidetään nimipinnat olemassa, jotta komponentit voivat importata nämä jo nyt. */
 
 export async function getMyGroups() {
   // TODO: toteuta kun backend-GET on valmis
@@ -221,14 +214,4 @@ export async function removeMember(_groupId, _memberId) {
   const e = new Error("Not implemented: removeMember");
   e.status = 501;
   throw e;
-}
-
-/* Takautuva yhteensopivuus vanhoille impporteille (jos jossain käytetty) */
-export async function getGroups() {
-  // Vanha nimi viittasi yleislistaukseen → palautetaan sama kuin getAllGroups
-  return getAllGroups();
-}
-export async function addToGroup(_groupId, _item) {
-  // Ei käytössä tässä projektissa
-  return { ok: false };
 }
