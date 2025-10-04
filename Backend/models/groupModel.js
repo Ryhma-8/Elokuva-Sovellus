@@ -153,9 +153,19 @@ const acceptJoinRequest = async (userId, groupId, senderName) => {
     return pool.query('INSERT INTO "Group_members" (group_id, account_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',[groupId, senderId])
 }
 
+const rejectJoinRequest = async (userId, groupId, senderName) => {
+    if (!await isGroupOwner(groupId, userId)) return null
+
+    const senderRes = await pool.query('SELECT id FROM "Account" WHERE username = $1',[senderName]);
+    if (!senderRes.rows.length) return null;
+
+    const senderId = senderRes.rows[0].id;
+    return pool.query('UPDATE "Group_requests" SET status = $3 WHERE group_id = $1 AND requested_by = $2', [groupId, senderId, 'rejected'])
+}
+
 export {
     createGroup, allGroups, usersGroups,
     groupJoinRequest, acceptJoinRequest, isGroupOwner,
     groupExists, alreadyInGroup, groupNameAlreadyInUse,
-    groupFull
+    groupFull,rejectJoinRequest
 }
