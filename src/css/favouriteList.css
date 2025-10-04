@@ -14,7 +14,6 @@
 .favourite-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
     list-style-type: none;
     gap: 16px;
     padding: 0;
@@ -23,21 +22,31 @@
 }
 
 .favourite-list-item {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 274px;
     max-height: 550px;
     background-color: #FED41F;
-    overflow-y: auto;
     border-radius: 16px;
     padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
 }
 
 .movie-poster {
     width: 100%;
     height: auto;
+    object-fit: cover;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
+}
+
+.movie-info-wrapper{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
 }
 
 .movie-title{
@@ -49,6 +58,7 @@
     margin-bottom: 8px;
 }
 
+
 .favourite-wrapper .copy-link-button{
     align-self: flex-start;
     margin-top: 16px;  
@@ -57,4 +67,20 @@
     height: 32px;
     background-color: white;
     border-radius: 32px;
+}
+
+.remove-fav-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    color: rgba(255,255,255,0.9);
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    display: flex;
 }

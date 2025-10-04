@@ -13,10 +13,14 @@ import PublicFavorites from "./screens/publicFavourites.jsx";
 import GroupsPage from "./screens/GroupsPage.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { FavoritesProvider } from "./context/FavoritesContext.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <UserProvider>
+    <FavoritesProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -31,6 +35,8 @@ createRoot(document.getElementById("root")).render(
         <Route path="/favorites/:userId" element={<PublicFavorites />} />
       </Routes>
     </BrowserRouter>
+    <ToastContainer position="bottom-right" autoClose={2000}/>
+    </FavoritesProvider>
     </UserProvider>
   </StrictMode>
 );
