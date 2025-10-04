@@ -164,9 +164,13 @@ export async function getMyGroups() {
       e.status = 401;
       throw e;
     }
-    return fetch(BASE + "/api/group/get_by_user", {
+    console.log(token)
+    const res = await fetch(BASE + "/api/group/get_by_user", {
       headers: { Authorization: "Bearer " + token },
+      credentials: "include"
     });
+    console.log(res)
+    return res
   };
   return withAuthRetry(doRequest);
 }

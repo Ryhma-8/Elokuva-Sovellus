@@ -1,17 +1,16 @@
 import { ApiError } from '../helpers/apiErrorClass.js'
-import { createGroup, allGroups, usersGroups, isGroupOwner, groupJoinRequest, groupExists, alreadyInGroup } from '../models/groupModel.js'
+import { createGroup, allGroups, usersGroups, isGroupOwner, groupJoinRequest, groupExists, alreadyInGroup, groupNameAlreadyInUse, groupFull, acceptJoinRequest } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
 
-//lisää tarkistus onko nimi jo käytössä ja palauta siitä virhe jos on
-// Täytyy kokeilla meneekö ryhmän luonti virheeseen jos yksittäinen jäsen email on väärin
 const makeNewGroup = async(req,res,next) => {
     const grouName = req.body.groupName
-    const owner = await userExists(req.user?.user)
+    const owner = await userExists(req.user?.email)
     const ownerId = owner.rows[0].id
     if (!grouName || !ownerId) return next (new ApiError("No group name or owner", 400))
+    if (await groupNameAlreadyInUse(grouName)) return next (new ApiError("Group name Already in use", 400))
     const membersList = req.body.memberEmails
-    if (membersList.length > 20) return next (new ApiError("Maximum of 5 members", 400)) // fronttiin kanssa maksimi rajaksi 20
+    if (membersList.length > 20) return next (new ApiError("Maximum of 20 members", 400))
 
     try {
         const group = await createGroup(grouName, ownerId, membersList)
@@ -30,18 +29,17 @@ const getAllGroups = async(req,res,next) => {
         return res.status(200).json(groupsData)
 
     } catch (error) {
-        return next(new ApiError(`error getting groups data: ${error}`, 404))
+        return next(new ApiError(`error getting groups data: ${error.message}`, 404))
     }
     
 }
 
 const getUsersGroups = async (req,res,next) => {
     try {
-        const user = await userExists(req.user?.user)
+        const user = await userExists(req.user?.email)
         if (!user.rows.length) return next (new ApiError("User does not exist", 404))
         const userId = user.rows[0].id
         const result = await usersGroups(userId)
-
         const groups = {}
 
         for (const row of result.rows) {
@@ -54,8 +52,6 @@ const getUsersGroups = async (req,res,next) => {
                 };
             }
 
-                
-                // lisää tarkistus, jos stautus declined niin ei oteta mukaan.
             if (row.member_name) {
                 const exists = groups[row.group_id].members.some(
                     m => m.username === row.member_name && m.status === row.member_status
@@ -72,19 +68,19 @@ const getUsersGroups = async (req,res,next) => {
             
         return res.status(200).json(Object.values(groups))
     } catch (error) {
-        return next(new ApiError(`error getting users groups ${error}`, 400))
+        return next(new ApiError(`error getting users groups ${error.message}`, 400))
     }
 }
 
 const sendGroupJoinRequest = async (req,res,next) => {
     try {
-        const user = await userExists(req.user?.user)
+        const user = await userExists(req.user?.email)
         if (!user.rows.length) return next (new ApiError("User does not exist", 404))
         const userId = user.rows[0].id
         const groupId = parseInt(req.body.groupId)
         const groupRes = await groupExists(groupId)
-        //ryhmä täynnä? >=20
         if (!groupRes.rows.length) return next (new ApiError("Group does not exist", 404))
+        if (await groupFull(groupId)) return next (new ApiError("Group is full", 400))
         const inGroup = await alreadyInGroup(userId, groupId)
         if (inGroup) return next (new ApiError("Already in group", 400))
         const request = await groupJoinRequest(userId, groupId)
@@ -93,8 +89,23 @@ const sendGroupJoinRequest = async (req,res,next) => {
             request: request.rows[0]
         })
     } catch (error) {
-        return next (new ApiError(`Error sending join request ${error}`,400))
+        return next (new ApiError(`Error sending join request ${error.message}`,400))
     }
 }
 
-export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest}
+const acceptGroupJoinRequest = async (req,res,next) => {
+    try {
+        const user = await userExists(req.user?.email)
+        if (!user.rows.length) return next (new ApiError("User does not exist", 404))
+        const userId = user.rows[0].id
+        const groupId = parseInt(req.body.groupId)
+        const senderName = req.body.senderName
+        if (!senderName) return next(new ApiError("Missing senderName", 400));
+        const joinRequest = await acceptJoinRequest(userId,groupId,senderName)
+        return res.status(201).json({message: "Join request accepted"})
+    } catch (error) {
+       return next (new ApiError(`Error accepting join request ${error.message}`,400))
+    }
+}
+
+export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,acceptGroupJoinRequest}

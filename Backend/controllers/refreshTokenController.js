@@ -13,11 +13,13 @@ const handleTokenRefresh = async (req,res,next) => {
     const refreshToken = cookies.refreshToken
 
     const result = await getUserWithRefreshToken(refreshToken)
+    
     if (!result) return next(new ApiError("Forbidden", 403))
      const dbUser = result.rows[0]
+    console.log(dbUser)
     jwt.verify(refreshToken,process.env.JWT_REFRESH_SECRET_KEY,
         (err, decoded) => {
-            if (err || decoded.user !== dbUser.email) return next(new ApiError("Forbidden", 403))
+            if (err || decoded.email !== dbUser.email) return next(new ApiError("Forbidden", 403))
         const token = sign({email: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '15m'}) // signissa ei kannattaisi käyttää id:tä, katsotaan saanko otettua pois.
         res.header("Access-Control-Expose-Headers","Authorization")
             .header("Authorization","Bearer " + token)

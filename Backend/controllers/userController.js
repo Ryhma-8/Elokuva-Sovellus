@@ -58,8 +58,8 @@ const login = async (req, res, next) => {
                 return next(new ApiError("Email or password is wrong!",401))
             }
 
-            const token = sign({user: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '15m'})
-            const refreshToken = sign({user: dbUser.email}, process.env.JWT_REFRESH_SECRET_KEY,{expiresIn: '15d'})
+            const token = sign({email: dbUser.email}, process.env.JWT_SECRET_KEY,{expiresIn: '15m'})
+            const refreshToken = sign({email: dbUser.email}, process.env.JWT_REFRESH_SECRET_KEY,{expiresIn: '15d'})
 
             insertRefreshToken(refreshToken,dbUser.email)
 
@@ -110,7 +110,7 @@ const logout = async (req, res, next) => {
 
 const deleteAccount = async (req,res, next) => {
     try {
-        const userEmail = req.user.email || req.user.user;
+        const userEmail = req.user.email
 
         if(!userEmail) {
             return next(new ApiError("Unauthorized", 401))
