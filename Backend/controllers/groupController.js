@@ -4,6 +4,7 @@ import { userExists } from '../models/userModel.js'
 
 
 //lisää tarkistus onko nimi jo käytössä ja palauta siitä virhe jos on
+// Täytyy kokeilla meneekö ryhmän luonti virheeseen jos yksittäinen jäsen email on väärin
 const makeNewGroup = async(req,res,next) => {
     const grouName = req.body.groupName
     const owner = await userExists(req.user?.user)
@@ -52,6 +53,8 @@ const getUsersGroups = async (req,res,next) => {
                     members: []
                 };
             }
+
+                
                 // lisää tarkistus, jos stautus declined niin ei oteta mukaan.
             if (row.member_name) {
                 const exists = groups[row.group_id].members.some(

@@ -71,7 +71,7 @@ const allGroups = async () => {
 
 }
 
-
+//muuta ehkä jopa kantaan tuo join_requested -> requested
 const usersGroups = async (userId) => {
   return pool.query(
     `
