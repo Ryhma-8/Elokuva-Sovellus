@@ -1,5 +1,8 @@
 import { ApiError } from '../helpers/apiErrorClass.js'
-import { createGroup, allGroups, usersGroups, isGroupOwner, groupJoinRequest, groupExists, alreadyInGroup, groupNameAlreadyInUse, groupFull, acceptJoinRequest } from '../models/groupModel.js'
+import { createGroup, allGroups, usersGroups,
+        groupJoinRequest, groupExists, alreadyInGroup,
+        groupNameAlreadyInUse, groupFull, acceptJoinRequest,
+        rejectJoinRequest } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
 
@@ -43,7 +46,9 @@ const getUsersGroups = async (req,res,next) => {
         const groups = {}
 
         for (const row of result.rows) {
+            
             if (!groups[row.group_id]) {
+                
                 groups[row.group_id] = {
                     group_id: row.group_id,
                     group_name: row.group_name,
@@ -108,4 +113,19 @@ const acceptGroupJoinRequest = async (req,res,next) => {
     }
 }
 
-export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,acceptGroupJoinRequest}
+const rejectGroupJoinRequest = async (req,res,next) => {
+    try {
+        const user = await userExists(req.user?.email)
+        if (!user.rows.length) return next (new ApiError("User does not exist", 404))
+        const userId = user.rows[0].id
+        const groupId = parseInt(req.body.groupId)
+        const senderName = req.body.senderName
+        if (!senderName) return next(new ApiError("Missing senderName", 400));
+        const rejectRequest = await rejectJoinRequest(userId,groupId,senderName)
+        return res.status(201).json({message: "Join request rejected"})
+    } catch (error) {
+       return next (new ApiError(`Error rejecting join request ${error.message}`,400))
+    }
+}
+
+export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,acceptGroupJoinRequest,rejectGroupJoinRequest}
