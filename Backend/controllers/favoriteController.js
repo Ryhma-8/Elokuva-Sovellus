@@ -10,10 +10,7 @@ import { userExists } from '../models/userModel.js'
 // Yritetään saada account_id joko tokenin id:stä tai sähköpostista
 async function resolveAccountId(req) {
   
-  if (req.user?.id) return req.user.id
-
-  // Login tekee muodossa { user: email }
-  const email = req.user?.user || req.user?.email
+  const email = req.user?.email
   if (!email) throw new ApiError('Unauthorized', 401)
 
   const result = await userExists(email)
@@ -82,6 +79,7 @@ export async function deleteFavoriteByIdController(req, res, next) {
   }
 }
 
+//TOINEN DELETEISTÄ POIS
 //DELETE /api/favorites/movie/:movie_id
 export async function deleteFavoriteByMovieIdController(req, res, next) {
   try {

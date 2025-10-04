@@ -17,8 +17,9 @@ export const getFavourites = async ({ userId, groupId} = {}) => {
     const user = console.log("Current user before request" ,JSON.parse(sessionStorage.getItem("user")));
     /* 
     // Mainin ehdollinen versio, jos joskus haluat ohittaa tokenin userId:n perusteella
-    // const headers = userId ? {} : { Authorization: `Bearer ${user?.accessToken}` };
-    */
+     */  
+    const headers = userId ? {} : { Authorization: `Bearer ${user?.accessToken}` };
+ 
     const response = await axios.get(url, {
       withCredentials: true,
       headers,

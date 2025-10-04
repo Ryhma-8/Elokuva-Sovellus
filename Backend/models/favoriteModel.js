@@ -33,7 +33,7 @@ export async function deleteFavoriteById(id, accountId) {
 
 export async function deleteFavoriteByMovieId(movieId, accountId) {
   const sql = `
-  DELETE FROM public. "Favorites"
+  DELETE FROM public."Favorites"
   WHERE movie_id = $1 AND account_id = $2
   RETURNING movie_id;
   `

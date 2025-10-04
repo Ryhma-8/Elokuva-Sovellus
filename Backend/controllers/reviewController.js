@@ -3,8 +3,7 @@ import { insertReview, listReviewsByMovie } from '../models/reviewModel.js'
 import { userExists } from '../models/userModel.js'
 
 async function resolveAccountId(req) {
-  if (req.user?.id) return req.user.id
-  const email = req.user?.user || req.user?.email
+  const email = req.user?.email
   if (!email) throw new ApiError('Unauthorized', 401)
   const result = await userExists(email)
   if (!result?.rows?.length) throw new ApiError('Unauthorized', 401)

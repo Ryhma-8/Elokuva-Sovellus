@@ -11,14 +11,23 @@ const groupExists = async(groupId) => {
 }
 
 const alreadyInGroup = async (userId, groupId) => {
-    if (isGroupOwner(userId, groupId)) return true
-    const member = pool.query('SELECT * FROM "Group_members" where account_id = $1 and group_id = $2',[userId, groupId])
+    if (await isGroupOwner(userId, groupId)) return true
+    const member = await pool.query('SELECT * FROM "Group_members" where account_id = $1 and group_id = $2',[userId, groupId])
     if (member.rows.length) return true
-    const alreadyRequested = pool.query('SELECT * FROM "Group_requests" where account_id = $1 and group_id = $2',[userId, groupId])
-    if (alreadyRequested) return true
+    const alreadyRequested =await pool.query('SELECT * FROM "Group_requests" where account_id = $1 and group_id = $2',[userId, groupId])
+    if (alreadyRequested.rows.length) return true
     return false
 }
 
+const groupNameAlreadyInUse = async (name) => {
+    const dbGoupName = await pool.query('SELECT name FROM "Group" WHERE name=$1',[name])
+    return dbGoupName.rows[0]
+}
+
+const groupFull = async (groupId) => {
+    const result = await pool.query('SELECT COUNT(account_id) >= 20 AS full FROM "Group_members" WHERE group_id = $1', [groupId])
+    return result.rows[0].full
+}
 
 const createGroup = async (name, ownerId, memberEmails = []) => {
     const client = await pool.connect()
@@ -71,7 +80,7 @@ const allGroups = async () => {
 
 }
 
-
+//muuta ehkä jopa kantaan tuo join_requested -> requested
 const usersGroups = async (userId) => {
   return pool.query(
     `
@@ -82,7 +91,7 @@ const usersGroups = async (userId) => {
                 WHEN g.owner_id = $1 THEN 'owner'
                 WHEN gm_self.account_id IS NOT NULL THEN 'member'
                 WHEN gr_self.account_id IS NOT NULL AND gr_self.request_type = 'invitation' THEN 'invited'
-                WHEN gr_self.account_id IS NOT NULL AND gr_self.request_type = 'join_request' THEN 'join_requested'
+                WHEN gr_self.account_id IS NOT NULL AND gr_self.request_type = 'join_request' THEN 'requested'
             END AS user_role
         FROM "Group" g
         LEFT JOIN "Group_members" gm_self
@@ -103,10 +112,15 @@ const usersGroups = async (userId) => {
 
         UNION ALL
 
-        SELECT gr.group_id, a.username, 'invited' AS member_status
+        SELECT gr.group_id, a.username,
+        CASE 
+                WHEN gr.request_type = 'join_request' THEN 'requested'
+                ELSE 'invited'
+            END AS member_status
         FROM "Group_requests" gr
         JOIN "Account" a ON gr.account_id = a.id
-        WHERE gr.status = 'pending' AND gr.request_type IN ('invitation', 'join_request')
+        WHERE gr.status = 'pending'
+        AND gr.request_type IN ('invitation', 'join_request')
     )
     SELECT ug.group_id,
         ug.group_name,
@@ -128,8 +142,20 @@ const groupJoinRequest = async (userId, groupId) => {
 }
 
 
-const acceptJoinRequest = async (ownerId, groupId) => {
+const acceptJoinRequest = async (userId, groupId, senderName) => {
+    if (!await isGroupOwner(groupId, userId)) return null
 
+    const senderRes = await pool.query('SELECT id FROM "Account" WHERE username = $1',[senderName]);
+    if (!senderRes.rows.length) return null;
+
+    const senderId = senderRes.rows[0].id;
+    await pool.query('UPDATE "Group_requests" SET status = $3 WHERE group_id = $1 AND requested_by = $2', [groupId, senderId, 'accepted'])
+    return pool.query('INSERT INTO "Group_members" (group_id, account_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',[groupId, senderId])
 }
 
-export {createGroup, allGroups, usersGroups, groupJoinRequest, acceptJoinRequest, isGroupOwner, groupExists, alreadyInGroup}
+export {
+    createGroup, allGroups, usersGroups,
+    groupJoinRequest, acceptJoinRequest, isGroupOwner,
+    groupExists, alreadyInGroup, groupNameAlreadyInUse,
+    groupFull
+}
