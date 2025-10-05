@@ -4,25 +4,38 @@ import { useUser } from "../context/useUser";
 import { useLocation } from "react-router-dom";
 import { getMovieDetails } from "../services/getMovieDetails";
 import { useFavorites } from "../context/FavoritesContext";
+import { getFavourites } from "../services/getFavourites"; 
 import { Trash2 } from "lucide-react";
 
-export default function FavouriteList() {
-  const { favouriteMovies, toggleFavorite } = useFavorites();
-  const [movies, setMovies] = useState([]);
-  const { user } = useUser();
+export default function FavouriteList({ userId }) {
+  const { favouriteMovies, toggleFavorite } = useFavorites(); // private
+  const { user } = useUser(); 
   const location = useLocation();
 
+  const [movies, setMovies] = useState([]);
+
   useEffect(() => {
-    const fetchFavouriteDetails = async () => {
+    const fetchFavourites = async () => {
       try {
-        // haetaan tietokannasta suosikit (vain movie_id)
-        const movieIds = favouriteMovies.map((fav) => fav.movie_id);
-        if (!movieIds.length) return;
+        let favs;
+
+        if (userId) {
+          // PUBLIC MODE
+          favs = await getFavourites({ userId });
+        } else {
+          // PRIVATE MODE
+          favs = favouriteMovies;
+        }
+
+        if (!favs || favs.length === 0) {
+          setMovies([]);
+          return;
+        }
 
         const results = await Promise.all(
-          movieIds.map(async (id) => {
+          favs.map(async (fav) => {
             try {
-              const data = await getMovieDetails(id);
+              const data = await getMovieDetails(fav.movie_id || fav.id);
               return {
                 id: data.id,
                 title: data.title,
@@ -31,22 +44,23 @@ export default function FavouriteList() {
                 vote_average: data.vote_average,
               };
             } catch (err) {
-              console.warn("Skipping failed movie fetch", id);
+              console.warn("Skipping failed movie fetch", fav.movie_id || fav.id);
               return null;
             }
           })
         );
 
-        const filtered = results.filter(Boolean);
-        setMovies(filtered);
+        setMovies(results.filter(Boolean));
       } catch (error) {
-        console.error("Error fetching movie details", error);
+        console.error("Error fetching favourites", error);
       }
     };
-    fetchFavouriteDetails();
-  }, [favouriteMovies]); // jos suosikkilistalta poistetaan tai sinne lisätään niin päivitetään lista
+
+    fetchFavourites();
+  }, [userId, favouriteMovies]);
 
   const handleRemove = async (movieId) => {
+    if (userId) return; // ei voi poistaa public-näkymässä
     toggleFavorite({ id: movieId });
     setMovies((prev) => prev.filter((m) => m.id !== movieId));
   };
@@ -90,13 +104,15 @@ export default function FavouriteList() {
                   ⭐ {movie.vote_average.toFixed(1)}
                 </p>
               </div>
-              <button
-                className="remove-fav-button"
-                onClick={() => handleRemove(movie.id)}
-                title="remove from favourites"
-              >
-                <Trash2 size={18} />
-              </button>
+              {!userId && (
+                <button
+                  className="remove-fav-button"
+                  onClick={() => handleRemove(movie.id)}
+                  title="remove from favourites"
+                >
+                  <Trash2 size={18} />
+                </button>
+              )}
             </li>
           ))}
         </ul>

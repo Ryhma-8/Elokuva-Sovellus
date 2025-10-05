@@ -4,20 +4,12 @@ import { refreshAccessToken } from "../services/refreshToken.js"
 export const getFavourites = async ({ userId, groupId} = {}) => {
   let url = `${import.meta.env.VITE_API_URL}/api/favorites`;
 
-  // Tämä voisi olla julkiseen hakuun?
   if (userId) {
     url = `${import.meta.env.VITE_API_URL}/api/favorites/share/${userId}`;
 
-    // Ryhmien suosikkien hakuun jotain vastaavaa???
-  } else if (groupId) {
-    url = `${import.meta.env.VITE_API_URL}/api/groups/${groupId}/favorites`;
-  }
-
   try {
     const user = console.log("Current user before request" ,JSON.parse(sessionStorage.getItem("user")));
-    /* 
-    // Mainin ehdollinen versio, jos joskus haluat ohittaa tokenin userId:n perusteella
-     */  
+
     const headers = userId ? {} : { Authorization: `Bearer ${user?.accessToken}` };
  
     const response = await axios.get(url, {
@@ -49,7 +41,7 @@ export const getFavourites = async ({ userId, groupId} = {}) => {
     throw err;
   }
 };
-
+}
 export const addFavourite = async (movie, userId) => {
   const url = `${import.meta.env.VITE_API_URL}/api/favorites`
 

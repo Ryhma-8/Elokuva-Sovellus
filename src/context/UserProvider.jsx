@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 export default function UserProvider({children}) {
-    const userFromStorage = sessionStorage.getItem('user') // Vaihdetaanko localstorageksi?
+    const userFromStorage = sessionStorage.getItem('user')
     const [user, setUser] = useState(userFromStorage ? JSON.parse(userFromStorage) : {email: '' ,password:'', accessToken:''})
 
     const signUp = async () => {
