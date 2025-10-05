@@ -186,13 +186,18 @@ const kickFromGroup = async (groupId, ownerId, usersName) => {
 
 }
 
-const leaveFromGroup = async () => {
+const leaveFromGroup = async (userId, groupId) => {
+    const inGroup = await pool.query('SELECT * FROM "Group_members" WHERE account_id = $1 AND group_id = $2',[userId, groupId])
+    if (!inGroup.rows.length) return null
 
+    await pool.query('DELETE FROM "Group_requests" WHERE account_id = $1 AND group_id = $2',[userId, groupId]);
+
+    return pool.query('DELETE FROM "Group_members" WHERE account_id = $1 AND group_id = $2 RETURNING *',[userId, groupId]);
 }
 
 export {
     createGroup, allGroups, usersGroups,
     groupJoinRequest, acceptJoinRequest, isGroupOwner,
     groupExists, alreadyInGroup, groupNameAlreadyInUse,
-    groupFull,rejectJoinRequest, kickFromGroup
+    groupFull,rejectJoinRequest, kickFromGroup, leaveFromGroup
 }

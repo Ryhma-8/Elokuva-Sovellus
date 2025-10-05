@@ -11,7 +11,6 @@ export const FavoritesProvider = ({ children }) => {
     
     //haetaan suosikkileffat käyttäjän sisäänkirjautuessa
     useEffect(() => {
-      if (!currentUser || !currentUser.id) return
       const loadFavourites = async () => {
         try {
             if (!currentUser) return

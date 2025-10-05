@@ -2,7 +2,7 @@ import { ApiError } from '../helpers/apiErrorClass.js'
 import { createGroup, allGroups, usersGroups,
         groupJoinRequest, groupExists, alreadyInGroup,
         groupNameAlreadyInUse, groupFull, acceptJoinRequest,
-        rejectJoinRequest, kickFromGroup } from '../models/groupModel.js'
+        rejectJoinRequest, kickFromGroup,leaveFromGroup } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
 
@@ -144,5 +144,37 @@ const kickUserFromGroup = async (req,res,next) => {
     }
 }
 
+
+const userLeaveFromGroup = async (req,res,next) => {
+    try {
+        const user = await userExists(req.user?.email)
+        if (!user.rows.length) return next (new ApiError("User does not exist", 404))
+        const userId = user.rows[0].id
+        const groupId = parseInt(req.body.groupId)
+        const result = await leaveFromGroup(userId, groupId);
+        if (!result) return res.status(400).json({ message: "User is not a member of this group" });
+        return res.status(201).json({message: "user left the group"})
+    } catch (error) {
+       return next (new ApiError(`Error in leaving the group ${error.message}`,400))
+    }
+}
+
+
+const ownerDeleteGroup = async (req,res,next) => {
+    try {
+        const user = await userExists(req.user?.email)
+        if (!user.rows.length) return next (new ApiError("User does not exist", 404))
+        const userId = user.rows[0].id
+        const groupId = parseInt(req.body.groupId)
+        await deleteGroup(groupId, userId,)
+        return res.status(201).json({message: "Group delted"})
+    } catch (error) {
+       return next (new ApiError(`Error rejecting join request ${error.message}`,400))
+    }
+}
+
+
+
+
 export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
-        acceptGroupJoinRequest,rejectGroupJoinRequest, kickUserFromGroup}
+        acceptGroupJoinRequest,rejectGroupJoinRequest, kickUserFromGroup, userLeaveFromGroup}

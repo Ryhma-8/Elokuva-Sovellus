@@ -10,7 +10,7 @@ import "../css/HeroBlock.css";
 import TheatreShowtimesSection from "../components/TheatreShowtimesSection.jsx";
 
 function LandingPage() {
-  const [movieName, setMovieName] = useState("Dune");
+  const [movieName, setMovieName] = useState("Star wars");
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -73,8 +73,8 @@ function LandingPage() {
         title="Next movie presentations"
         showTheatrePicker={true}
         showDatePicker={false} 
-        initialCount={4}
-        step={4}
+        initialCount={8}
+        step={8}
         showMore={false}
       />
 
