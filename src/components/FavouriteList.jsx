@@ -13,6 +13,8 @@ export default function FavouriteList({ userId }) {
   const location = useLocation();
 
   const [movies, setMovies] = useState([]);
+  const isProfilePage = location.pathname === "/profile";
+  const isGroupPage = location.pathname === "/group";
 
   useEffect(() => {
     const fetchFavourites = async () => {
@@ -65,11 +67,9 @@ export default function FavouriteList({ userId }) {
     setMovies((prev) => prev.filter((m) => m.id !== movieId));
   };
 
-  const isProfilePage = location.pathname === "/profile";
-
   return (
     <div className="favourite-wrapper">
-      <h4>FAVOURITES</h4>
+      {isGroupPage ? <h4>Group favourites</h4> : <h4>FAVOURITES</h4>}
 
       {isProfilePage && (
         <button
@@ -104,7 +104,7 @@ export default function FavouriteList({ userId }) {
                   ⭐ {movie.vote_average.toFixed(1)}
                 </p>
               </div>
-              {!userId && (
+              {!userId && isProfilePage && (
                 <button
                   className="remove-fav-button"
                   onClick={() => handleRemove(movie.id)}

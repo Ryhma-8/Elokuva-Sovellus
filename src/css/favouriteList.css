@@ -4,6 +4,8 @@
     margin: 0 auto;
     padding:0 16px;
     max-width: 1200px;
+    margin-top: 32px;
+    margin-bottom: 32px;
 }
 
 .favourite-wrapper h4{

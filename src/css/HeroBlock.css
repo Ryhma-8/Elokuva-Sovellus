@@ -106,6 +106,18 @@
   color: #111;
 }
 
+.hero-movie-card .add-button-group{
+  margin-left: auto;
+  margin-top: 16px;
+  min-width: 164px;
+  min-height: 32px;
+  width: 164px;
+  height: 32px;
+  background-color: white;
+  border-radius: 32px;
+
+}
+
 
 
 /* Responsiivisuus puhelimille */

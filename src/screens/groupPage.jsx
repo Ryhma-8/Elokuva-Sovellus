@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRef } from "react";
 import movieSearch from "../services/simpleMovieSearch"
+import FavouriteList from "../components/favouriteList";
 
 export default function GroupPage() {
     const [movieName, setMovieName] = useState("Dune");
@@ -66,6 +67,7 @@ export default function GroupPage() {
                     </InfiniteScroll>
                 </div>
             </div>
+            <FavouriteList/>
 
             
 
