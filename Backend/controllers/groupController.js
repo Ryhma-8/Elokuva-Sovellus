@@ -2,7 +2,7 @@ import { ApiError } from '../helpers/apiErrorClass.js'
 import { createGroup, allGroups, usersGroups,
         groupJoinRequest, groupExists, alreadyInGroup,
         groupNameAlreadyInUse, groupFull, acceptJoinRequest,
-        rejectJoinRequest, kickFromGroup,leaveFromGroup } from '../models/groupModel.js'
+        rejectJoinRequest, kickFromGroup,leaveFromGroup, deleteGroup } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
 
@@ -155,7 +155,7 @@ const userLeaveFromGroup = async (req,res,next) => {
         if (!result) return res.status(400).json({ message: "User is not a member of this group" });
         return res.status(201).json({message: "user left the group"})
     } catch (error) {
-       return next (new ApiError(`Error in leaving the group ${error.message}`,400))
+       return next (new ApiError(`Error in leaving a group ${error.message}`,400))
     }
 }
 
@@ -166,10 +166,11 @@ const ownerDeleteGroup = async (req,res,next) => {
         if (!user.rows.length) return next (new ApiError("User does not exist", 404))
         const userId = user.rows[0].id
         const groupId = parseInt(req.body.groupId)
-        await deleteGroup(groupId, userId,)
-        return res.status(201).json({message: "Group delted"})
+        const result = await deleteGroup(userId, groupId)
+        if(!result) return next (new ApiError("User is not the owner of this group", 400))
+        return res.status(201).json({message: "Group deleted"})
     } catch (error) {
-       return next (new ApiError(`Error rejecting join request ${error.message}`,400))
+       return next (new ApiError(`Error in deleting a group ${error.message}`,400))
     }
 }
 
@@ -177,4 +178,5 @@ const ownerDeleteGroup = async (req,res,next) => {
 
 
 export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
-        acceptGroupJoinRequest,rejectGroupJoinRequest, kickUserFromGroup, userLeaveFromGroup}
+        acceptGroupJoinRequest,rejectGroupJoinRequest, kickUserFromGroup,
+        userLeaveFromGroup, ownerDeleteGroup}
