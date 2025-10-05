@@ -128,6 +128,7 @@ const rejectGroupJoinRequest = async (req,res,next) => {
     }
 }
 
+
 const kickUserFromGroup = async (req,res,next) => {
     try {
         const user = await userExists(req.user?.email)
