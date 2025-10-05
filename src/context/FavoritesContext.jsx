@@ -11,11 +11,10 @@ export const FavoritesProvider = ({ children }) => {
     
     //haetaan suosikkileffat käyttäjän sisäänkirjautuessa
     useEffect(() => {
-      if (!currentUser || !currentUser.id) return
       const loadFavourites = async () => {
         try {
             if (!currentUser) return
-            const favourites = await getFavourites(currentUser.id)
+            const favourites = await getFavourites({ userId: currentUser.id })
             setFavouriteMovies(favourites || [])
         } catch (err) {
             console.error("Error fetching favourites", err)

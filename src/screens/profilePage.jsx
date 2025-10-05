@@ -4,13 +4,12 @@ import { UserContext } from "../context/UserContext";
 import { Navigate } from "react-router-dom";
 import Header from "../components/header"
 import Footer from "../components/footer"
-import FavouriteList from "../components/FavouriteList";
+import FavouriteList from "../components/FavouriteList"
 
 const ProfilePage = () => {
   const {user} = React.useContext(UserContext);
 
-  if 
-(!user || !user.accessToken) {
+if (!user || !user.accessToken) {
     return <Navigate to ="/login" replace />;
   }
   return (
