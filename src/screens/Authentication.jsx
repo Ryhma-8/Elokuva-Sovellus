@@ -47,7 +47,7 @@ export default function Authentication({authenticationMode}) {
             type="email"
             className="form-input"
             placeholder="Email"
-            value={user.email}
+            value={user.email || ""}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
             required
           />
@@ -57,7 +57,7 @@ export default function Authentication({authenticationMode}) {
               type="text"
               className="form-input"
               placeholder="Username"
-              value={user.username}
+              value={user.username || ""}
               onChange={(e) => setUser({ ...user, username: e.target.value })}
               required
             />
@@ -73,7 +73,7 @@ export default function Authentication({authenticationMode}) {
               title:"Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
             }
             : {})}
-          value={user.password}
+          value={user.password || ""}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
           required
         />

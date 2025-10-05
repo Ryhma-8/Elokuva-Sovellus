@@ -2,7 +2,7 @@ import { ApiError } from '../helpers/apiErrorClass.js'
 import { createGroup, allGroups, usersGroups,
         groupJoinRequest, groupExists, alreadyInGroup,
         groupNameAlreadyInUse, groupFull, acceptJoinRequest,
-        rejectJoinRequest } from '../models/groupModel.js'
+        rejectJoinRequest, kickFromGroup } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
 
@@ -106,7 +106,7 @@ const acceptGroupJoinRequest = async (req,res,next) => {
         const groupId = parseInt(req.body.groupId)
         const senderName = req.body.senderName
         if (!senderName) return next(new ApiError("Missing senderName", 400));
-        const joinRequest = await acceptJoinRequest(userId,groupId,senderName)
+        await acceptJoinRequest(userId,groupId,senderName)
         return res.status(201).json({message: "Join request accepted"})
     } catch (error) {
        return next (new ApiError(`Error accepting join request ${error.message}`,400))
@@ -121,11 +121,27 @@ const rejectGroupJoinRequest = async (req,res,next) => {
         const groupId = parseInt(req.body.groupId)
         const senderName = req.body.senderName
         if (!senderName) return next(new ApiError("Missing senderName", 400));
-        const rejectRequest = await rejectJoinRequest(userId,groupId,senderName)
+        await rejectJoinRequest(userId,groupId,senderName)
         return res.status(201).json({message: "Join request rejected"})
     } catch (error) {
        return next (new ApiError(`Error rejecting join request ${error.message}`,400))
     }
 }
 
-export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,acceptGroupJoinRequest,rejectGroupJoinRequest}
+const kickUserFromGroup = async (req,res,next) => {
+    try {
+        const user = await userExists(req.user?.email)
+        if (!user.rows.length) return next (new ApiError("User does not exist", 404))
+        const userId = user.rows[0].id
+        const groupId = parseInt(req.body.groupId)
+        const senderName = req.body.senderName
+        if (!senderName) return next(new ApiError("Missing users name", 400));
+        await kickFromGroup(groupId, userId,senderName)
+        return res.status(201).json({message: "User kicked from the group"})
+    } catch (error) {
+       return next (new ApiError(`Error rejecting join request ${error.message}`,400))
+    }
+}
+
+export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
+        acceptGroupJoinRequest,rejectGroupJoinRequest, kickUserFromGroup}
