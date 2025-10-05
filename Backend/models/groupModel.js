@@ -195,9 +195,35 @@ const leaveFromGroup = async (userId, groupId) => {
     return pool.query('DELETE FROM "Group_members" WHERE account_id = $1 AND group_id = $2 RETURNING *',[userId, groupId]);
 }
 
+const deleteGroup = async (userId, groupId) => {
+  if (!await isGroupOwner(groupId, userId)) return null;
+
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    await client.query('DELETE FROM "Group_members" WHERE group_id = $1', [groupId]);
+
+    await client.query('DELETE FROM "Group_requests" WHERE group_id = $1', [groupId]);
+
+    await client.query('DELETE FROM "Group" WHERE id = $1', [groupId]);
+
+    await client.query('COMMIT');
+    return true;
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+    
+  } finally {
+    client.release();
+  }
+};
+
 export {
     createGroup, allGroups, usersGroups,
     groupJoinRequest, acceptJoinRequest, isGroupOwner,
     groupExists, alreadyInGroup, groupNameAlreadyInUse,
-    groupFull,rejectJoinRequest, kickFromGroup, leaveFromGroup
+    groupFull,rejectJoinRequest, kickFromGroup, leaveFromGroup, deleteGroup
 }
