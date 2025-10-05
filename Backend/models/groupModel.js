@@ -14,7 +14,7 @@ const alreadyInGroup = async (userId, groupId) => {
     if (await isGroupOwner(userId, groupId)) return true
     const member = await pool.query('SELECT * FROM "Group_members" where account_id = $1 and group_id = $2',[userId, groupId])
     if (member.rows.length) return true
-    const alreadyRequested =await pool.query('SELECT * FROM "Group_requests" where account_id = $1 and group_id = $2',[userId, groupId])
+    const alreadyRequested =await pool.query('SELECT * FROM "Group_requests" where account_id = $1 and group_id = $2 and status != $3',[userId, groupId,'rejected'])
     if (alreadyRequested.rows.length) return true
     return false
 }
@@ -80,7 +80,6 @@ const allGroups = async () => {
 
 }
 
-//muuta ehkä jopa kantaan tuo join_requested -> requested
 const usersGroups = async (userId) => {
   return pool.query(
     `
@@ -149,7 +148,7 @@ const acceptJoinRequest = async (userId, groupId, senderName) => {
     if (!senderRes.rows.length) return null;
 
     const senderId = senderRes.rows[0].id;
-    await pool.query('UPDATE "Group_requests" SET status = $3 WHERE group_id = $1 AND requested_by = $2', [groupId, senderId, 'accepted'])
+    await pool.query('UPDATE "Group_requests" SET status = $3 WHERE group_id = $1 AND requested_by = $2 AND status = $4', [groupId, senderId, 'accepted', 'pending'])
     return pool.query('INSERT INTO "Group_members" (group_id, account_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',[groupId, senderId])
 }
 
@@ -163,9 +162,26 @@ const rejectJoinRequest = async (userId, groupId, senderName) => {
     return pool.query('UPDATE "Group_requests" SET status = $3 WHERE group_id = $1 AND requested_by = $2', [groupId, senderId, 'rejected'])
 }
 
+const kickFromGroup = async (groupId, ownerId, usersName) => {
+    if (!await isGroupOwner(groupId, ownerId)) return null
+
+    const senderRes = await pool.query('SELECT id FROM "Account" WHERE username = $1',[usersName]);
+    if (!senderRes.rows.length) return null;
+
+    const senderId = senderRes.rows[0].id;
+    await pool.query('DELETE FROM "Group_requests" WHERE account_id = $1 AND group_id = $2',[senderId, groupId]);
+
+    return pool.query('DELETE FROM "Group_members" WHERE account_id = $1 AND group_id = $2',[senderId, groupId]);
+
+}
+
+const leaveFromGroup = async () => {
+
+}
+
 export {
     createGroup, allGroups, usersGroups,
     groupJoinRequest, acceptJoinRequest, isGroupOwner,
     groupExists, alreadyInGroup, groupNameAlreadyInUse,
-    groupFull,rejectJoinRequest
+    groupFull,rejectJoinRequest, kickFromGroup
 }

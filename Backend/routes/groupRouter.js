@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { auth } from '../helpers/auth.js'
 import { makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
-        acceptGroupJoinRequest, rejectGroupJoinRequest } from '../controllers/groupController.js'
+        acceptGroupJoinRequest, rejectGroupJoinRequest, kickUserFromGroup } from '../controllers/groupController.js'
 
 const router = Router()
 
@@ -16,5 +16,7 @@ router.post("/send_join_request", auth, sendGroupJoinRequest)
 router.post("/accept_join_request", auth, acceptGroupJoinRequest)
 
 router.post("/reject_join_request", auth, rejectGroupJoinRequest)
+
+router.post("/kick_from_group", auth, kickUserFromGroup)
 
 export default router
