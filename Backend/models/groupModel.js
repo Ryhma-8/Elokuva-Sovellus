@@ -5,13 +5,18 @@ const isGroupOwner = async(groupId, userId) => {
     return res.rows[0]?.owner_id === userId
 }
 
+const isGroupMember = async(groupId, userId) => {
+    const res = await pool.query('SELECT account_id FROM "Group_members" WHERE account_id = $1 AND group_id = $2', [userId, groupId])
+    return res.rows[0]?.account_id === userId
+}
+
 
 const groupExists = async(groupId) => {
     return pool.query('SELECT * FROM "Group" where id=$1', [groupId])
 }
 
 const alreadyInGroup = async (userId, groupId) => {
-    if (await isGroupOwner(userId, groupId)) return true
+    if (await isGroupOwner(groupId, userId)) return true
     const member = await pool.query('SELECT * FROM "Group_members" where account_id = $1 and group_id = $2',[userId, groupId])
     if (member.rows.length) return true
     const alreadyRequested =await pool.query('SELECT * FROM "Group_requests" where account_id = $1 and group_id = $2 and status != $3',[userId, groupId,'rejected'])
@@ -87,7 +92,7 @@ const allGroups = async () => {
         COUNT(account_id)
         FROM "Group" LEFT JOIN "Group_members"
         on "Group".id = "Group_members".group_id
-        Group BY "Group".name, "Group".id;`)
+        GROUP BY "Group".name, "Group".id;`)
 
 }
 
@@ -187,8 +192,8 @@ const kickFromGroup = async (groupId, ownerId, usersName) => {
 }
 
 const leaveFromGroup = async (userId, groupId) => {
-    const inGroup = await pool.query('SELECT * FROM "Group_members" WHERE account_id = $1 AND group_id = $2',[userId, groupId])
-    if (!inGroup.rows.length) return null
+    const inGroup = await isGroupMember(groupId, userId)
+    if (!inGroup) return null
 
     await pool.query('DELETE FROM "Group_requests" WHERE account_id = $1 AND group_id = $2',[userId, groupId]);
 
@@ -204,8 +209,9 @@ const deleteGroup = async (userId, groupId) => {
     await client.query('BEGIN');
 
     await client.query('DELETE FROM "Group_members" WHERE group_id = $1', [groupId]);
-
     await client.query('DELETE FROM "Group_requests" WHERE group_id = $1', [groupId]);
+    await client.query('DELETE FROM "Group_movies" WHERE group_id = $1', [groupId]);
+    await client.query('DELETE FROM "Presenting_times" WHERE group_id = $1', [groupId]);
 
     await client.query('DELETE FROM "Group" WHERE id = $1', [groupId]);
 
@@ -215,15 +221,36 @@ const deleteGroup = async (userId, groupId) => {
   } catch (err) {
     await client.query('ROLLBACK');
     throw err;
-    
   } finally {
     client.release();
   }
 };
 
+
+const addMovie = async(userId, groupId, movieId) =>  {
+    const inGroup = await isGroupMember(groupId, userId)
+    if (!inGroup) {
+        if (!await isGroupOwner(groupId, userId)) return null;
+    }
+    const movieAlreadyInGroup = await pool.query('SELECT * FROM "Group_movies" WHERE movie_id = $1 AND group_id = $2', [movieId, groupId])
+    if (movieAlreadyInGroup.rows.length > 0) return "Movie already in group"
+    return pool.query('INSERT INTO "Group_movies" (group_id, movie_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING *',[groupId, movieId])
+}
+
+const addShowTime = async(userId, groupId, showTimeId) =>  {
+    const inGroup = await isGroupMember(groupId, userId)
+    if (!inGroup) {
+        if (!await isGroupOwner(groupId, userId)) return null;
+    }
+    const movieAlreadyInGroup = await pool.query('SELECT * FROM "Presenting_times" WHERE presenting_times_id = $1 AND group_id = $2', [showTimeId, groupId])
+    if (movieAlreadyInGroup.rows.length > 0) return "Show time already in group"
+    return pool.query('INSERT INTO "Presenting_times" (group_id, presenting_times_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING *',[groupId, showTimeId])
+}
+
 export {
     createGroup, allGroups, usersGroups,
     groupJoinRequest, acceptJoinRequest, isGroupOwner,
     groupExists, alreadyInGroup, groupNameAlreadyInUse,
-    groupFull,rejectJoinRequest, kickFromGroup, leaveFromGroup, deleteGroup
+    groupFull,rejectJoinRequest, kickFromGroup, leaveFromGroup,
+    deleteGroup, addMovie, addShowTime
 }
