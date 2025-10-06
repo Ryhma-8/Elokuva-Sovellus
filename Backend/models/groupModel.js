@@ -247,10 +247,28 @@ const addShowTime = async(userId, groupId, showTimeId) =>  {
     return pool.query('INSERT INTO "Presenting_times" (group_id, presenting_times_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING *',[groupId, showTimeId])
 }
 
+const deleteMovie = async (userId, groupId, movieId) => {
+    const inGroup = await isGroupMember(groupId, userId)
+    if (!inGroup) {
+        if (!await isGroupOwner(groupId, userId)) return null;
+    }
+    const res = await pool.query('DELETE FROM "Group_movies" WHERE movie_id = $1 AND group_id = $2',[movieId, groupId]);
+    return res.rowCount > 0;
+}
+
+const deleteShowTime = async (userId, groupId, showTimeId) => {
+    const inGroup = await isGroupMember(groupId, userId)
+    if (!inGroup) {
+        if (!await isGroupOwner(groupId, userId)) return null;
+    }
+    const res = await pool.query('DELETE FROM "Presenting_times" WHERE presenting_times_id = $1 AND group_id = $2',[showTimeId, groupId]);
+    return res.rowCount > 0;
+}
+
 export {
     createGroup, allGroups, usersGroups,
     groupJoinRequest, acceptJoinRequest, isGroupOwner,
     groupExists, alreadyInGroup, groupNameAlreadyInUse,
     groupFull,rejectJoinRequest, kickFromGroup, leaveFromGroup,
-    deleteGroup, addMovie, addShowTime
+    deleteGroup, addMovie, addShowTime, deleteMovie, deleteShowTime
 }

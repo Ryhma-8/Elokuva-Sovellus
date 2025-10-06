@@ -3,7 +3,7 @@ import { createGroup, allGroups, usersGroups,
         groupJoinRequest, groupExists, alreadyInGroup,
         groupNameAlreadyInUse, groupFull, acceptJoinRequest,
         rejectJoinRequest, kickFromGroup,leaveFromGroup, deleteGroup,
-        addMovie, addShowTime } from '../models/groupModel.js'
+        addMovie, addShowTime, deleteMovie, deleteShowTime } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
 
@@ -203,9 +203,41 @@ const addShowTimeForGroup = async(req, res, next) =>  {
     const result = await addShowTime(userId, groupId, showTimeId)
     if (!result) return next(new ApiError('Users is not a member of the group', 400))  
     if (result === "Show time already in group") return next(new ApiError('Show time already in group', 400))
-    return res.status(201).json(result.rows[0])
+    return res.status(201).json({message: "Show time added",  result: result.rows[0]})
   } catch (error) {
        return next (new ApiError(`Error in adding Show time to group ${error.message}`,400))
+    }
+}
+
+const deleteMovieFromGroup = async (req,res,next) => {
+    try {
+        const user = await userExists(req.user?.email)
+        if (!user.rows.length) return next (new ApiError("User does not exist", 404))
+        const userId = user.rows[0].id
+        const groupId = parseInt(req.body?.groupId)
+        const movieId = parseInt(req.body?.movieId)
+        const result = await deleteMovie(userId, groupId, movieId);
+        if (result=== null) return next (new ApiError("User is not a member or owner of this group", 404))
+        if (!result) return next (new ApiError("Movie not found in this group", 404))
+        return res.status(201).json({message: "Movie deleted"})
+    } catch (error) {
+       return next (new ApiError(`Error deleting movie from a group ${error.message}`,400))
+    }
+}
+
+const deleteShowTimeFromGroup = async (req,res,next) => {
+    try {
+        const user = await userExists(req.user?.email)
+        if (!user.rows.length) return next (new ApiError("User does not exist", 404))
+        const userId = user.rows[0].id
+        const groupId = parseInt(req.body?.groupId)
+        const showTimeId = parseInt(req.body?.showTimeId)
+        const result = await deleteShowTime(userId, groupId, showTimeId);
+        if (result=== null) return next (new ApiError("User is not a member or owner of this group", 404))
+        if (!result) return next (new ApiError("Show time not found in this group", 404))
+        return res.status(201).json({message: "Show time deleted"})
+    } catch (error) {
+       return next (new ApiError(`Error deleting show time from a group ${error.message}`,400))
     }
 }
 
@@ -214,4 +246,5 @@ const addShowTimeForGroup = async(req, res, next) =>  {
 
 export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
         acceptGroupJoinRequest,rejectGroupJoinRequest, kickUserFromGroup,
-        userLeaveFromGroup, ownerDeleteGroup, addMovieForGroup, addShowTimeForGroup}
+        userLeaveFromGroup, ownerDeleteGroup, addMovieForGroup, addShowTimeForGroup,
+        deleteMovieFromGroup, deleteShowTimeFromGroup}

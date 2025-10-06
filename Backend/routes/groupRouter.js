@@ -2,8 +2,9 @@ import { Router } from 'express'
 import { auth } from '../helpers/auth.js'
 import { makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
         acceptGroupJoinRequest, rejectGroupJoinRequest, kickUserFromGroup,
-        userLeaveFromGroup, ownerDeleteGroup, addMovieForGroup, addShowTimeForGroup
-         } from '../controllers/groupController.js'
+        userLeaveFromGroup, ownerDeleteGroup, addMovieForGroup, addShowTimeForGroup,
+        deleteMovieFromGroup, deleteShowTimeFromGroup
+        } from '../controllers/groupController.js'
 
 const router = Router()
 
@@ -32,5 +33,9 @@ router.delete("/delete", auth, ownerDeleteGroup)
 router.post("/add_movie", auth, addMovieForGroup)
 
 router.post("/add_showTime", auth, addShowTimeForGroup)
+
+router.delete("/delete_movie", auth, deleteMovieFromGroup)
+
+router.delete("/delete_showTime", auth, deleteShowTimeFromGroup)
 
 export default router
