@@ -8,12 +8,14 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useRef } from "react";
 import movieSearch from "../services/simpleMovieSearch"
 import FavouriteList from "../components/favouriteList";
+import { useParams } from "react-router-dom";
 
 export default function GroupPage() {
     const [movieName, setMovieName] = useState("Dune");
     const [movies, setMovies] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const {groupId} = useParams(); 
 
     useEffect(() => {
         fetchMovies(movieName, 1);
@@ -67,10 +69,7 @@ export default function GroupPage() {
                     </InfiniteScroll>
                 </div>
             </div>
-            <FavouriteList/>
-
-            
-
+            <FavouriteList />
             <Footer />
         </>
     );

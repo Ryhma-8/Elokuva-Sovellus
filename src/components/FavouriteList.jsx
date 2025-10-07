@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../css/favouriteList.css";
 import { useUser } from "../context/useUser";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { getMovieDetails } from "../services/getMovieDetails";
 import { useFavorites } from "../context/FavoritesContext";
 import { getFavourites } from "../services/getFavourites"; 
@@ -92,6 +92,12 @@ export default function FavouriteList({ userId }) {
         <ul className="favourite-list">
           {movies.map((movie) => (
             <li className="favourite-list-item" key={movie.id}>
+            <Link
+            key={movie.id}
+            to={`/movie`}
+            state={{ movieId: movie.id }}
+            className="favourite-link"
+            >
               <img
                 className="movie-poster"
                 src={`https://image.tmdb.org/t/p/w500${movie.poster}`}
@@ -104,6 +110,7 @@ export default function FavouriteList({ userId }) {
                   ⭐ {movie.vote_average.toFixed(1)}
                 </p>
               </div>
+              </Link>
               {!userId && isProfilePage && (
                 <button
                   className="remove-fav-button"
