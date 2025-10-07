@@ -105,3 +105,29 @@
     flex-direction: column;
   }
 }
+
+
+.groups-page .my-group-row {
+  /* pinotaan otsikko + kontrollit + alarivin napit */
+  flex-direction: column;
+  align-items: stretch;
+  gap: .25rem;
+}
+
+.groups-page .my-group-row .member-select {
+  /* hieman leveämpi pudotuslista jotta teksti mahtuu */
+  min-width: 220px;
+}
+
+.groups-page .actions-row {
+  display: flex;
+  gap: .75rem;
+}
+
+.groups-page .actions-row .btn {
+  flex: 1 1 0;
+  padding-top: .7rem;
+  padding-bottom: .7rem;
+  font-weight: 600;
+}
+
