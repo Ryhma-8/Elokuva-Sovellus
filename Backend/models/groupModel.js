@@ -247,6 +247,23 @@ const addShowTime = async(userId, groupId, showTimeId) =>  {
     return pool.query('INSERT INTO "Presenting_times" (group_id, presenting_times_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING *',[groupId, showTimeId])
 }
 
+const getMovies = async(userId, groupId) => {
+    const inGroup = await isGroupMember(groupId, userId)
+    if (!inGroup) {
+        if (!await isGroupOwner(groupId, userId)) return null;
+    }
+    return pool.query('SELECT * FROM "Group_movies" WHERE group_id = $1', [groupId])
+}
+
+
+const getShowTimes = async(userId, groupId) => {
+    const inGroup = await isGroupMember(groupId, userId)
+    if (!inGroup) {
+        if (!await isGroupOwner(groupId, userId)) return null;
+    }
+    return pool.query('SELECT * FROM "Presenting_times" WHERE group_id = $1', [groupId])
+}
+
 const deleteMovie = async (userId, groupId, movieId) => {
     const inGroup = await isGroupMember(groupId, userId)
     if (!inGroup) {
@@ -270,5 +287,6 @@ export {
     groupJoinRequest, acceptJoinRequest, isGroupOwner,
     groupExists, alreadyInGroup, groupNameAlreadyInUse,
     groupFull,rejectJoinRequest, kickFromGroup, leaveFromGroup,
-    deleteGroup, addMovie, addShowTime, deleteMovie, deleteShowTime
+    deleteGroup, addMovie, addShowTime, deleteMovie, deleteShowTime,
+    getMovies, getShowTimes
 }
