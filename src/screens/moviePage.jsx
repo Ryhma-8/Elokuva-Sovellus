@@ -5,6 +5,7 @@ import ReviewCarousel from "../components/moviePageComponents/ReviewCarousel";
 import LeaveReview from "../components/moviePageComponents/LeaveReview";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import Recommendations from "../components/moviePageComponents/Recommendations";
 
 const MoviePage = () => {
   const location = useLocation();
@@ -21,6 +22,7 @@ const MoviePage = () => {
         <MovieBlock movieId={movieId} />
         <ReviewCarousel movieId={movieId} refreshTick={refreshTick} />
         <LeaveReview movieId={movieId} onReviewSent={bump} />
+        <Recommendations movieId={movieId}/>
       <Footer />
     </div>
   );

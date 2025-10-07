@@ -2,7 +2,12 @@ import React from "react";
 import "../../css/HeroBlock.css"
 import { Link } from "react-router-dom";
 
+
+
 export default function MoviesList({movies}) {
+
+    const isGroupPage = location.pathname === "/group";
+
     return (
         <div className="hero-movies-box">
             {movies?.map((movie) => (
@@ -17,7 +22,8 @@ export default function MoviesList({movies}) {
                         <p className="hero-text">Release: {movie.release_date}</p>
                         <p  className="hero-text">Score: {Math.round(movie.vote_average * 10) / 10}</p>
                     </div>
-                </div>
+                    {isGroupPage && (<button className="add-button-group">ADD FOR GROUP</button>)}
+                </div> 
             ))}
         </div>
     )

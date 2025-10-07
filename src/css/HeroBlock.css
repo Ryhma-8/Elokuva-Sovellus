@@ -1,10 +1,10 @@
 .hero-block {
   margin-top: 2em;
   display: flex;
-  justify-content: space-between; 
+  justify-content: center; 
   align-items: center;
   padding: 0 5vw; 
-       
+  gap: 2rem;
 }
 
 .hero-title {
@@ -19,7 +19,7 @@
   gap: 1rem;
   align-items: center;
   padding: 0.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #111;
 }
 
 .hero-movie-info {
@@ -36,8 +36,11 @@
   overflow-y: auto;
   flex: 1 1 60%;
   max-width: 900px;
-  margin-left: auto;
+  margin-left: 64px;
+  margin-top: 16px;
+  margin-bottom: 16px;
   border-radius: 10px;
+  border: 1px solid ;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -104,6 +107,21 @@
 
 .list-hero-title{
   color: #111;
+}
+
+.hero-movie-card .add-button-group{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 164px;
+  min-height: 32px;
+  width: 164px;
+  height: 32px;
+  background-color: white;
+  border-radius: 32px;
+
 }
 
 
