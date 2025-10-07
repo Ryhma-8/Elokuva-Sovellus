@@ -4,214 +4,114 @@ const BASE = import.meta.env.VITE_API_URL;
 
 export const GROUP_MAX_INVITES = 20;
 
-// Yhtenäinen vastauskäsittely ilman modernia syntaksia
-async function handleResponse(r) {
-  var data = null;
-  try {
-    data = await r.json();
-  } catch (e) {
-    // ei bodya -> data null
-  }
+// Yleinen vastauskäsittelijä.
+async function handle(r) {
+  let data = null;
+  try { data = await r.json(); } catch {}
   if (!r.ok) {
-    var msg = "Request failed";
-    if (data && data.message) msg = data.message;
-    else if (data && data.err && data.err.message) msg = data.err.message;
-    else if (r.statusText) msg = r.statusText;
-    var e2 = new Error(msg);
-    e2.status = r.status;
-    e2.data = data;
-    throw e2;
+    const msg =
+      data?.err?.message ||
+      data?.message ||
+      r.statusText ||
+      "Request failed";
+    const e = new Error(msg);
+    e.status = r.status;
+    e.data = data;
+    throw e;
   }
   return data;
 }
 
-// Hakee access tokenin sessionStoragesta
-function getAccessToken() {
-  try {
-    var raw = sessionStorage.getItem("user");
-    if (!raw) return null;
-    var u = JSON.parse(raw);
-    return u && u.accessToken ? u.accessToken : null;
-  } catch (e) {
-    return null;
-  }
-}
+// Autentikoitu pyyntö, jossa 401 -> token refresh -> yksi retry.
+async function authed(path, { method = "GET", body } = {}, retry = true) {
+  // Haetaan access token sessiosta.
+  const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+  const token = user?.accessToken;
 
-// Pieni apuri: aja pyyntö; jos tulee 401, haetaan uusi token ja yritetään kerran uudestaan
-async function withAuthRetry(doRequest) {
-  var r = await doRequest();
-  if (r.status === 401) {
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: body ? JSON.stringify(body) : undefined,
+    credentials: "include"
+  });
+
+  // Jos token vanhentui, kokeillaan päivittää kerran.
+  if (res.status === 401 && retry) {
     await refreshAccessToken();
-    r = await doRequest();
-  }
-  return handleResponse(r);
-}
-
-
-/**
- * Luo uuden ryhmän.
- * - POST /api/group/new_group
- * - Body: { groupName: string, memberEmails: string[] } (0–GROUP_MAX_INVITES kpl)
- */
-export async function createGroup(params) {
-  var groupName = params ? params.groupName : "";
-  var memberEmails = params && Array.isArray(params.memberEmails) ? params.memberEmails : [];
-  var name = String(groupName || "").trim();
-  if (!name) {
-    var e = new Error("Group name is required");
-    e.status = 400;
-    throw e;
+    return authed(path, { method, body }, false);
   }
 
-  var emails = memberEmails.slice(0, GROUP_MAX_INVITES);
-
-  var doRequest = async function () {
-    var token = getAccessToken();
-    if (!token) {
-      var e3 = new Error("Not authenticated");
-      e3.status = 401;
-      throw e3;
-    }
-    return fetch(BASE + "/api/group/new_group", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ groupName: name, memberEmails: emails }),
-    });
-  };
-
-  return withAuthRetry(doRequest);
+  return handle(res);
 }
 
-/*
- Invitations (Accept / Decline) – backin valmiutta odottavat
- */
+/* Julkiset API-funktiot */
 
-export async function getInvitations() {
-  var doRequest = async function () {
-    var token = getAccessToken();
-    if (!token) {
-      var e = new Error("Not authenticated");
-      e.status = 401;
-      throw e;
-    }
-    return fetch(BASE + "/api/groups/invitations?status=pending", {
-      headers: { Authorization: "Bearer " + token },
-    });
-  };
-  return withAuthRetry(doRequest);
+// Luodaan uusi ryhmä.
+export async function createGroup({ groupName, memberEmails }) {
+  return authed(`/api/group/new_group`, {
+    method: "POST",
+    body: { groupName, memberEmails }
+  });
 }
 
-export async function acceptInvitation(requestId) {
-  var id = String(requestId || "").trim();
-  if (!id) {
-    var e = new Error("Missing requestId");
-    e.status = 400;
-    throw e;
-  }
-  var doRequest = async function () {
-    var token = getAccessToken();
-    if (!token) {
-      var e2 = new Error("Not authenticated");
-      e2.status = 401;
-      throw e2;
-    }
-    return fetch(BASE + "/api/requests/" + encodeURIComponent(id) + "/accept", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + token },
-    });
-  };
-  return withAuthRetry(doRequest);
-}
-
-export async function rejectInvitation(requestId) {
-  var id = String(requestId || "").trim();
-  if (!id) {
-    var e = new Error("Missing requestId");
-    e.status = 400;
-    throw e;
-  }
-  var doRequest = async function () {
-    var token = getAccessToken();
-    if (!token) {
-      var e2 = new Error("Not authenticated");
-      e2.status = 401;
-      throw e2;
-    }
-    return fetch(BASE + "/api/requests/" + encodeURIComponent(id) + "/reject", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + token },
-    });
-  };
-  return withAuthRetry(doRequest);
-}
-
-/*
- My groups, All groups, Send join request
- */
-
-/**
- * Palauttaa kirjautuneen käyttäjän ryhmät.
- * - GET /api/group/get_by_user (Authorization vaaditaan)
- */
-export async function getMyGroups() {
-  var doRequest = async function () {
-    var token = getAccessToken();
-    if (!token) {
-      var e = new Error("Not authenticated");
-      e.status = 401;
-      throw e;
-    }
-    console.log(token)
-    const res = await fetch(BASE + "/api/group/get_by_user", {
-      headers: { Authorization: "Bearer " + token },
-      credentials: "include"
-    });
-    console.log(res)
-    return res
-  };
-  return withAuthRetry(doRequest);
-}
-
-/**
- * Palauttaa kaikki ryhmät ja jäsenmäärät.
- * - GET /api/group/get_all (ei auth-vaatimusta reitissä – lisätään header silti tarvittaessa)
- */
+// Haetaan kaikki ryhmät (mukana laskettu jäsenmäärä).
 export async function getAllGroups() {
-  // Tehdään ilman authia, koska reitti ei sitä vaadi
-  var r = await fetch(BASE + "/api/group/get_all");
-  return handleResponse(r);
+  const r = await fetch(`${BASE}/api/group/get_all`);
+  return handle(r);
 }
 
-/**
- * Lähettää liittymispyynnön ryhmään.
- * - POST /api/group/send_join_request
- * - Body: { groupId: number }
- */
+// Haetaan käyttäjän omat ryhmät (role + members[] statuksineen).
+export async function getUserGroups() {
+  return authed(`/api/group/get_by_user`);
+}
+
+// Lähetetään liittymispyyntö ryhmään.
 export async function sendJoinRequest(groupId) {
-  var id = Number(groupId);
-  if (!id || isNaN(id)) {
-    var e = new Error("Invalid groupId");
-    e.status = 400;
-    throw e;
-  }
-  var doRequest = async function () {
-    var token = getAccessToken();
-    if (!token) {
-      var e2 = new Error("Not authenticated");
-      e2.status = 401;
-      throw e2;
-    }
-    return fetch(BASE + "/api/group/send_join_request", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ groupId: id }),
-    });
-  };
-  return withAuthRetry(doRequest);
+  return authed(`/api/group/send_join_request`, {
+    method: "POST",
+    body: { groupId }
+  });
+}
+
+// Owner hyväksyy liittymispyynnön.
+export async function acceptJoinRequest({ groupId, senderName }) {
+  return authed(`/api/group/accept_join_request`, {
+    method: "POST",
+    body: { groupId, senderName }
+  });
+}
+
+// Owner hylkää liittymispyynnön.
+export async function rejectJoinRequest({ groupId, senderName }) {
+  return authed(`/api/group/reject_join_request`, {
+    method: "POST",
+    body: { groupId, senderName }
+  });
+}
+
+// Owner poistaa käyttäjän ryhmästä.
+export async function kickFromGroup({ groupId, senderName }) {
+  return authed(`/api/group/kick_from_group`, {
+    method: "POST",
+    body: { groupId, senderName }
+  });
+}
+
+// Jäsen poistuu ryhmästä itse.
+export async function leaveGroup({ groupId }) {
+  return authed(`/api/group/leave_group`, {
+    method: "POST",
+    body: { groupId }
+  });
+}
+
+// Owner poistaa koko ryhmän.
+export async function deleteGroup({ groupId }) {
+  return authed(`/api/group/delete`, {
+    method: "DELETE",
+    body: { groupId }
+  });
 }
