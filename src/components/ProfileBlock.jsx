@@ -8,11 +8,21 @@ export default function ProfileBlock() {
   const navigate=useNavigate()
   const { user, setUser } = useUser();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Deleted account!");
-    deleteAccount(setUser)
-    navigate("/");
+
+    const confirmed = window.confirm("Are you sure you want to delete your account? This action cannot be undone.")
+    if (!confirmed) return 
+
+    try {
+      await deleteAccount(setUser)
+      alert("Your account and all related data have been deleted.")
+      navigate("/");
+    } catch (error) {
+      console.error("Error deleting account:", error)
+      alert("Failed to delete account. Please try again.")
+    }
+    
   };
 
   return (
