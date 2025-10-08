@@ -16,6 +16,7 @@ const deleteAccount = async(setUser) => {
     } catch (error) {
         if (error.response?.status === 401) {
             await refreshAccessToken()
+            //await new Promise((r) => setTimeout(r, 300))
             const newUser = JSON.parse(sessionStorage.getItem('user'))
             const headers = {
             Authorization: `Bearer ${newUser.accessToken}`,
