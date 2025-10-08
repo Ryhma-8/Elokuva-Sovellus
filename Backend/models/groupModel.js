@@ -282,11 +282,19 @@ const deleteShowTime = async (userId, groupId, showTimeId) => {
     return res.rowCount > 0;
 }
 
+const getGroup = async (userId,groupId) => {
+    const inGroup = await isGroupMember(groupId, userId)
+    if (!inGroup) {
+        if (!await isGroupOwner(groupId, userId)) return null;
+    }
+    return pool.query('SELECT * FROM "Group" WHERE id = $1', [groupId])
+}
+
 export {
     createGroup, allGroups, usersGroups,
     groupJoinRequest, acceptJoinRequest, isGroupOwner,
     groupExists, alreadyInGroup, groupNameAlreadyInUse,
     groupFull,rejectJoinRequest, kickFromGroup, leaveFromGroup,
     deleteGroup, addMovie, addShowTime, deleteMovie, deleteShowTime,
-    getMovies, getShowTimes
+    getMovies, getShowTimes, getGroup
 }
