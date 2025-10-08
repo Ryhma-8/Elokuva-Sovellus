@@ -3,7 +3,8 @@ import { auth } from '../helpers/auth.js'
 import { makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
         acceptGroupJoinRequest, rejectGroupJoinRequest, kickUserFromGroup,
         userLeaveFromGroup, ownerDeleteGroup, addMovieForGroup, addShowTimeForGroup,
-        deleteMovieFromGroup, deleteShowTimeFromGroup, getAllGroupMovies, getAllGroupShowTimes
+        deleteMovieFromGroup, deleteShowTimeFromGroup, getAllGroupMovies, getAllGroupShowTimes,
+        getGroupAccess
         } from '../controllers/groupController.js'
 
 const router = Router()
@@ -41,5 +42,9 @@ router.get("/get_showTimes/:groupId", auth, getAllGroupShowTimes)
 router.delete("/delete_movie", auth, deleteMovieFromGroup)
 
 router.delete("/delete_showTime", auth, deleteShowTimeFromGroup)
+
+// Group access
+
+router.get("/:groupId", auth, getGroupAccess)
 
 export default router

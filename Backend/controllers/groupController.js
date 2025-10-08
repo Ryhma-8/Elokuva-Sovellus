@@ -3,7 +3,8 @@ import { createGroup, allGroups, usersGroups,
         groupJoinRequest, groupExists, alreadyInGroup,
         groupNameAlreadyInUse, groupFull, acceptJoinRequest,
         rejectJoinRequest, kickFromGroup,leaveFromGroup, deleteGroup,
-        addMovie, addShowTime, deleteMovie, deleteShowTime, getMovies, getShowTimes } from '../models/groupModel.js'
+        addMovie, addShowTime, deleteMovie, deleteShowTime, getMovies,
+        getShowTimes, getGroup } from '../models/groupModel.js'
 import { userExists } from '../models/userModel.js'
 
 
@@ -261,7 +262,7 @@ const deleteShowTimeFromGroup = async (req,res,next) => {
         const groupId = parseInt(req.body?.groupId)
         const showTimeId = parseInt(req.body?.showTimeId)
         const result = await deleteShowTime(userId, groupId, showTimeId);
-        if (result=== null) return next (new ApiError("User is not a member or owner of this group", 403))
+        if (result === null) return next (new ApiError("User is not a member or owner of this group", 403))
         if (!result) return next (new ApiError("Show time not found in this group", 404))
         return res.status(201).json({message: "Show time deleted"})
     } catch (error) {
@@ -269,10 +270,23 @@ const deleteShowTimeFromGroup = async (req,res,next) => {
     }
 }
 
-
-
+const getGroupAccess = async (req,res,next) => {
+    try {
+        const user = await userExists(req.user?.email)
+        if (!user.rows.length) return next (new ApiError("User does not exist", 404))
+        const userId = user.rows[0].id
+        const groupId = parseInt(req.params.groupId)
+        const result = await getGroup(userId, groupId)
+         if (!result) return next(new ApiError("Access denied – user not in group", 403));
+        if (!result.rows.length) return next(new ApiError("Group not found", 404));
+        return res.status(200).json(result.rows[0])
+    } catch(error) {
+        return next (new ApiError(`Error accessing group ${error.message}`,400))
+    }
+}
 
 export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
         acceptGroupJoinRequest,rejectGroupJoinRequest, kickUserFromGroup,
         userLeaveFromGroup, ownerDeleteGroup, addMovieForGroup, addShowTimeForGroup,
-        deleteMovieFromGroup, deleteShowTimeFromGroup, getAllGroupMovies, getAllGroupShowTimes}
+        deleteMovieFromGroup, deleteShowTimeFromGroup, getAllGroupMovies, getAllGroupShowTimes,
+        getGroupAccess}
