@@ -269,7 +269,7 @@ const deleteShowTimeFromGroup = async (req,res,next) => {
     }
 }
 
-
+// Access to group page here
 
 
 export {makeNewGroup, getAllGroups, getUsersGroups, sendGroupJoinRequest,
