@@ -48,32 +48,36 @@ const getUsersGroups = async (req,res,next) => {
         const groups = {}
 
         for (const row of result.rows) {
-            
+
             if (!groups[row.group_id]) {
-                
                 groups[row.group_id] = {
-                    group_id: row.group_id,
-                    group_name: row.group_name,
-                    user_role: row.user_role,
-                    members: []
+                group_id: row.group_id,
+                group_name: row.group_name,
+                user_role: row.user_role,
+                members: []
                 };
             }
 
             if (row.member_name) {
-                const exists = groups[row.group_id].members.some(
-                    m => m.username === row.member_name && m.status === row.member_status
+                const existing = groups[row.group_id].members.find(
+                m => m.username === row.member_name
                 );
 
-                if (!exists) {
-                groups[row.group_id].members.push({
-                    username: row.member_name,
-                    status: row.member_status
-                });
+                if (existing) {
+                    if (row.member_status === 'owner') {
+                        existing.status = 'owner';
+                    }
+                    } else {
+                        groups[row.group_id].members.push({
+                            username: row.member_name,
+                            status: row.member_status
+                    });
                 }
             }
         }
             
         return res.status(200).json(Object.values(groups))
+        
     } catch (error) {
         return next(new ApiError(`error getting users groups ${error.message}`, 400))
     }
