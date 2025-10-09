@@ -7,15 +7,21 @@ import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRef } from "react";
 import movieSearch from "../services/simpleMovieSearch"
-import FavouriteList from "../components/favouriteList";
+import FavouriteList from "../components/FavouriteList";
 import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function GroupPage() {
     const [movieName, setMovieName] = useState("Dune");
     const [movies, setMovies] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const {groupId} = useParams(); 
+    const location = useLocation();
+    const params= useParams();
+
+    const groupId = location.state?.groupId || params.groupId;
+
+    console.log("Group ID:", groupId);
 
     useEffect(() => {
         fetchMovies(movieName, 1);
@@ -65,11 +71,11 @@ export default function GroupPage() {
                         hasMore={page < totalPages}
                         scrollableTarget="hero-results"
                     >
-                        <MoviesList movies={movies} />
+                        <MoviesList movies={movies} groupId={groupId}/>
                     </InfiniteScroll>
                 </div>
             </div>
-            <FavouriteList />
+            <FavouriteList groupId={groupId}/>
             <Footer />
         </>
     );
