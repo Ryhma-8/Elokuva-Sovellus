@@ -100,7 +100,8 @@ const usersGroups = async (userId) => {
   return pool.query(
     `
     WITH user_groups AS (
-        SELECT g.id AS group_id,
+        SELECT 
+            g.id AS group_id,
             g.name AS group_name,
             CASE
                 WHEN g.owner_id = $1 THEN 'owner'
@@ -120,6 +121,7 @@ const usersGroups = async (userId) => {
         OR gm_self.account_id = $1 
         OR gr_self.account_id = $1
     ),
+
     group_members AS (
         SELECT gm.group_id, a.username, 'joined' AS member_status
         FROM "Group_members" gm
@@ -128,7 +130,7 @@ const usersGroups = async (userId) => {
         UNION ALL
 
         SELECT gr.group_id, a.username,
-        CASE 
+            CASE 
                 WHEN gr.request_type = 'join_request' THEN 'requested'
                 ELSE 'invited'
             END AS member_status
@@ -136,8 +138,16 @@ const usersGroups = async (userId) => {
         JOIN "Account" a ON gr.account_id = a.id
         WHERE gr.status = 'pending'
         AND gr.request_type IN ('invitation', 'join_request')
+
+        UNION ALL
+
+        SELECT g.id AS group_id, a.username, 'owner' AS member_status
+        FROM "Group" g
+        JOIN "Account" a ON g.owner_id = a.id
     )
-    SELECT ug.group_id,
+
+    SELECT 
+        ug.group_id,
         ug.group_name,
         ug.user_role,
         gm.username AS member_name,
@@ -145,8 +155,11 @@ const usersGroups = async (userId) => {
     FROM user_groups ug
     LEFT JOIN group_members gm ON ug.group_id = gm.group_id
     ORDER BY ug.group_id, gm.username;
-`, [userId]);
+    `,
+    [userId]
+  );
 };
+
 
 
 const groupJoinRequest = async (userId, groupId) => {
