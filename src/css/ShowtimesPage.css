@@ -133,3 +133,30 @@
     grid-template-columns: 1fr;
   }
 }
+
+.show-card .show-card-body {
+  position: relative; /* ankkuri toastille */
+}
+
+.inline-toast {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  border-radius: 999px; 
+  pointer-events: none; 
+  opacity: 0.96;
+}
+
+/* Rivin “Add”-napin kevyt siistiminen kortissa */
+.show-card-times .btn {
+  border-width: 2px;   
+  font-weight: 600;
+  line-height: 1.1;
+  padding: 0.3rem 0.8rem; 
+}
+
+.show-card-times .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

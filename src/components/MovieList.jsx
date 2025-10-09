@@ -17,22 +17,39 @@ export default function MovieList({
   const todaySelected = isSameFinnkinoDay(selectedDate);
   const now = new Date();
 
-  // Ryhmittely ja rajaus 4 seuraavaa aikaa / kortti
+  // Ryhmitellään elokuvittain ja pidetään jokaisesta ajasta tallessa myös showtime-id + theatre/auditorium
   const cards = useMemo(() => {
-    const map = new Map();
+    const byMovie = new Map();
+
     for (const s of shows) {
       const key = `${s.title}|${s.image ?? ""}`;
-      if (!map.has(key)) map.set(key, { title: s.title, image: s.image, times: [] });
-      map.get(key).times.push(s.start);
+      if (!byMovie.has(key)) {
+        byMovie.set(key, { title: s.title, image: s.image, items: [] });
+      }
+      byMovie.get(key).items.push({
+        id: s.id,
+        start: s.start,
+        theatre: s.theatre ?? null,
+        auditorium: s.auditorium ?? null,
+      });
     }
 
-    const list = Array.from(map.values()).map((m) => {
-      const ordered = m.times.sort((a, b) => new Date(a) - new Date(b));
-      const filtered = todaySelected ? ordered.filter((t) => new Date(t) >= now) : ordered;
-      return { ...m, times: filtered.slice(0, 4) };
+    const list = Array.from(byMovie.values()).map((m) => {
+      const ordered = m.items.slice().sort((a, b) => new Date(a.start) - new Date(b.start));
+      const filtered = todaySelected ? ordered.filter((t) => new Date(t.start) >= now) : ordered;
+      const limited = filtered.slice(0, 4);
+
+      // Takautuvuus: vanha times:string[] vielä mukana
+      const timesAsStrings = limited.map((t) => t.start);
+
+      return {
+        title: m.title,
+        image: m.image,
+        showItems: limited,   // { id, start, theatre, auditorium }
+        times: timesAsStrings
+      };
     });
 
-    // poista tyhjät ja järjestä aikaisimman esitysajan mukaan
     const nonEmpty = list.filter((m) => m.times.length > 0);
     nonEmpty.sort((a, b) => new Date(a.times[0]) - new Date(b.times[0]));
     return nonEmpty;
@@ -47,7 +64,13 @@ export default function MovieList({
     <>
       <div className="showtimes-grid">
         {visible.map((m, idx) => (
-          <MovieCard key={`${m.title}-${idx}`} title={m.title} image={m.image} times={m.times} />
+          <MovieCard
+            key={`${m.title}-${idx}`}
+            title={m.title}
+            image={m.image}
+            times={m.times}
+            showItems={m.showItems}
+          />
         ))}
       </div>
 

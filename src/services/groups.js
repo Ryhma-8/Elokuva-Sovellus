@@ -115,3 +115,59 @@ export async function deleteGroup({ groupId }) {
     body: { groupId }
   });
 }
+
+
+export async function addShowTimeToGroup({
+  groupId,
+  showTimeId,
+  start,
+  title,
+  theatre,
+  auditorium,
+  image
+}) {
+  // Kootaan body niin, että jätetään tyhjät arvot pois – pidetään pyyntö siistinä
+  const body = { groupId, showTimeId };
+  if (start) body.start = start;
+  if (title) body.title = title;
+  if (theatre) body.theatre = theatre;
+  if (auditorium) body.auditorium = auditorium;
+  if (image) body.image = image;
+
+  try {
+    const data = await authed(`/api/group/add_showTime`, {
+      method: "POST",
+      body
+    });
+    return {
+      ok: true,
+      status: 201,
+      message: data?.message || "Show time added",
+      result: data?.result
+    };
+  } catch (e) {
+    // Back antaa 400-virheen tekstillä "Show time already in group"
+    if (e.status === 400 && /already.*group/i.test(e.message)) {
+      return { ok: false, info: true, status: e.status, message: e.message };
+    }
+    throw e;
+  }
+}
+
+/**
+ * Haetaan ryhmän näytökset. Snapshot-kentät (start, title, theatre, auditorium, image)
+ * ovat mukana jos ne on talletettu lisäyshetkellä.
+ */
+export async function getGroupShowTimes(groupId) {
+  return authed(`/api/group/get_showTimes/${groupId}`);
+}
+
+/**
+ * Poistetaan näytös ryhmästä.
+ */
+export async function deleteGroupShowTime({ groupId, showTimeId }) {
+  return authed(`/api/group/delete_showTime`, {
+    method: "DELETE",
+    body: { groupId, showTimeId }
+  });
+}
