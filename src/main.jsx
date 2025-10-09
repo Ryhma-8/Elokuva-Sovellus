@@ -33,6 +33,9 @@ createRoot(document.getElementById("root")).render(
         <Route path="/register" element={<Authentication authenticationMode={AuthenticationMode.SignUp}/>} />
         <Route path ="/group" element={<GroupPage/>} />
         <Route path="/favorites/:userId" element={<PublicFavorites />} />
+
+        <Route path="/group/:groupId" element={<GroupPage />} />
+
       </Routes>
     </BrowserRouter>
     <ToastContainer position="bottom-right" autoClose={2000}/>
