@@ -15,6 +15,7 @@ import {
   deleteGroup,
 } from "../services/groups.js";
 import "../css/groups.css";
+import { Link } from "react-router-dom";
 
 export default function GroupsPage() {
   const { user } = useUser();
@@ -313,14 +314,13 @@ export default function GroupsPage() {
                   const canLeave = g.user_role === "member";
 
                   return (
-                    
                     <div key={g.group_id} className="group-row my-group-row">
                       {/* YLÄRIVI: vasen info + oikea kontrollipaneeli */}
                       <div className="d-flex align-items-center gap-2">
                         {/* Info vasemmalle */}
                         <div className="d-flex flex-column">
                           <div className="d-flex align-items-center gap-2">
-                            <span className="fw-semibold">{g.group_name}</span>
+                            <Link to="/group" state={{groupId:g.group_id}}  className="fw-semibold">{g.group_name}</Link>
                             <span className="badge bg-primary-subtle text-primary border">
                               {g.user_role}
                             </span>
