@@ -5,9 +5,10 @@ import { Link, useLocation } from "react-router-dom";
 import { getMovieDetails } from "../services/getMovieDetails";
 import { useFavorites } from "../context/FavoritesContext";
 import { getFavourites } from "../services/getFavourites"; 
+import { getGroupMovies, addGroupMovie, removeGroupMovie } from "../services/getGroupMovies";
 import { Trash2 } from "lucide-react";
 
-export default function FavouriteList({ userId }) {
+export default function FavouriteList({ userId, groupId }) {
   const { favouriteMovies, toggleFavorite } = useFavorites(); // private
   const { user } = useUser(); 
   const location = useLocation();
@@ -21,7 +22,12 @@ export default function FavouriteList({ userId }) {
       try {
         let favs;
 
-        if (userId) {
+        if (groupId) {
+          // GROUP MODE
+          favs = await getGroupMovies({ groupId });
+        }
+
+       else if (userId) {
           // PUBLIC MODE
           favs = await getFavourites({ userId });
         } else {
@@ -59,10 +65,10 @@ export default function FavouriteList({ userId }) {
     };
 
     fetchFavourites();
-  }, [userId, favouriteMovies]);
+  }, [userId, favouriteMovies, groupId]);
 
   const handleRemove = async (movieId) => {
-    if (userId) return; // ei voi poistaa public-näkymässä
+    if (userId || isGroupPage) return; // ei voi poistaa public-näkymässä
     toggleFavorite({ id: movieId });
     setMovies((prev) => prev.filter((m) => m.id !== movieId));
   };

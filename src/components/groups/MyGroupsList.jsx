@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMyGroups } from "../../services/groups.js";
 import Alert from "../Alert.jsx";
+import { Link } from "react-router-dom";
 
 // apuri: roolin badge-luokka
 function roleBadge(role) {

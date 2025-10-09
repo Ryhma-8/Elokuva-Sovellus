@@ -1,12 +1,29 @@
 import React from "react";
 import "../../css/HeroBlock.css"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { addGroupMovie } from "../../services/getGroupMovies";
 
 
 
-export default function MoviesList({movies}) {
+export default function MoviesList({movies, groupId}) {
 
+    const location = useLocation();
     const isGroupPage = location.pathname === "/group";
+
+  const handleAddToGroup = async (movie) => {
+    try {
+      if (!groupId) {
+        alert("No group selected");
+        return;
+      }
+
+      await addGroupMovie(movie, groupId);
+      alert("Movie added to group!");
+    } catch (err) {
+      console.error("Error adding movie:", err);
+      alert("Failed to add movie to group.");
+    }
+  };
 
     return (
         <div className="hero-movies-box">
@@ -22,7 +39,7 @@ export default function MoviesList({movies}) {
                         <p className="hero-text">Release: {movie.release_date}</p>
                         <p  className="hero-text">Score: {Math.round(movie.vote_average * 10) / 10}</p>
                     </div>
-                    {isGroupPage && (<button className="add-button-group">ADD FOR GROUP</button>)}
+                    {isGroupPage && (<button className="add-button-group" onClick={()=> handleAddToGroup (movie)}>ADD FOR GROUP</button>)}
                 </div> 
             ))}
         </div>

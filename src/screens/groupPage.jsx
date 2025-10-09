@@ -5,17 +5,23 @@ import MoviesList from "../components/HeroBlock/movieList";
 import SearchBar from "../components/HeroBlock/searchBar";
 import { useEffect, useState, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import movieSearch from "../services/simpleMovieSearch";
-import FavouriteList from "../components/favouriteList";
+import { useRef } from "react";
+import movieSearch from "../services/simpleMovieSearch"
+import FavouriteList from "../components/FavouriteList";
 import { useParams } from "react-router-dom";
-import GroupShowtimesSection from "../components/group/GroupShowtimesSection.jsx";
+import { useLocation } from "react-router-dom";
 
 export default function GroupPage() {
-  const [movieName, setMovieName] = useState("Dune");
-  const [movies, setMovies] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const { groupId } = useParams();
+    const [movieName, setMovieName] = useState("Dune");
+    const [movies, setMovies] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const location = useLocation();
+    const params= useParams();
+
+    const groupId = location.state?.groupId || params.groupId;
+
+    console.log("Group ID:", groupId);
 
   useEffect(() => {
     fetchMovies(movieName, 1);
@@ -59,23 +65,20 @@ export default function GroupPage() {
           />
         </div>
 
-        <div className="hero-results" id="hero-results" ref={scrollRef}>
-          <InfiniteScroll
-            key={movieName}
-            dataLength={movies.length}
-            next={() => fetchMovies(movieName, page + 1)}
-            hasMore={page < totalPages}
-            scrollableTarget="hero-results"
-          >
-            <MoviesList movies={movies} />
-          </InfiniteScroll>
-        </div>
-      </div>
-
-      {groupId && <GroupShowtimesSection groupId={Number(groupId)} />}
-
-      <FavouriteList />
-      <Footer />
-    </>
-  );
+                <div className="hero-results" id="hero-results" ref={scrollRef}>
+                    <InfiniteScroll
+                        key={movieName}
+                        dataLength={movies.length}
+                        next={() => fetchMovies(movieName, page + 1)}
+                        hasMore={page < totalPages}
+                        scrollableTarget="hero-results"
+                    >
+                        <MoviesList movies={movies} groupId={groupId}/>
+                    </InfiniteScroll>
+                </div>
+            </div>
+            <FavouriteList groupId={groupId}/>
+            <Footer />
+        </>
+    );
 }
