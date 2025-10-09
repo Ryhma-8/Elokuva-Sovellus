@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Header from "../components/header";
+import Footer from "../components/footer";
 import { useUser } from "../context/useUser.jsx";
 import Alert from "../components/Alert.jsx";
 import CreateGroupForm from "../components/groups/CreateGroupForm.jsx";
@@ -457,6 +458,7 @@ export default function GroupsPage() {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }
