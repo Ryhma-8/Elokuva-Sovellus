@@ -30,6 +30,7 @@ const makeNewGroup = async (req, res, next) => {
 const getAllGroups = async (req, res, next) => {
   try {
     const result = await allGroups()
+    console.log(result.rows)
     return res.status(200).json(result.rows)
   } catch (error) {
     return next(new ApiError(`error getting groups data: ${error.message}`, 404))
@@ -43,26 +44,30 @@ const getUsersGroups = async (req, res, next) => {
     const userId = user.rows[0].id
     const result = await usersGroups(userId)
 
-    // Muotoillaan vastauksen rakenne ryhmäkohtaiseksi listaksi
     const groups = {}
-    for (const row of result.rows) {
+    
+     for (const row of result.rows) {
       if (!groups[row.group_id]) {
         groups[row.group_id] = {
           group_id: row.group_id,
           group_name: row.group_name,
           user_role: row.user_role,
-          members: [],
-        }
+          members: []
+        };
       }
-      if (row.member_name) {
-        const exists = groups[row.group_id].members.some(
-          (m) => m.username === row.member_name && m.status === row.member_status
-        )
-        if (!exists) {
+
+      if (row.member_email) {
+        // Käytetään emailia uniikkina tunnisteena
+        const existing = groups[row.group_id].members.find(
+          m => m.email === row.member_email
+        );
+
+        if (!existing) {
           groups[row.group_id].members.push({
             username: row.member_name,
-            status: row.member_status,
-          })
+            email: row.member_email,   // uusi kenttä
+            status: row.member_status
+          });
         }
       }
     }
