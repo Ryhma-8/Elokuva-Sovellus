@@ -232,6 +232,51 @@ export default function GroupsPage() {
     }
   };
 
+  // Toimintonapit dropdownin viereen
+  const inlineActions = (group, member) => {
+    if (!member) return null;
+    const isOwner = group.user_role === "owner";
+    const me = user?.username;
+    const kickingSelf = member.username === me;
+
+    if (member.status === "requested" && isOwner) {
+      return (
+        <>
+          <button
+            className="btn btn-success"
+            disabled={busy.has(group.group_id)}
+            onClick={() => onAccept(group, member)}
+          >
+            {busy.has(group.group_id) ? "…" : "Accept"}
+          </button>
+          <button
+            className="btn btn-outline-secondary"
+            disabled={busy.has(group.group_id)}
+            onClick={() => onDecline(group, member)}
+          >
+            {busy.has(group.group_id) ? "…" : "Decline"}
+          </button>
+        </>
+      );
+    }
+
+    // *** Korjaus: Kick vain ownerille, vain 'joined' jäsenistä, eikä koskaan itseään ***
+    if (member.status === "joined" && isOwner && !kickingSelf) {
+      return (
+        <button
+          className="btn btn-outline-danger"
+          disabled={busy.has(group.group_id)}
+          onClick={() => onKick(group, member)}
+          title="Remove member"
+        >
+          {busy.has(group.group_id) ? "…" : "Kick"}
+        </button>
+      );
+    }
+
+    return null;
+  };
+
   // Normalisoi jäsenmäärä "All groups" -listaan
   const normalizeCount = (g) => {
     const raw = g.count ?? g.member_count ?? g.members ?? 0;
@@ -276,8 +321,11 @@ export default function GroupsPage() {
                         {/* Info vasemmalle */}
                         <div className="d-flex flex-column">
                           <div className="d-flex align-items-center gap-2">
-                            {/* Nimi linkkinä paramireitille */}
-                            <Link to={`/group/${g.group_id}`} className="fw-semibold">
+                            <Link
+                             to="/group"
+                             state={{ groupId: g.group_id }}
+                             className="fw-semibold"
+                            >
                               {g.group_name}
                             </Link>
                             <span className="badge bg-primary-subtle text-primary border">
@@ -327,6 +375,13 @@ export default function GroupsPage() {
                           )}
                         </div>
                       </div>
+
+                      {/* ALARIVI: toimintonapit leveänä, näytetään vain jos valitulle jäsenelle on nappeja */}
+                      {(() => {
+                        const actions = inlineActions(g, current);
+                        if (!actions) return null;
+                        return <div className="actions-row mt-2">{actions}</div>;
+                      })()}
                     </div>
                   );
                 })}
@@ -349,8 +404,7 @@ export default function GroupsPage() {
                   const name = g.name ?? g.group_name ?? "Group";
                   const normalizedCount = normalizeCount(g);
 
-                  const myRoleMap = myRoleById;
-                  const myRole = myRoleMap.get(id); // 'owner' | 'member' | 'requested' | undefined
+                  const myRole = myRoleById.get(id); // 'owner' | 'member' | 'requested' | undefined
                   const isMine = myRole === "owner" || myRole === "member";
                   const isRequested = myRole === "requested";
 
@@ -366,7 +420,6 @@ export default function GroupsPage() {
                           Sign in to join
                         </span>
                       ) : isMine ? (
-                        // Pidetään tässä vain tieto, että olet jo ryhmässä
                         <span className="badge bg-secondary-subtle text-secondary border">
                           Already in group
                         </span>
