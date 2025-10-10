@@ -72,7 +72,7 @@ export default function GroupsPage() {
 
   // Joined-jäsenten määrä
   const joinedCount = (g) =>
-    (g?.members || []).reduce((acc, m) => acc + (m.status === "joined" ? 1 : 0), 0);
+    (g?.members || []).filter((m) => m.status === "joined" || m.status === "owner").length;
 
   // Oma rooli per groupId
   const myRoleById = useMemo(() => {

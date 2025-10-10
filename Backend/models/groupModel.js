@@ -100,66 +100,92 @@ const createGroup = async (name, ownerId, memberEmails = []) => {
 
 const allGroups = async () => {
   return pool.query(`
-        SELECT "Group".id,
-               "Group".name,
-               COUNT(account_id)
-        FROM "Group"
-        LEFT JOIN "Group_members" ON "Group".id = "Group_members".group_id
-        GROUP BY "Group".name, "Group".id;
-  `)
+     SELECT 
+        g.id,
+        g.name,
+        ARRAY_REMOVE(ARRAY_AGG(DISTINCT a.username), NULL) AS member_names,
+        COUNT(DISTINCT a.id) AS count
+    FROM "Group" g
+    LEFT JOIN (
+        SELECT account_id, group_id FROM "Group_members"
+        UNION ALL
+        SELECT owner_id AS account_id, id AS group_id FROM "Group"
+    ) gm ON gm.group_id = g.id
+    LEFT JOIN "Account" a ON a.id = gm.account_id
+    GROUP BY g.id, g.name
+    ORDER BY g.id;
+      `)
 }
 
 const usersGroups = async (userId) => {
   return pool.query(
     `
     WITH user_groups AS (
-        SELECT g.id AS group_id,
-               g.name AS group_name,
-               CASE
-                 WHEN g.owner_id = $1 THEN 'owner'
-                 WHEN gm_self.account_id IS NOT NULL THEN 'member'
-                 WHEN gr_self.account_id IS NOT NULL AND gr_self.request_type = 'invitation' THEN 'invited'
-                 WHEN gr_self.account_id IS NOT NULL AND gr_self.request_type = 'join_request' THEN 'requested'
-               END AS user_role
+    SELECT 
+        g.id AS group_id,
+        g.name AS group_name,
+        CASE
+            WHEN g.owner_id = $1 THEN 'owner'
+            WHEN gm_self.account_id IS NOT NULL THEN 'member'
+            WHEN gr_self.account_id IS NOT NULL AND gr_self.request_type = 'invitation' THEN 'invited'
+            WHEN gr_self.account_id IS NOT NULL AND gr_self.request_type = 'join_request' THEN 'requested'
+        END AS user_role
         FROM "Group" g
         LEFT JOIN "Group_members" gm_self
-          ON g.id = gm_self.group_id AND gm_self.account_id = $1
+            ON g.id = gm_self.group_id AND gm_self.account_id = $1
         LEFT JOIN "Group_requests" gr_self
-          ON g.id = gr_self.group_id
-         AND gr_self.account_id = $1
-         AND gr_self.status = 'pending'
-         AND gr_self.request_type IN ('invitation', 'join_request')
-        WHERE g.owner_id = $1
-           OR gm_self.account_id = $1
-           OR gr_self.account_id = $1
+            ON g.id = gr_self.group_id 
+            AND gr_self.account_id = $1
+            AND gr_self.status = 'pending'
+            AND gr_self.request_type IN ('invitation', 'join_request')
+        WHERE g.owner_id = $1 
+          OR gm_self.account_id = $1 
+          OR gr_self.account_id = $1
     ),
+
     group_members AS (
-        SELECT gm.group_id, a.username, 'joined' AS member_status
+        -- Kaikki hyväksytyt jäsenet
+        SELECT gm.group_id, a.username, a.email AS member_email, 'joined' AS member_status
         FROM "Group_members" gm
         JOIN "Account" a ON gm.account_id = a.id
 
         UNION ALL
 
-        SELECT gr.group_id, a.username,
-               CASE WHEN gr.request_type = 'join_request' THEN 'requested'
-                    ELSE 'invited' END AS member_status
+        -- Pending requestit
+        SELECT gr.group_id, a.username, a.email AS member_email,
+            CASE 
+                WHEN gr.request_type = 'join_request' THEN 'requested'
+                ELSE 'invited'
+            END AS member_status
         FROM "Group_requests" gr
         JOIN "Account" a ON gr.account_id = a.id
         WHERE gr.status = 'pending'
           AND gr.request_type IN ('invitation', 'join_request')
+
+        UNION ALL
+
+        -- Owner
+        SELECT g.id AS group_id, a.username, a.email AS member_email, 'owner' AS member_status
+        FROM "Group" g
+        JOIN "Account" a ON g.owner_id = a.id
     )
-    SELECT ug.group_id,
-           ug.group_name,
-           ug.user_role,
-           gm.username AS member_name,
-           gm.member_status
-    FROM user_groups ug
-    LEFT JOIN group_members gm ON ug.group_id = gm.group_id
-    ORDER BY ug.group_id, gm.username;
-`,
+
+      SELECT 
+        ug.group_id,
+        ug.group_name,
+        ug.user_role,
+        gm.username AS member_name,
+        gm.member_email,
+        gm.member_status
+      FROM user_groups ug
+      LEFT JOIN group_members gm ON ug.group_id = gm.group_id
+      ORDER BY ug.group_id, gm.username;
+
+    `,
     [userId]
-  )
-}
+  );
+};
+
 
 const groupJoinRequest = async (userId, groupId) => {
   return pool.query(
