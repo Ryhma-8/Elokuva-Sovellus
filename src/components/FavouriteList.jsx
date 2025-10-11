@@ -8,7 +8,7 @@ import { getFavourites } from "../services/getFavourites";
 import { getGroupMovies, addGroupMovie, removeGroupMovie } from "../services/getGroupMovies";
 import { Trash2 } from "lucide-react";
 
-export default function FavouriteList({ userId, groupId }) {
+export default function FavouriteList({ userId, groupId, refreshTrigger }) {
   const { favouriteMovies, toggleFavorite } = useFavorites(); // private
   const { user } = useUser(); 
   const location = useLocation();
@@ -68,7 +68,7 @@ export default function FavouriteList({ userId, groupId }) {
     };
 
     fetchFavourites();
-  }, [userId, favouriteMovies, groupId]);
+  }, [userId, favouriteMovies, groupId, refreshTrigger]);
 
   const handleRemove = async (movieId) => {
     if (userId) {

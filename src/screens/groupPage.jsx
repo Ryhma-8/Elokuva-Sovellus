@@ -39,6 +39,12 @@ export default function GroupPage() {
     setTotalPages(totalPages);
   };
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleMovieAdded = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   const scrollRef = useRef(null);
 
   // Hakunappi resetoi scrollauksen ja aloittaa haun alusta
@@ -71,12 +77,12 @@ export default function GroupPage() {
             hasMore={page < totalPages}
             scrollableTarget="hero-results"
           >
-            <MoviesList movies={movies} groupId={groupId} />
+            <MoviesList movies={movies} groupId={groupId} handleMovieAdded={handleMovieAdded} />
           </InfiniteScroll>
         </div>
       </div>
       {groupId && <GroupShowtimesSection groupId={Number(groupId)} />}
-      <FavouriteList groupId={groupId} />
+      <FavouriteList groupId={groupId} refreshTrigger={refreshTrigger} />
       <Footer />
     </>
   );

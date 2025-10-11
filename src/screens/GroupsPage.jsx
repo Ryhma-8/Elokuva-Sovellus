@@ -15,10 +15,11 @@ import {
   deleteGroup,
 } from "../services/groups.js";
 import "../css/groups.css";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 export default function GroupsPage() {
   const { user } = useUser();
+  const navigate = useNavigate();
   const isSignedIn = Boolean(user?.username);
 
   // Tilat
@@ -321,14 +322,21 @@ export default function GroupsPage() {
                         {/* Info vasemmalle */}
                         <div className="d-flex flex-column">
                           <div className="d-flex align-items-center gap-2">
-                            <Link
-                             to="/group"
-                             state={{ groupId: g.group_id }}
-                             className="fw-semibold"
-                            >
+
+                            <button className="btn btn-link p-0 fw-semibold text-decoration-none"
+                              onClick={() => {
+                                const isMember = g.user_role === "owner" || g.user_role === "member";
+                                if (!isMember) {
+                                  alert("You must be a member to view this group page.");
+                                  return;
+                                }
+                                navigate(`/group`, { state: { groupId: g.group_id } });
+                              }}
+                              >
                               {g.group_name}
-                            </Link>
-                            <span className={`badge user-role-badge ${g.user_role}`}>
+                            </button>
+
+                            <span className="badge bg-primary-subtle text-primary border">
                               {g.user_role}
                             </span>
                           </div>

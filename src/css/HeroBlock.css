@@ -124,6 +124,10 @@
 
 }
 
+.hero-movie-card .add-button-group.added{
+  background-color: #d1ffd4;
+}
+
 
 
 /* Responsiivisuus puhelimille */

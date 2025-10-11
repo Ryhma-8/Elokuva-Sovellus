@@ -2,6 +2,7 @@
   background: #ffd400;
   color: #111;
   padding: 0.75rem 1.5rem;
+  width: 100%;
 }
 
 .nav {
@@ -46,3 +47,14 @@
   text-decoration: none;
 }
 .logo-link:visited { color: inherit; }
+
+
+@media (max-width: 600px) {
+  .nav {
+    justify-content: space-around;
+    width: 100%;
+  }
+  .header-image {
+    height: 40px; /* pienempi logo mobiilissa */
+  }
+}
