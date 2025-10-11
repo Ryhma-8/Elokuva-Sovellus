@@ -1,5 +1,6 @@
 import axios from "axios";
 import { refreshAccessToken } from "./refreshToken.js";
+import { data } from "react-router-dom";
 
 export const getGroupMovies = async ({ groupId }) => {
   let url = `${import.meta.env.VITE_API_URL}/api/group/get_movies/${groupId}`;
@@ -29,54 +30,55 @@ export const getGroupMovies = async ({ groupId }) => {
   }
 };
 export const addGroupMovie = async (movie, groupId) => {
-    const url = `${import.meta.env.VITE_API_URL}/api/group/add_movie`;
+  const url = `${import.meta.env.VITE_API_URL}/api/group/add_movie`;
 
-    if (!groupId) throw new Error("groupId is undefined");
-    
-    try {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-    
-        const payload = {
-            groupId: groupId,
-            movieId: movie.id,
-          };
-    
-        const response = await axios.post(url, payload, {
+  if (!groupId) throw new Error("groupId is undefined");
+
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
+    const payload = {
+      groupId: groupId,
+      movieId: movie.id,
+    };
+
+    const response = await axios.post(url, payload, {
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${user.accessToken}` },
+    });
+
+    return response.data;
+  } catch (err) {
+    if (err.response?.status === 401) {
+      await refreshAccessToken();
+      const user = JSON.parse(sessionStorage.getItem("user"));
+      const retry = await axios.post(url, payload, {
         withCredentials: true,
         headers: { Authorization: `Bearer ${user.accessToken}` },
-        });
-    
-        return response.data;
-    } catch (err) {
-        if (err.response?.status === 401) {
-        await refreshAccessToken();
-        const user = JSON.parse(sessionStorage.getItem("user"));
-        const retry = await axios.post(url, payload, {
-            withCredentials: true,
-            headers: { Authorization: `Bearer ${user.accessToken}` },
-        });
-        return retry.data;
-        }
-        console.error("Failed to add group movie", err);
-        throw err;
+      });
+      return retry.data;
     }
-    }
+    console.error("Failed to add group movie", err);
+    throw err;
+  }
+}
 
 
-    export const removeGroupMovie = async (movieId, groupId) => {
-    const url = `${import.meta.env.VITE_API_URL}/api/group/remove_movie`;
-        try {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-        const response = await axios.delete(url, {
-            withCredentials: true,
-            headers: { Authorization: `Bearer ${user.accessToken}` },
-            data: { movie_id: movieId, group_id: groupId },
-        })
-        console.log("Removed movie:", response.data)
-        return response.data
-        }
-        catch (err) {
-            console.error("Removing group movie failed", err)
-            throw err
-        }
-    }
+export const removeGroupMovie = async (movieId, groupId) => {
+  const url = `${import.meta.env.VITE_API_URL}/api/group/delete_movie`;
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    const response = await axios.delete(url,
+      {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${user.accessToken}` },
+        data: { movieId, groupId },
+      })
+    console.log("Removed movie:", response.data)
+    return response.data
+  }
+  catch (err) {
+    console.error("Removing group movie failed", err)
+    throw err
+  }
+}
