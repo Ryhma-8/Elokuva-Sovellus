@@ -8,7 +8,7 @@ import { getFavourites } from "../services/getFavourites";
 import { getGroupMovies, addGroupMovie, removeGroupMovie } from "../services/getGroupMovies";
 import { Trash2 } from "lucide-react";
 
-export default function FavouriteList({ userId, groupId }) {
+export default function FavouriteList({ userId, groupId, refreshTrigger }) {
   const { favouriteMovies, toggleFavorite } = useFavorites(); // private
   const { user } = useUser(); 
   const location = useLocation();
@@ -68,12 +68,26 @@ export default function FavouriteList({ userId, groupId }) {
     };
 
     fetchFavourites();
-  }, [userId, favouriteMovies, groupId]);
+  }, [userId, favouriteMovies, groupId, refreshTrigger]);
 
   const handleRemove = async (movieId) => {
-    if (userId || isGroupPage) return; // ei voi poistaa public-näkymässä
-    toggleFavorite({ id: movieId });
-    setMovies((prev) => prev.filter((m) => m.id !== movieId));
+    if (userId) {
+      // Public-näkymä — ei voi poistaa
+      return;
+    }
+  
+    if (isGroupPage && groupId) {
+      try {
+        await removeGroupMovie(movieId, groupId);
+        setMovies((prev) => prev.filter((m) => m.id !== movieId));
+      } catch (err) {
+        console.error("Failed to remove group movie", err);
+      }
+    } else {
+      // Private-näkymä (omat suosikit)
+      toggleFavorite({ id: movieId });
+      setMovies((prev) => prev.filter((m) => m.id !== movieId));
+    }
   };
 
   return (
@@ -104,7 +118,6 @@ export default function FavouriteList({ userId, groupId }) {
           {movies.map((movie) => (
             <li className="favourite-list-item" key={movie.id}>
             <Link
-            key={movie.id}
             to={`/movie`}
             state={{ movieId: movie.id }}
             className="favourite-link"
@@ -122,7 +135,7 @@ export default function FavouriteList({ userId, groupId }) {
                 </p>
               </div>
               </Link>
-              {!userId && isProfilePage && (
+              {!userId && isProfilePage || isGroupPage && (
                 <button
                   className="remove-fav-button"
                   onClick={() => handleRemove(movie.id)}
