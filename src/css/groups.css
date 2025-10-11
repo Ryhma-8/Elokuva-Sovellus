@@ -90,6 +90,45 @@
   color: #333;
 }
 
+.user-role-badge.owner {
+  background-color: #007bff; /* sininen */
+  color: white;
+}
+
+.user-role-badge.member {
+  background-color: #28a745; /* vihreä */
+  color: white;
+}
+
+.user-role-badge.requested {
+  background-color: #ffc107; /* keltainen */
+  color: black;
+}
+
+/* Normal state */
+.groups-page .btn-leave {
+  border: 1.5px solid #352d2e; /* tumma punainen */
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Hover state */
+.groups-page .btn-leave:hover:not(:disabled) {
+  background-color: #3a3031;
+  color: #fff;
+}
+
+/* Disabled state: tumma ja harmaa */
+.groups-page .btn-leave:disabled {
+  border-color: #555;      /* tummanharmaa */
+  color: #555;             /* tummanharmaa teksti */
+  background-color: #e0e0e0; /* vaalea harmaa tausta */
+  cursor: not-allowed;
+}
+
+
 /* Responsiivisuus*/
 @media (max-width: 768px) {
   .groups-page .group-row {
@@ -104,6 +143,8 @@
   .groups-page .email-controls {
     flex-direction: column;
   }
+
+  
 }
 
 
@@ -131,3 +172,39 @@
   font-weight: 600;
 }
 
+@media (max-width: 768px) {
+  .groups-page .my-group-row > .d-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .groups-page .my-group-row .member-select {
+    width: 100%;
+  }
+
+  .groups-page .my-group-row .actions-row {
+    flex-direction: column;
+  }
+
+  .groups-page .my-group-row .actions-row .btn {
+    flex: 1 1 100%;
+  }
+
+  
+}
+
+.groups-page .actions-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .groups-page .actions-row {
+    flex-direction: column;
+  }
+
+  .groups-page .actions-row .btn {
+    flex: 1 1 100%;
+  }
+}

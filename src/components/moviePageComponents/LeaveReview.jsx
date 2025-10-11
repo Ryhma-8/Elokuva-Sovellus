@@ -23,17 +23,18 @@ export default function LeaveReview({ movieId, onReviewSent }) {
     }
     try {
       setSending(true);
-      await addReview({
+        await addReview({
         movie_id: movieId,
         description,
         title: "", // käytännössä turha kentä, voi poistaa täältä ja kannasta
         rating: starRating || null, // valinnainen
       });
+      
       setReviewText("");
       setStarRating(0);
       onReviewSent?.(); // päivityssignaali karusellille
     } catch (err) {
-      alert(err?.message || "Failed to send review");
+      console.log(err);
     } finally {
       setSending(false);
     }

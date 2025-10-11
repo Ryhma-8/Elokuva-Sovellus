@@ -57,15 +57,18 @@ export const addFavourite = async (movie, userId) => {
       user_id: userId
     }
 
-    console.log("Adding favourite with payload", payload)
+
 
     const response = await axios.post(url, payload, {
       withCredentials: true,
       headers: { Authorization: `Bearer ${user?.accessToken}` }
     })
-    console.log("Added movie:", response.data)
+    
     return response.data
   } catch (err) {
+    if (err.response?.status === 401) {
+      alert("Please log in to manage favourites")
+    }
     console.error("Adding movie failed", err)
     throw err
   }
