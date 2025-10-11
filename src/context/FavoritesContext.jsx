@@ -26,12 +26,13 @@ export const FavoritesProvider = ({ children }) => {
     }, [currentUser])
 
     const toggleFavorite = async (movie) => {
-        /*console.log(currentUser)
+
         if (!currentUser) {
+            
             console.warn("User not logged in")
             return
-        }*/
-        
+
+        }
         try {
             const isFav = favouriteMovies.some((fav) => fav.movie_id === movie.id)
 

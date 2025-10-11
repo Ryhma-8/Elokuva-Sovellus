@@ -20,7 +20,6 @@ function MoviesPage() {
           setSearch, tempSearch, setTempSearch } = useDropDown()
 
   const { isFavorite, toggleFavorite, favouriteMovies } = useFavorites()
-  console.log("Favourites from context:", favouriteMovies)
 
 
   return (

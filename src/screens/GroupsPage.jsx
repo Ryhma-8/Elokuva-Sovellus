@@ -70,7 +70,7 @@ export default function GroupsPage() {
     load();
   }, [isSignedIn]);
 
-  // Joined-jäsenten määrä
+  // Joined-jäsenten määrä + owner
   const joinedCount = (g) =>
     (g?.members || []).filter((m) => m.status === "joined" || m.status === "owner").length;
 
@@ -328,7 +328,7 @@ export default function GroupsPage() {
                             >
                               {g.group_name}
                             </Link>
-                            <span className="badge bg-primary-subtle text-primary border">
+                            <span className={`badge user-role-badge ${g.user_role}`}>
                               {g.user_role}
                             </span>
                           </div>
@@ -349,8 +349,8 @@ export default function GroupsPage() {
                           >
                             <option value="">Members</option>
                             {(g.members || []).map((m) => (
-                              <option key={m.username} value={m.username}>
-                                {m.username} — {m.status}
+                              <option key={m.email} value={m.username}>
+                                {m.username}  {m.status}
                               </option>
                             ))}
                           </select>
@@ -365,7 +365,7 @@ export default function GroupsPage() {
                             </button>
                           ) : (
                             <button
-                              className="btn btn-sm btn-outline-secondary"
+                              className="btn btn-sm btn-leave"
                               onClick={() => onLeave(g)}
                               disabled={busy.has(g.group_id) || !canLeave}
                               title={!canLeave ? "Owner can't leave own group" : "Leave group"}

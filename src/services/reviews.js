@@ -30,6 +30,7 @@ export async function getReviews(movieId) {
 //Tässä uudella tokenilla tehdyn kutsun voisi toteuttaa paremmin, esim axiosilla on oma intercepter ominaisuus tätä varten 
 export async function addReview({ movie_id, description, rating, title = '' }) {
   const user = JSON.parse(sessionStorage.getItem('user'))
+  if (!user) alert("Please log in to leave a review")
   console.log(user.accessToken)
   const r = await fetch(`${BASE}/api/reviews`, {
     method: 'POST',
@@ -50,6 +51,7 @@ export async function addReview({ movie_id, description, rating, title = '' }) {
       },
       body: JSON.stringify({ movie_id, description, rating, title }),
     });
+    
     return handle(newR);
   }
   return handle(r);

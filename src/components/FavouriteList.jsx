@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../css/favouriteList.css";
 import { useUser } from "../context/useUser";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { getMovieDetails } from "../services/getMovieDetails";
 import { useFavorites } from "../context/FavoritesContext";
 import { getFavourites } from "../services/getFavourites"; 
@@ -12,10 +12,13 @@ export default function FavouriteList({ userId, groupId }) {
   const { favouriteMovies, toggleFavorite } = useFavorites(); // private
   const { user } = useUser(); 
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const [movies, setMovies] = useState([]);
   const isProfilePage = location.pathname === "/profile";
   const isGroupPage = location.pathname === "/group";
+  const usernameFromUrl = searchParams.get("username");
+  const username = isGroupPage ? "Group" : userId ? usernameFromUrl || "User" : user?.username || "My";
 
   useEffect(() => {
     const fetchFavourites = async () => {
@@ -75,17 +78,19 @@ export default function FavouriteList({ userId, groupId }) {
 
   return (
     <div className="favourite-wrapper">
-      {isGroupPage ? <h4>Group favourites</h4> : <h4>FAVOURITES</h4>}
+      {isGroupPage ? <h4>Group favourites</h4> : <h4>{`${username}'s Favorites`}</h4>}
 
       {isProfilePage && (
         <button
           className="copy-link-button"
           onClick={() => {
-            const link = `${window.location.origin}/favorites/${user?.id}`;
+            const username = user?.username;
+            const link = `${window.location.origin}/favorites/${user?.id}?username=${encodeURIComponent(username)}`;
             navigator.clipboard
               .writeText(link)
               .then(() => console.log("Copied:", link))
               .catch((err) => console.error(err));
+            alert("Link copied to clipboard!");
           }}
         >
           Copy link
