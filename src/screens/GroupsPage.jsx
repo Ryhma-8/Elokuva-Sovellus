@@ -344,7 +344,7 @@ export default function GroupsPage() {
                         </div>
 
                         {/* Oikealle: dropdown + Delete/Leave */}
-                        <div className="d-flex align-items-center gap-2 ms-auto">
+                        <div className="d-flex align-items-center gap-2 ">
                           <select
                             className="form-select form-select-sm member-select"
                             value={current?.username || ""}

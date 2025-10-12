@@ -73,3 +73,10 @@
     color: #AAAAAA;
   }
   
+  @media (max-width: 1215px) {
+    .review-carousel{
+      margin-left: 16px;
+      margin-right: 16px;
+      width: auto;
+    }
+  }

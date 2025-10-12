@@ -9,8 +9,11 @@
 }
 
 .favourite-wrapper h4 {
-    align-self: flex-start;
+    text-align: center;
     margin-bottom: 16px;
+    margin: 1em;
+    padding: 1em;
+    text-decoration: underline;
 }
 
 .favourite-list {
