@@ -1,26 +1,30 @@
-# React + Vite
+# Group 8 – Movie Website Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Summary
 
-Currently, two official plugins are available:
+The goal of the project was to build a website for browsing movies, checking theater showtimes, and managing favorites. Favorites can be organized in groups or user profiles, and users can also add reviews for movies.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Programming Languages
+The project used the following languages:
 
-## Expanding the ESLint configuration
+- PostgreSQL (Database)
+- JavaScript (React + JSX, Node.js/Express.js)
+- CSS
+- HTML
+- Markdown
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Participants
 
+**Juho Ylöstalo**
 
-## For project
+**Joni Sirviö**
 
-Backend installation
-```sh
-  Run
+**Krister Rajaniemi**
 
-$ npm i express cors nodemon pg dotenv cross-env jsonwebtoken bcrypt joi fs
+**Tino Vuori**
 
-  For tests
-
-$ npm i mocha chai --save-dev
-```
+##
+ 
+The project progressed smoothly from the start. Communication was effective through Discord messages and Teams meetings. The project tasks were distributed regularly, and during Teams meetings the group discussed together how to handle situations when someone faced an issue, for example during the testing phase.
+######
+The development remained strong until the end. Task distribution and any arising problems have been handled collaboratively, usually on weekends when work schedules have been less demanding.
