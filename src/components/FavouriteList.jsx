@@ -92,7 +92,7 @@ export default function FavouriteList({ userId, groupId, refreshTrigger }) {
 
   return (
     <div className="favourite-wrapper">
-      {isGroupPage ? <h4>Group favourites</h4> : <h4>{`${username}'s Favorites`}</h4>}
+      {isGroupPage ? <h4>Group favourites</h4> : <h4>{`${username}'s favorites`}</h4>}
 
       {isProfilePage && (
         <button
