@@ -125,6 +125,9 @@
     margin-bottom: 16px;
   }
 
+
+  /*roskakannu puuttuu tästä näkymästä*/
+  
   .favourite-list {
     display: flex; 
     flex-wrap: wrap;
