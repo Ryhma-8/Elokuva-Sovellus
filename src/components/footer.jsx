@@ -3,7 +3,6 @@ import { Link, NavLink } from "react-router-dom";
 import { useUser } from '../context/useUser';
 import movbee from "../assets/movbee.png";
 import { logOut } from '../services/logOut';
-import { useRef } from 'react';
 
 export default function Footer() {
     const { user, setUser } = useUser();
@@ -17,11 +16,6 @@ export default function Footer() {
           </NavLink>
         </h1>
         <ul className="nav-links">
-        <li>
-            <NavLink to="/group" className={({ isActive }) => (isActive ? "active" : "")}>
-              Group
-            </NavLink>
-          </li>
           <li>
             <NavLink to="/movies" className={({ isActive }) => (isActive ? "active" : "")}>
               Movies

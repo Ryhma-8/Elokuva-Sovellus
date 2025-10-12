@@ -102,3 +102,37 @@
     cursor: pointer;
     display: flex;
 }
+
+@media (max-width: 768px) {
+  .favourite-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* keskittää wrapperin sisältö vaakasuunnassa */
+    padding: 0 16px;
+    margin: 0 auto;
+    width: 100%; /* varmista koko leveys */
+    box-sizing: border-box;
+  }
+
+  .favourite-wrapper h4 {
+    text-align: center;
+    width: 100%; /* jotta text-align toimii oikein */
+    margin-bottom: 12px;
+  }
+
+  .favourite-wrapper .copy-link-button {
+    align-self: center; /* nappi keskelle */
+    margin-bottom: 16px;
+  }
+
+  .favourite-list {
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: center; /* keskittää listan kortit */
+    gap: 12px; 
+    padding: 0;
+    width: 100%; /* varmista, että justify-content toimii */
+    list-style: none;
+  }
+}
+

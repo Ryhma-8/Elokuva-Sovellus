@@ -152,11 +152,14 @@
     font-size: 1.8rem;
   }
 
-   .hero-results {
+  .hero-results {
+    margin-left: 0;          /* Poistetaan kiinteä 64px vasen marginaali */
+    margin-right: 0;         /* Varmistetaan että ei työnny yli */
     width: 100%;
-    height: 60vh;
-    max-height: 60vh;
-    overflow-y: auto;
+    max-width: 600px;
+    height: auto;
+    border-radius: 10px;
+    box-sizing: border-box;
   }
 
   .hero-movies-box {
@@ -170,8 +173,24 @@
     align-items: center; 
     font-size: 0.9rem;
   }
+  .hero-movie-card .add-button-group {
+    min-width: auto; 
+    width: auto;     
+    padding: px 8px; 
+    height: auto;   
+    font-size: 0.75rem;         
+    border-radius: 7px;         
+  }
 
+    .hero-list-title{
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
+
+
 
 
 /* Suuret näytöt 4k*/

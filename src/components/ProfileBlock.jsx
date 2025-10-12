@@ -27,14 +27,16 @@ export default function ProfileBlock() {
 
   return (
     <div className="profile-block">
-        <div className= "profile-content">
-            <h2 className="profile-title">Profile</h2>
-            <p className="username">Username: {user.username}</p>
-            <p className="user-email">{user.email}</p>
-        </div>
-        <div className="delete-block">
-            <button className="delete-button" onClick={handleSubmit}>Delete account</button>
-        </div>
+      <div className="profile-content">
+        <h2 className="profile-title">Profile</h2>
+        <p className="username">Username: {user.username}</p>
+        <p className="user-email">{user.email}</p>
+      </div>
+    <div className="delete-block">
+      <button className="delete-button" onClick={handleSubmit}>
+        Delete account
+      </button>
     </div>
+</div>
   );
 }

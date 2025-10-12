@@ -1,6 +1,7 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
 import "../css/groupPage.css";
+import "../css/HeroBlock.css";
 import MoviesList from "../components/HeroBlock/movieList";
 import SearchBar from "../components/HeroBlock/searchBar";
 import { useEffect, useState, useRef } from "react";
