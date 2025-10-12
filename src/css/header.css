@@ -1,3 +1,11 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Estää horisontaalisen venymisen */
+  box-sizing: border-box;
+}
+
 .site-header {
   background: #ffd400;
   color: #111;
@@ -51,7 +59,6 @@
 
 @media (max-width: 600px) {
   .nav {
-    justify-content: space-around;
     width: 100%;
   }
   .header-image {

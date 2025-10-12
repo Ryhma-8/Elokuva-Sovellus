@@ -32,3 +32,22 @@
     text-align: center;
     padding-top: 40px;
 }
+
+@media (max-width: 600px) {
+  .site-footer {
+    padding: 24px 12px;
+  }
+
+  .site-footer .nav {
+    gap: 1rem;
+  }
+
+  .site-footer .nav-links {
+    flex-direction: row; /* linkit allekkain */
+    gap: 0.5rem;
+  }
+
+  .footer-text-wrapper {
+    font-size: 0.85rem;
+  }
+}

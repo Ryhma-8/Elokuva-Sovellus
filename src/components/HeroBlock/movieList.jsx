@@ -57,7 +57,7 @@ const [addedMovies, setAddedMovies] = React.useState(new Set());
                 onClick={() => handleAddToGroup(movie)}
                 disabled={isAdded}
               >
-                {isAdded ? "✓ ADDED" : "ADD FOR GROUP"}
+                {isAdded ? "✓ ADDED" : "ADD"}
               </button>
             )}
           </div>
