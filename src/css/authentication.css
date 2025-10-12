@@ -13,7 +13,7 @@
 
 .password-field .form-input {
   width: 100%;
-  padding-right: 17em; /* jättää tilaa ikonille */
+  padding-right: 10em; /* jättää tilaa ikonille */
 }
 
 .password-field .toggle-password {

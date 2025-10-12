@@ -1,35 +1,62 @@
-/* Kortit ja otsikkopalkki */
+
+
+
 .groups-page .card {
   border: 2px solid #3d3922;
   border-radius: 14px;
   overflow: hidden;
   background: #fff;
   color: #111;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .groups-page .card-header {
   background: #ffd400;
   color: #111;
+  font-weight: 600;
 }
 
 .groups-page .card-body {
   background: #ffd400;
+  padding: 1rem;
 }
 
 .groups-page .group-row {
   border: 1px solid #3d3922;
   border-radius: 10px;
-  background: #fff; 
-  padding: 0.5rem 0.75rem;
+  background: #fff;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.groups-page .group-row * {
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.groups-page .my-group-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  min-height: 110px;
+}
+
+.groups-page .my-group-row > .d-flex {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: space-between;
 }
 
 .groups-page .member-select {
-  width: 180px;
+  min-width: 220px;
+  max-width: 100%;
 }
 
 .groups-page .empty-state {
@@ -43,12 +70,16 @@
   border-width: 1.5px;
 }
 
+.groups-page .btn-link {
+  display: block;
+  text-align: left;
+}
+
 .groups-page .btn-warning {
   border: 1px solid #222;
   font-weight: 600;
 }
 
-/* Chip-lista */
 .groups-page .chips {
   display: flex;
   flex-wrap: wrap;
@@ -75,7 +106,6 @@
   padding: 0;
 }
 
-/* Syötekenttä + Add-nappi vierekkäin */
 .groups-page .email-controls {
   display: flex;
   gap: 0.5rem;
@@ -91,49 +121,63 @@
 }
 
 .user-role-badge.owner {
-  background-color: #007bff; /* sininen */
+  background-color: #007bff;
   color: white;
 }
 
 .user-role-badge.member {
-  background-color: #28a745; /* vihreä */
+  background-color: #28a745;
   color: white;
 }
 
 .user-role-badge.requested {
-  background-color: #ffc107; /* keltainen */
+  background-color: #ffc107;
   color: black;
 }
 
-/* Normal state */
 .groups-page .btn-leave {
-  border: 1.5px solid #352d2e; /* tumma punainen */
+  border: 1.5px solid #352d2e;
   background-color: #ffffff;
   color: #000000;
   font-weight: 600;
   transition: background-color 0.2s, color 0.2s;
 }
 
-/* Hover state */
 .groups-page .btn-leave:hover:not(:disabled) {
   background-color: #3a3031;
   color: #fff;
 }
 
-/* Disabled state: tumma ja harmaa */
 .groups-page .btn-leave:disabled {
-  border-color: #555;      /* tummanharmaa */
-  color: #555;             /* tummanharmaa teksti */
-  background-color: #e0e0e0; /* vaalea harmaa tausta */
+  border-color: #555;
+  color: #555;
+  background-color: #e0e0e0;
   cursor: not-allowed;
 }
 
+.groups-page .actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
 
-/* Responsiivisuus*/
+.groups-page .actions-row .btn {
+  flex: 1 1 auto;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  font-weight: 600;
+}
+
+@media (max-width: 992px) {
+  .groups-page .card-body {
+    padding: 0.75rem;
+  }
+}
+
 @media (max-width: 768px) {
   .groups-page .group-row {
-    align-items: stretch;
     flex-direction: column;
+    align-items: stretch;
   }
 
   .groups-page .member-select {
@@ -144,67 +188,38 @@
     flex-direction: column;
   }
 
-  
-}
-
-
-.groups-page .my-group-row {
-  /* pinotaan otsikko + kontrollit + alarivin napit */
-  flex-direction: column;
-  align-items: stretch;
-  gap: .25rem;
-}
-
-.groups-page .my-group-row .member-select {
-  /* hieman leveämpi pudotuslista jotta teksti mahtuu */
-  min-width: 220px;
-}
-
-.groups-page .actions-row {
-  display: flex;
-  gap: .75rem;
-}
-
-.groups-page .actions-row .btn {
-  flex: 1 1 0;
-  padding-top: .7rem;
-  padding-bottom: .7rem;
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .groups-page .my-group-row > .d-flex {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-
-  .groups-page .my-group-row .member-select {
-    width: 100%;
-  }
-
-  .groups-page .my-group-row .actions-row {
-    flex-direction: column;
-  }
-
-  .groups-page .my-group-row .actions-row .btn {
-    flex: 1 1 100%;
-  }
-
-  
-}
-
-.groups-page .actions-row {
-  display: flex;
-  gap: 0.75rem;
-}
-
-@media (max-width: 768px) {
   .groups-page .actions-row {
     flex-direction: column;
   }
 
   .groups-page .actions-row .btn {
-    flex: 1 1 100%;
+    width: 100%;
   }
+}
+
+.groups-page .my-group-wrapper {
+  margin-bottom: 1rem;
+}
+
+.groups-page small.text-muted {
+  font-size: 0.85rem;
+}
+
+.groups-page .btn-link {
+  color: #0049c6;
+}
+
+.groups-page .btn-link:hover {
+  color: #001d70;
+  text-decoration: underline;
+}
+
+.groups-page .badge {
+  font-size: 0.8rem;
+  padding: 0.3em 0.6em;
+  border-radius: 0.4rem;
+}
+
+.badge.bg-primary-subtle.text-primary.border {
+  margin-right: 64px;
 }
