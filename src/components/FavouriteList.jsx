@@ -99,7 +99,7 @@ export default function FavouriteList({ userId, groupId, refreshTrigger }) {
           className="copy-link-button"
           onClick={() => {
             const username = user?.username;
-            const link = `https://elokuva-sovellus.onrender.com/favorites/${user?.id}?username=${encodeURIComponent(username)}`;
+            const link = `${import.meta.env.VITE_API_URL}/api/favorites/share/${user?.id}?username=${encodeURIComponent(username)}`;
             navigator.clipboard
               .writeText(link)
               .then(() => console.log("Copied:", link))
