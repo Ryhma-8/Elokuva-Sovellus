@@ -4,10 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+  "dev": "vite",
+  "build": "vite build",
+  "start": "serve -s dist -l $PORT"
   },
   "dependencies": {
     "@coreui/coreui": "^5.4.3",
@@ -25,7 +24,8 @@
     "react-icons-kit": "^2.0.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^7.9.1",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "serve": "^14.2.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
