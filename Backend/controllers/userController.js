@@ -66,8 +66,8 @@ const login = async (req, res, next) => {
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 maxAge: 7*24*60*60*1000,
-                sameSite: "lax", // suojaa CSRF tämä pitää asettaa none kun siirretään palvelimelle
-                secure: false // aseta True kun vaihdetaan localahostista muualle, True siis tekee sen että cookie lähtee vain https yhdteyden yli
+                sameSite: "none", // suojaa CSRF tämä pitää asettaa none kun siirretään palvelimelle
+                secure: true // aseta True kun vaihdetaan localahostista muualle, True siis tekee sen että cookie lähtee vain https yhdteyden yli
             })
 
             res.header("Access-Control-Expose-Headers","Authorization")
@@ -123,8 +123,8 @@ const deleteAccount = async (req, res, next) => {
         
         res.clearCookie('refreshToken', {
             httpOnly: true,
-            sameSite: 'lax',
-            secure: false
+            sameSite: 'none',
+            secure: true
         })
         return res.sendStatus(204)
     } catch (err) {
