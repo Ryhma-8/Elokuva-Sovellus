@@ -6,12 +6,18 @@ import cookieParser from 'cookie-parser';
 import favoriteRouter from './routes/favoriteRouter.js';
 import reviewRouter from './routes/reviewRouter.js';
 import groupRouter from './routes/groupRouter.js'
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const port = process.env.PORT
 const app = express();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, "dist"))); 
 
 app.use(cors({
      credentials: true,
@@ -28,6 +34,9 @@ app.use('/user', userRouter);
 app.use('/api/favorites', favoriteRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/group', groupRouter);
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
