@@ -156,6 +156,7 @@
     margin-left: 0;          /* Poistetaan kiinteä 64px vasen marginaali */
     margin-right: 0;         /* Varmistetaan että ei työnny yli */
     width: 100%;
+    /* max-width oli aikaisemmin none, muutin olemaan 600px, eli keskimäärin 3,5 leffaa - Joni */
     max-width: 600px;
     height: auto;
     border-radius: 10px;
@@ -163,15 +164,22 @@
   }
 
   .hero-movies-box {
-    max-height: none;
+    max-height: 600px;
     overflow-y: visible; 
   }
 
   .hero-movie-info {
     flex-direction: column;
     gap: 0.3rem;
-    align-items: center; 
+    /*Aiemmin oli align-items: center;*/
+    align-items: self-start; 
     font-size: 0.9rem;
+    /*Jonin sekoilua*/
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: normal;
+    text-overflow: ellipsis;
+
   }
   .hero-movie-card .add-button-group {
     min-width: auto; 
