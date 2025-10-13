@@ -39,6 +39,7 @@ export default function Recommendations({ movieId }) {
             to={`/movie`}
             state={{ movieId: movie.id }}
             className="recommendation-item"
+            onClick={() => window.scrollTo(0, 0)}
           >
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
