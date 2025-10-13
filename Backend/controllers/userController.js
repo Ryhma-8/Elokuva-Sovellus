@@ -95,16 +95,16 @@ const logout = async (req, res, next) => {
         res.clearCookie('refreshToken', 
             {httpOnly: true,
             maxAge: 7*24*60*60*1000,
-            sameSite: "lax",
-            secure: false})
+            sameSite: "none",
+            secure: true})
         return res.sendStatus(204)
     }
     await deleteRefreshToken(refreshToken)
     res.clearCookie('refreshToken', 
             {httpOnly: true,
             maxAge: 7*24*60*60*1000,
-            sameSite: "lax",
-            secure: false})
+            sameSite: "none",
+            secure: true})
     return res.sendStatus(204)
 }
 
